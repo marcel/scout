@@ -1,6 +1,3 @@
-- If you continue to use XmlSimple for sub objects, swap in FasterXmlSimple if
-  you can get it to be compatible
-  
 - Finish specifying all support filters and sub-resources for each resource
 
 - Create tables to track the most recent updated_at for various records in the DB 
@@ -19,3 +16,19 @@ it would make it very efficient to know whether to poll for changes.
 Scout::Resource.league + 'players' + {:players_key=>Scout::Cache::Player.find_by_full_name('Santana Moss').yahoo_key} + 'stats' + {:type => 'week', :week => 1}
 
 - Import fantasy_football_nerd_id for defensive teams in Cache::Player
+
+- Have a way of returning the current roster for a team from the DB
+
+- Consider shaving the yak of storing just ids for yahoo entities in the DB and know how to construct the key based on 
+their conventions. This probably isn't worth the hassle. It would improve the performance of the indexes but the data set
+is so small right now that it doesn't matter at all.
+
+- Show aggregate high, normal and low projections for a roster for the week
+
+- Store matchups in the db
+
+DONE:
+=====
+
+- If you continue to use XmlSimple for sub objects, swap in FasterXmlSimple if
+  you can get it to be compatible

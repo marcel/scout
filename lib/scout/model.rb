@@ -121,6 +121,14 @@ module Scout
         :primary_key => :yahoo_key,
         :foreign_key => :yahoo_player_key
       }
+      has_many :injuries, {
+        :primary_key => :fantasy_football_nerd_id,
+        :foreign_key => :fantasy_football_nerd_id
+      }
+      has_many :projections, {
+        :primary_key => :fantasy_football_nerd_id,
+        :foreign_key => :fantasy_football_nerd_id
+      }
 
       class << self
         def from_model(model)
@@ -141,6 +149,10 @@ module Scout
 
     class Injury < ActiveRecord::Base
       set_table_name :injuries
+      belongs_to :player, {
+        :primary_key => :fantasy_football_nerd_id,
+        :foreign_key => :fantasy_football_nerd_id
+      }
 
       class << self
         def from_model(model)
@@ -158,6 +170,10 @@ module Scout
 
     class Projection < ActiveRecord::Base
       set_table_name :projections
+      belongs_to :player, {
+        :primary_key => :fantasy_football_nerd_id,
+        :foreign_key => :fantasy_football_nerd_id
+      }
 
       class << self
         def from_model(model)
@@ -178,6 +194,11 @@ module Scout
 
     class Team < ActiveRecord::Base
       set_table_name :teams
+      has_many :rosters, {
+        :primary_key => :yahoo_key,
+        :foreign_key => :yahoo_team_key
+      }
+
       class << self
         def from_model(model)
           new(
@@ -190,18 +211,26 @@ module Scout
       end
     end
 
+    # TODO Rename this RosterSpot
     class Roster < ActiveRecord::Base
       set_table_name :rosters
+      belongs_to :player, :foreign_key => :yahoo_player_key, :primary_key => :yahoo_key
+      belongs_to :team, :foreign_key => :yahoo_team_key, :primary_key => :yahoo_key
+
       class << self
         def from_model(team_key, model)
           # Assumes something like:
           #  Scout::Resource.league + 'teams' + 'roster'+ {:type => 'week', :week => 3} + 'players' + 'ownership'
-          new(
+          roster = new(
             :yahoo_team_key   => team_key,
             :yahoo_player_key => model.player_key,
             :week             => model.selected_position.week,
             :position         => model.selected_position.position
           )
+
+          roster.playing_status = model.status if model.status?
+
+          roster
         end
       end
     end
