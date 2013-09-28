@@ -1,0 +1,7 @@
+* Identify available players who are the most consistent week to week above some minimum point threshold
+* Identify players who consistently outperform their projection
+* Identify free agents with higher projections than some of your players going into next week
+* Identify optimal lineups you could have had if you hadn't dropped players in the past
+* Identify all upcoming bye weeks and propose plans for how to work around them
+* As soon as someone drops a player check their projection and notify if there is upside
+* Dashboard of "Top Available" by position with e.g. "Top Defense", "Top W/R/T"
