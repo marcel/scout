@@ -1,0 +1,10 @@
+<div class="pagination">
+  <ul>
+    <li class="disabled"><span>Week:</span></li>
+    <% weeks.each do |week, label| -%>
+      <li class="<%= label %>">
+        <span><%= link_to_if(label.blank?, week, current_url(week: week), style: "display: block")  %></span>
+      </li>
+    <% end -%>
+  </ul>
+</div>

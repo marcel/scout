@@ -1,0 +1,25 @@
+<div class="page-header">
+  <h1><%=t '.title', :default => 'Teams' %></h1>
+</div>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Moves/Trades</th>
+      <th>Waiver Balance</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @teams.each do |team| %>
+      <tr>
+        <td>
+          <strong><%= team.name %></strong><br /> <small class="muted">(<%= team.manager %>)</small><br />
+          <%= image_tag(team.logo, :size => '75x75', :class => 'img-polaroid') %>
+        </td>
+        <td>Moves: <%= team.moves %> / Trades: <%= team.trades %></td>
+        <td><%= team.faab_balance %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

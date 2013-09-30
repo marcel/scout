@@ -1,0 +1,44 @@
+<%= form_for @injury, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :fantasy_football_nerd_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fantasy_football_nerd_id, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :week, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :week, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :injury, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :injury, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :practice_status, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :practice_status, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :game_status, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :game_status, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :last_update, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :last_update, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                injuries_path, :class => 'btn' %>
+  </div>
+<% end %>

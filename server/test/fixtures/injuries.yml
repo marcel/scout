@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  fantasy_football_nerd_id: 1
+  week: 1
+  injury: MyString
+  practice_status: MyString
+  game_status: MyString
+  last_update: 2013-09-28
+
+two:
+  fantasy_football_nerd_id: 1
+  week: 1
+  injury: MyString
+  practice_status: MyString
+  game_status: MyString
+  last_update: 2013-09-28

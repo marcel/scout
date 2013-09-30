@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  yahoo_key: MyString
+  type: 
+  timestamp: 1
+  add_roster_change_id: 1
+  drop_roster_change_id: 1
+  bid: 1
+
+two:
+  yahoo_key: MyString
+  type: 
+  timestamp: 1
+  add_roster_change_id: 1
+  drop_roster_change_id: 1
+  bid: 1

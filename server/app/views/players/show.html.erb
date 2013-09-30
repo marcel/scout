@@ -1,0 +1,9 @@
+<%- model_class = Player -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong>Player:</strong></dt>
+  <dd><%= player_profile(@player) %></dd>
+</dl>

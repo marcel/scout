@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  fantasy_football_nerd_id: 1
+  week: 1
+  standard_high: 1.5
+  standard_low: 1.5
+  standard: 1.5
+  ppr_high: 1.5
+  ppr_low: 1.5
+  ppr: 1.5
+  rank: 1
+
+two:
+  fantasy_football_nerd_id: 1
+  week: 1
+  standard_high: 1.5
+  standard_low: 1.5
+  standard: 1.5
+  ppr_high: 1.5
+  ppr_low: 1.5
+  ppr: 1.5
+  rank: 1

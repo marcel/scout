@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  yahoo_key: MyString
+  name: MyString
+  number_of_moves: 1
+  number_of_trades: 1
+
+two:
+  yahoo_key: MyString
+  name: MyString
+  number_of_moves: 1
+  number_of_trades: 1

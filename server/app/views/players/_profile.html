@@ -1,0 +1,20 @@
+<div class="thumbnail">
+  <div class="row-fluid">
+    <div class="player-headshot span3">
+      <%= image_tag(player.headshot, :class => 'img-polaroid') %>
+    </div>
+  
+    <div class="player-bion span9">
+      <strong><%= player.full_name %></strong>
+      <div>
+        <%- if player.uniform_number.present? -%>
+          <span class="player-uniform-number"><%= "##{player.uniform_number}" %></span>
+        <%- end -%>
+        <span class="player-position"><%= link_to(player.position, current_url(position: player.position)) %></span>
+        | 
+        <span class="player-team"><%= link_to(player.team_abbr, current_url(team: player.team_abbr)) %></span>
+      </div>
+      <div><%= player_playing_status(player) %></div>
+    </div>
+  </div>
+</div>

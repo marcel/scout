@@ -1,0 +1,33 @@
+<div class="page-header">
+  <h1><%=t '.title', :default => "Projections" %> <small>week <%= @week %></small></h1>
+</div>
+<%= weeks_in_season(@week) %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Player</th>
+      <th>High</th>
+      <th>Standard</th>
+      <th>Low</th>
+    </tr>
+  </thead>
+  <tbody class="row-fluid">
+    <% @projections.each do |projection| %>
+      <tr>
+        <td class="span1"><%= projection.rank %></td>
+        <td class="span3">
+          <% if projection.player %>
+            <%= player_profile(projection.player, projection_path(projection)) %>
+          <% else %>
+            None
+          <% end -%>
+        </td>
+        <td class="span2"><%= projection.standard_high %></td>
+        <td class="span2"><%= link_to projection.standard, current_url(above: projection.standard.to_i, below: projection.standard.to_i + 1) %></td>
+        <td class="span2"><%= projection.standard_low %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  stat_id: 1
+  sort_order: 1
+  position_type: MyString
+  display_name: MyString
+
+two:
+  name: MyString
+  stat_id: 1
+  sort_order: 1
+  position_type: MyString
+  display_name: MyString

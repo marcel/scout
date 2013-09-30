@@ -1,0 +1,16 @@
+<div class="page-header">
+  <h1><%=t '.title', :default => @player.full_name + ' points' %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong>Player:</strong></dt>
+  <dd><%= player_profile(@player) %></dd>
+  <dt><strong>Points:</strong></dt>
+  <dd><%= @player.points.first.total %></dd>
+  <dt><strong>Week:</strong></dt>
+  <dd><%= @player.points.first.week %></dd>
+</dl>
+
+<div class="form-actions">
+
+</div>

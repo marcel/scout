@@ -1,0 +1,10 @@
+require 'rubygems'
+require 'rake'
+require 'rake/testtask'
+require File.dirname(__FILE__) + '/lib/scout'
+
+task :default => :test
+
+Rake::TestTask.new do |test|
+  test.pattern = 'test/*_test.rb'
+end

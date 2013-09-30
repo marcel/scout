@@ -1,0 +1,33 @@
+<div class="page-header">
+  <h1><%=t '.title', :default => "Points" %> <small>week <%= @week %></small></h1>
+</div>
+<!-- <div class="dropdown">
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+    <li><a tabindex="-1" href="#">Action</a></li>
+    <li><a tabindex="-1" href="#">Another action</a></li>
+    <li><a tabindex="-1" href="#">Something else here</a></li>
+    <li class="divider"></li>
+    <li><a tabindex="-1" href="#">Separated link</a></li>
+  </ul>
+</div> -->
+
+<%= weeks_in_season(@week) %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Points</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @player_point_totals.each do |player_point_total| %>
+      <tr>
+        <td class="span4">
+          <%= player_profile(player_point_total.player, player_points_path(player_point_total.player)) %>
+        </td>
+        <td class="span8"><%= points_status(player_point_total.total) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

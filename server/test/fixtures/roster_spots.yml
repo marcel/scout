@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  yahoo_team_key: MyString
+  yahoo_player_key: MyString
+  week: 1
+  position: MyString
+  playing_status: MyString
+
+two:
+  yahoo_team_key: MyString
+  yahoo_player_key: MyString
+  week: 1
+  position: MyString
+  playing_status: MyString

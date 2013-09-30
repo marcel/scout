@@ -1,0 +1,31 @@
+<%- model_class = Injury -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:fantasy_football_nerd_id) %>:</strong></dt>
+  <dd><%= @injury.fantasy_football_nerd_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:week) %>:</strong></dt>
+  <dd><%= @injury.week %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:injury) %>:</strong></dt>
+  <dd><%= @injury.injury %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:practice_status) %>:</strong></dt>
+  <dd><%= @injury.practice_status %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:game_status) %>:</strong></dt>
+  <dd><%= @injury.game_status %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:last_update) %>:</strong></dt>
+  <dd><%= @injury.last_update %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              injuries_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_injury_path(@injury), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              injury_path(@injury),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

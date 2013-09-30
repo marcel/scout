@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  yahoo_player_key: MyString
+  type: 
+  source_type: MyString
+  source_team_key: MyString
+  destination_type: MyString
+  destination_team_key: MyString
+
+two:
+  yahoo_player_key: MyString
+  type: 
+  source_type: MyString
+  source_team_key: MyString
+  destination_type: MyString
+  destination_team_key: MyString
