@@ -1,7 +1,20 @@
 Scout::Server::Application.routes.draw do
-  resources :teams
+  get "expert_ranks/index"
+  get "expert_ranks/show"
+  get "watches", to: "watch#index", as: :watch_list
+  get "watch/update/:id", to: "watch#update", as: :update_watch
+  
+  resources :teams do 
+    member do 
+      get 'roster/(:week)', to: "rosters#show", as: :roster
+    end
+    # resource :roster, only: :show
+  end
+  
+  get 'search', to: "players#search", as: :player_search
 
   resources :players do
+  
     resource :player_point_totals, as: :points, path: :points, only: :show
   end
   

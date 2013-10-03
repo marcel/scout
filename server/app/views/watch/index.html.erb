@@ -1,0 +1,18 @@
+<div class="page-header">
+  <h1><%= link_to(t('.title', :default => "Watch list"), url_for()) %></h1>
+</div>
+<table class="table table-striped table-bordered">
+  <tbody>
+    <% @players.each do |player| %>
+      <tr>
+        <td>
+        <div class="row-fluid">
+          <div class="span4"><%= player_profile(player) %></div>
+          <div class="span8">&nbsp;</div>
+        </div>
+        <div><%= render_player_performance_chart(player) %></div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

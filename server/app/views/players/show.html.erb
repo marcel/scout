@@ -1,9 +1,10 @@
-<%- model_class = Player -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%=t '.title', :default => @player.full_name %></h1>
 </div>
 
-<dl class="dl-horizontal">
-  <dt><strong>Player:</strong></dt>
-  <dd><%= player_profile(@player) %></dd>
-</dl>
+
+  <div><%= player_profile(@player) %></div>
+
+<div class="row">
+  <%= high_chart("chart", @chart)%>
+</div>

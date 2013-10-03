@@ -1,0 +1,69 @@
+<div class="page-header">
+  <h1><%= link_to(t('.title', :default => "#{@team.name} roster"), url_for()) %> <small>week <%= @week %></small></h1>
+</div>
+
+<% content_for :sibebar_title do %>
+Week <%= @week %> performances
+<% end %>
+<% content_for :sidebar do %>
+  <% Team.joins(:roster_spots).includes(:roster_spots).references(:roster_spots).where("roster_spots.week" => @week).sort_by {|t| -t.points(@week)}.each_with_index do |team, index| %>
+    <li>
+      <%= link_to(team.name, roster_team_path(team)) %>
+    <div class="row-fluid">
+    <div class="span3"><%= image_tag(team.logo, :size => '25x25', :class => 'img-polaroid') %></div>
+      <% optimal_roster = RosterSpot.optimal_roster(team.roster_spots) %>
+      
+      <div class="span9">
+      <%#= team_points_status(("%.2f" % team.projected_points(@week)).to_f)%> 
+      <%= team_points_status(("%.2f" % team.points(@week)).to_f) %> 
+      <%#= team_points_status(("%.2f" % optimal_roster.max).to_f) %>
+      <%#= team_points_status(("%.2f" % optimal_roster.min).to_f) %>
+      </div>
+      </li>
+      <li class="divider"></li>
+  <% end %>
+<% end %>
+
+<%= weeks_in_season(@week) %>
+<table class="table table-striped table-bordered table-condensed">
+  <caption class="lead">
+    Projected: <%= team_points_status(("%.2f" % @team.projected_points(@week)).to_f)%> | 
+    Actual: <%= team_points_status(("%.2f" % @team.points(@week)).to_f) %> | 
+    Best possible: <%= team_points_status(("%.2f" % RosterSpot.optimal_roster(@team.roster_spots).max).to_f) %> |
+    Worst possible: <%= team_points_status(("%.2f" % RosterSpot.optimal_roster(@team.roster_spots).min).to_f) %>
+  </caption>
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Position</th>
+      <th>Points</th>
+      <th>High</th>
+      <th>Standard</th>
+      <th>Low</th>
+    </tr>
+  </thead>
+  <tbody class="row-fluid">
+    <% @team.roster_spots.sort.each do |roster_spot| %>
+      <tr>
+        <td class="span4">
+          <% if roster_spot.player %>
+            <%= player_profile(roster_spot.player, projection_path(roster_spot.player.projection)) %>
+          <% else %>
+            None
+          <% end -%>
+        </td>
+        <td class="span1"><strong><%= roster_spot.position %></strong></td>
+        <td class="span2">
+          <% if points = roster_spot.player.points_on_week(@week) %>
+            <%= player_points_status(points.total) %>
+          <% else %>
+            0.0
+          <% end %>
+        </td>
+        <td class="span2"><%= player_points_status(roster_spot.player.projection.standard_high) %></td>
+        <td class="span2"><%= link_to player_points_status(roster_spot.player.projection.standard) %></td>
+        <td class="span2"><%= player_points_status(roster_spot.player.projection.standard_low) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

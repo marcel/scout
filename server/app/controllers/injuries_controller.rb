@@ -11,6 +11,11 @@ class InjuriesController < ApplicationController
     
     query = Injury.where(where_clause)
     query = query.where("players.full_name LIKE ?", "%#{params[:name]}%") if params[:name]
+    query = query.where("players.owner_key" => params[:owner]) if params[:owner]
+    
+    query = query.where("players.position" => params[:position].split(',')) if params[:position]
+    query = query.where("players.team_abbr" => params[:team].split(',')) if params[:team]
+    query = query.where("players.position_type" => params[:position_type].split(',')) if params[:position_type]
     
     if params[:game_status]
       if player_status = Player::PlayingStatus.lookup(params[:game_status])

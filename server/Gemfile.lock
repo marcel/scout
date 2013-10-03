@@ -50,6 +50,7 @@ GEM
       nokogiri
     faster_xml_simple (0.5.0)
       libxml-ruby (>= 0.3.8.4)
+    hash-deep-merge (0.1.1)
     hashie (2.0.5)
     hike (1.2.3)
     i18n (0.6.5)
@@ -61,6 +62,9 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.0)
     kgio (2.8.1)
+    lazy_high_charts (1.4.3)
+      bundler (>= 1.0)
+      hash-deep-merge
     libxml-ruby (2.7.0)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -133,6 +137,7 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    will_paginate (3.0.5)
 
 PLATFORMS
   ruby
@@ -145,6 +150,7 @@ DEPENDENCIES
   hashie
   jbuilder (~> 1.2)
   jquery-rails
+  lazy_high_charts
   nokogiri
   oauth
   pry
@@ -155,3 +161,4 @@ DEPENDENCIES
   turbolinks
   twitter-bootstrap-rails
   unicorn
+  will_paginate

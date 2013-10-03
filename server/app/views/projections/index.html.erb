@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1><%=t '.title', :default => "Projections" %> <small>week <%= @week %></small></h1>
+  <h1><%= link_to(t('.title', :default => "Projections"), url_for()) %> <small>week <%= @week %></small></h1>
 </div>
 <%= weeks_in_season(@week) %>
 
@@ -24,9 +24,9 @@
             None
           <% end -%>
         </td>
-        <td class="span2"><%= projection.standard_high %></td>
-        <td class="span2"><%= link_to projection.standard, current_url(above: projection.standard.to_i, below: projection.standard.to_i + 1) %></td>
-        <td class="span2"><%= projection.standard_low %></td>
+        <td class="span2"><%= player_points_status(projection.standard_high) %></td>
+        <td class="span2"><%= link_to player_points_status(projection.standard), current_url(above: projection.standard.to_i, below: projection.standard.to_i + 1) %></td>
+        <td class="span2"><%= player_points_status(projection.standard_low) %></td>
       </tr>
     <% end %>
   </tbody>

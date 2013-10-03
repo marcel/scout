@@ -1,17 +1,100 @@
+- On the pages that let you filter tables, show a bar at the top of the table with each filter and an [x] that let's you remove filters without clearing everything
+
+- On expert ranking page provide filters to show only Green/Blue/Yellow/Red/Unchanged
+
+- Import http://sports.yahoo.com/news/week-5-rankings--running-back for each position and show week over week rank trends (up or down)
+
+- From Alex:
+  It feels like the generalizable product might be
+
+  Click on a member of my team (any position, DEF etc) "Show me possible replacements"
+  
+  This renders a page which shows a number of other players, along with projections / rankings for both the 
+  upcoming week and remainder of the year. This would include all kinds of secondary analytics (like targets) 
+  as well as aggregated human projections
+  
+  Then you simply work to continually refine the data and presentation of that "show me possible replacements"
+  page where you continually work to the point where you never need to visit any other sites anymore.
+
+- Look for url_for() and replace with current_url()
+
+- Roster spots is messed up. It needs to only include the current recent roster spots for the week.
+
+- Do research on running analytics and clustering on this corpus
+
+- Import csv of play by play data (though check http://www.armchairanalysis.com/data.php before as it might be easier to import) (apparently CBSSports.com has play by play data by game. see if there are other stats i can import). Also look at what Football Outsiders,  and Pro Football Focus offer. Some links: 
+http://www.footballoutsiders.com/products
+https://www.profootballfocus.com/?tab=by_team&season=2008&teamid=21&stats=&gameid=
+https://www.profootballfocus.com/?tab=by_team&season=2008&teamid=21&stats=&gameid=
+www.advancednflstats.com
+http://www.nfl.com/liveupdate/gamecenter/54467/PIT_Gamebook.pdf
+http://www.nfl.com/gamecenter/2009091000/2009/REG1/titans@steelers/analyze/box-score
+http://scores.espn.go.com/nfl/playbyplay?gameId=290910023&period=0
+http://www.armchairanalysis.com/data.php
+
+- Consider having e.g. green up arrow and red down arrow on player info cards if their point production is either trending up or they are playing above projection.
+
+- See if you can force the graph's y axis to start at 0 no matter what. Sometimes people with high averages seem lower because their bottom is always at the bottom relatively.
+
+- Add filtering by waiver in addition to team for all player tables
+
+- Add search for player that shows week over week performance page
+
+- Consider introducing caching for e.g. optimal_lineup per week so the sidebar can be loaded quickly
+
+- Fix bugs and clean up optimal roster computation
+
+- Sometimes rosters seem to be returning with more players than they should. Fix query to only resturn the current roster.
+
+- Import remaining rosters for weeks 1-3
+
+- When looking at the roster view list all teams in the sidebar with links (maybe also include 'projected/actual/best/worst' in the sidebar too)
+
+- Click on 'best possible line up' and 'worst possible line up' to see them
+
+- Include player's matchup in team roster view
+
+- Graph of team's projected / actual / optimal points week over week
+
+- If a player was picked up on waivers and i can see from the API how much he was bought for, show that
+
+- Should I create a Roster model that is just a has_many RosterSpots for Team?
+
+- Finish RosterSpot.import
+
+- Deal with case where someone has an empty roster spot. Since we only grab the 12 most recent we either need to create an empty tombstone or something. Also don't know whether the payload will return an empty slot or just 11 results.
+
+- When importing teams also include the roster sub-resource and store selected_position for the given player, maybe in a RosterSpot.
+
+- Consider normalizing ownership_type and related freeagent + waiver info
+
+- Maybe add before or after save on Player that checks for a change in owner_key and either creates or deletes a RosterSpot or decide if RosterSpot doesn't even need to exist. The value I currently see in keeping it even if player has owner_key is a historical record of all rosters though you could also have that from looking at all transactions I believe so it seems to mostly be about more convenient denormalization unless i'm not realizing something else. I believe I need to do this in order to know the player's selected position on the roster.
+
+- Consider using a sparklines library if there are cases where it's useful to see a sparkline at a glance in a table of data
+
+- Maybe create player permalink with stats per game if that's useful
+
+- Maybe add js to map right and left arrow to move forward and backward week to week in index views that have week links
+
+- In the points vs predicted chart maybe show the versus team in the week by week legend + the score
+
+- Fix broken team icons for 2 letter team abbreviations that need to map to a 3 letter abbrevation by just renaming all css to
+same 2 letter abbreviations that the DB stores
+
 - Share the same player filtering by query string across all applicable resources rather than duplicate the implementation in each controller
 
 - For things like loading all playeres from Yahoo API where you have to do 25 at a time, as an optimization I could do a count of existing
-records by week in the db as an estimate of how many likely results the api would return, then i could use something like typheous to 
+records by week in the db as an estimate of how many likely results the api would return, then i could use something like typheous to
 enqueue batches of concurrent requests for start=N where N is the estimated total divided by 25
 
 - Make the sidebar menu contextual to the current section (e.g. for Injuries provide filters)
 
 - Introduce a notion of something like a "watch list" where you can mark a player as on your watch list. Additionally, you could
-choose to watch particular things, like injuries or projections. So if during an import anything changes you'll be notified.
+choose to watch particular things, like injuries or projections. So if during an import anything changes you'll be notified. Also send a digest "Here is how all the people on your watch list performed this week".
 
 - Add authority data like GameWeeks and Stats to seed.rb
 
-- Look into Heroku add-ons that could do email or sms 
+- Look into Heroku add-ons that could do email or sms
 
 - Finish specifying all support filters and sub-resources for each resource
 
@@ -39,16 +122,36 @@ is so small right now that it doesn't matter at all.
 
 - Investigate if there are any benefits to using 'oauth/request_proxy/typhoeus_request'
 
+For reference this is how to make a chart:
+@chart = LazyHighCharts::HighChart.new('graph') do |f|
+  f.title({ :text=>"Combination chart"})
+  f.options[:xAxis][:categories] = ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+  f.labels(:items=>[:html=>"Total fruit consumption", :style=>{:left=>"40px", :top=>"8px", :color=>"black"} ])
+  f.series(:type=> 'column',:name=> 'Jane',:data=> [3, 2, 1, 3, 4])
+  f.series(:type=> 'column',:name=> 'John',:data=> [2, 3, 5, 7, 6])
+  f.series(:type=> 'column', :name=> 'Joe',:data=> [4, 3, 3, 9, 0])
+  f.series(:type=> 'column', :name=> 'Joe',:data=> [4, 3, 3, 9, 0])
+  f.series(:type=> 'spline',:name=> 'Average', :data=> [3, 2.67, 3, 6.33, 3.33])
+  f.series(:type=> 'pie',:name=> 'Total consumption',
+    :data=> [
+      {:name=> 'Jane', :y=> 13, :color=> 'red'},
+      {:name=> 'John', :y=> 23,:color=> 'green'},
+      {:name=> 'Joe', :y=> 19,:color=> 'blue'}
+    ],
+    :center=> [100, 80], :size=> 100, :showInLegend=> false)
+end
+
 DONE:
 =====
+- Create points/projections permalink page per player with a chart showing week over week projections and actual points
 
 - Method to import each model that is idempotent
 
 - If you continue to use XmlSimple for sub objects, swap in FasterXmlSimple if
   you can get it to be compatible
-  
+
 - Add position_type to Player table
-  
+
 - [NOT NEEDED] Create tables to track the most recent updated_at for various records in the DB
 so it's easy to know what's changed since the last time an import was done
 
@@ -57,3 +160,5 @@ Scout::Resource.league + 'players' + {:players_key=>Scout::Cache::Player.find_by
 
 - In the absense of the API supporting something like since_id, when synching new data from the DB,
 pulling just the current week's data for the resource will limit how much deduping needs to happen.
+
+- Implement watches.

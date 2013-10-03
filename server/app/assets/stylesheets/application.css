@@ -11,3 +11,395 @@
  *= require_self
  *= require_tree .
  */
+
+ .logo-nfl-large{
+
+   background-image:url(logo-nfl-teams-large-vert.png);
+
+   background-position:-100px 0;
+
+   background-repeat:no-repeat
+ }
+
+
+ .ie6 .logo-nfl-large{
+
+   background-image:url(logo-nfl-teams-large-vert-ie6.png);
+
+   background-position:-100px 0;
+
+   background-repeat:no-repeat
+ }
+
+
+ .nfl-large-ari,.nfl-large-22{
+
+   background-position:0 0
+ }
+
+
+ .nfl-large-atl,.nfl-large-1 {
+
+     background-position:0 -100px
+ }
+
+
+ .nfl-large-bal,.nfl-large-33{
+
+   background-position:0 -200px
+ }
+
+ .nfl-large-buf,.nfl-large-2{
+   background-position:0 -300px}
+ .nfl-large-car,.nfl-large-29{
+   background-position:0 -400px}
+ .nfl-large-chi,.nfl-large-3{
+   background-position:0 -500px}
+ .nfl-large-cin,.nfl-large-4{
+   background-position:0 -600px}
+ .nfl-large-cle,.nfl-large-5{
+   background-position:0 -700px}
+ .nfl-large-dal,.nfl-large-6{
+   background-position:0 -800px}
+ .nfl-large-den,.nfl-large-7{
+   background-position:0 -900px}
+ .nfl-large-det,.nfl-large-8{
+   background-position:0 -1000px}
+ .nfl-large-gnb,.nfl-large-9{
+   background-position:0 -1100px}
+ .nfl-large-hou,.nfl-large-34{
+   background-position:0 -1200px}
+ .nfl-large-ind,.nfl-large-11{
+   background-position:0 -1300px}
+ .nfl-large-jax,.nfl-large-30{
+   background-position:0 -1400px}
+ .nfl-large-kan,.nfl-large-12{
+   background-position:0 -1500px}
+ .nfl-large-mia,.nfl-large-15{
+   background-position:0 -1600px}
+ .nfl-large-min,.nfl-large-16{
+   background-position:0 -1700px}
+ .nfl-large-nwe,.nfl-large-17{
+   background-position:0 -1800px}
+ .nfl-large-nor,.nfl-large-18{
+   background-position:0 -1900px}
+ .nfl-large-nyg,.nfl-large-19{
+   background-position:0 -2000px}
+ .nfl-large-nyj,.nfl-large-20{
+   background-position:0 -2100px}
+ .nfl-large-oak,.nfl-large-13{
+   background-position:0 -2200px}
+ .nfl-large-phi,.nfl-large-21{
+   background-position:0 -2300px}
+ .nfl-large-pit,.nfl-large-23{
+   background-position:0 -2400px}
+ .nfl-large-sdg,.nfl-large-24{
+   background-position:0 -2500px}
+ .nfl-large-sfo,.nfl-large-25{
+   background-position:0 -2600px}
+ .nfl-large-sea,.nfl-large-26{
+   background-position:0 -2700px}
+ .nfl-large-stl,.nfl-large-14{
+   background-position:0 -2800px}
+ .nfl-large-tam,.nfl-large-27{
+   background-position:0 -2900px}
+ .nfl-large-ten,.nfl-large-10{
+   background-position:0 -3000px}
+ .nfl-large-was,.nfl-large-28{
+   background-position:0 -3100px}
+ .logo-nfl-medium{
+   background-image:url(logo-nfl-teams-medium-vert.png);
+  background-position:-50px 0;
+  background-repeat:no-repeat}
+ .ie6 .logo-nfl-medium{
+   background-image:url(logo-nfl-teams-medium-vert-ie6.png);
+  background-position:-50px 0;
+  background-repeat:no-repeat}
+ .nfl-medium-ari,.nfl-medium-22{
+   background-position:0 0}
+ .nfl-medium-atl,.nfl-medium-1{
+   background-position:0 -50px}
+ .nfl-medium-bal,.nfl-medium-33{
+   background-position:0 -100px}
+ .nfl-medium-buf,.nfl-medium-2{
+   background-position:0 -150px}
+ .nfl-medium-car,.nfl-medium-29{
+   background-position:0 -200px}
+ .nfl-medium-chi,.nfl-medium-3{
+   background-position:0 -250px}
+ .nfl-medium-cin,.nfl-medium-4{
+   background-position:0 -300px}
+ .nfl-medium-cle,.nfl-medium-5{
+   background-position:0 -350px}
+ .nfl-medium-dal,.nfl-medium-6{
+   background-position:0 -400px}
+ .nfl-medium-den,.nfl-medium-7{
+   background-position:0 -450px}
+ .nfl-medium-det,.nfl-medium-8{
+   background-position:0 -500px}
+ .nfl-medium-gnb,.nfl-medium-9{
+   background-position:0 -550px}
+ .nfl-medium-hou,.nfl-medium-34{
+   background-position:0 -600px}
+ .nfl-medium-ind,.nfl-medium-11{
+   background-position:0 -650px}
+ .nfl-medium-jax,.nfl-medium-30{
+   background-position:0 -700px}
+ .nfl-medium-kan,.nfl-medium-12{
+   background-position:0 -750px}
+ .nfl-medium-mia,.nfl-medium-15{
+   background-position:0 -800px}
+ .nfl-medium-min,.nfl-medium-16{
+   background-position:0 -850px}
+ .nfl-medium-nwe,.nfl-medium-17{
+   background-position:0 -900px}
+ .nfl-medium-nor,.nfl-medium-18{
+   background-position:0 -950px}
+ .nfl-medium-nyg,.nfl-medium-19{
+   background-position:0 -1000px}
+ .nfl-medium-nyj,.nfl-medium-20{
+   background-position:0 -1050px}
+ .nfl-medium-oak,.nfl-medium-13{
+   background-position:0 -1100px}
+ .nfl-medium-phi,.nfl-medium-21{
+   background-position:0 -1150px}
+ .nfl-medium-pit,.nfl-medium-23{
+   background-position:0 -1200px}
+ .nfl-medium-sdg,.nfl-medium-24{
+   background-position:0 -1250px}
+ .nfl-medium-sfo,.nfl-medium-25{
+   background-position:0 -1300px}
+ .nfl-medium-sea,.nfl-medium-26{
+   background-position:0 -1350px}
+ .nfl-medium-stl,.nfl-medium-14{
+   background-position:0 -1400px}
+ .nfl-medium-tam,.nfl-medium-27{
+   background-position:0 -1450px}
+ .nfl-medium-ten,.nfl-medium-10{
+   background-position:0 -1500px}
+ .nfl-medium-was,.nfl-medium-28{
+   background-position:0 -1550px}
+ .logo-nfl-40{
+   background-image:url(logo-nfl-teams-40-vert.png);
+  background-position:-50px 0;
+  background-repeat:no-repeat}
+ .ie6 .logo-nfl-40{
+   background-image:url(logo-nfl-teams-40-vert-ie6.png);
+  background-position:-50px 0;
+  background-repeat:no-repeat}
+ .nfl-40-ari,.nfl-40-22{
+   background-position:0 0}
+ .nfl-40-atl,.nfl-40-1{
+   background-position:0 -50px}
+ .nfl-40-bal,.nfl-40-33{
+   background-position:0 -100px}
+ .nfl-40-buf,.nfl-40-2{
+   background-position:0 -150px}
+ .nfl-40-car,.nfl-40-29{
+   background-position:0 -200px}
+ .nfl-40-chi,.nfl-40-3{
+   background-position:0 -250px}
+ .nfl-40-cin,.nfl-40-4{
+   background-position:0 -300px}
+ .nfl-40-cle,.nfl-40-5{
+   background-position:0 -350px}
+ .nfl-40-dal,.nfl-40-6{
+   background-position:0 -400px}
+ .nfl-40-den,.nfl-40-7{
+   background-position:0 -450px}
+ .nfl-40-det,.nfl-40-8{
+   background-position:0 -500px}
+ .nfl-40-gnb,.nfl-40-9{
+   background-position:0 -550px}
+ .nfl-40-hou,.nfl-40-34{
+   background-position:0 -600px}
+ .nfl-40-ind,.nfl-40-11{
+   background-position:0 -650px}
+ .nfl-40-jax,.nfl-40-30{
+   background-position:0 -700px}
+ .nfl-40-kan,.nfl-40-12{
+   background-position:0 -750px}
+ .nfl-40-mia,.nfl-40-15{
+   background-position:0 -800px}
+ .nfl-40-min,.nfl-40-16{
+   background-position:0 -850px}
+ .nfl-40-nwe,.nfl-40-17{
+   background-position:0 -900px}
+ .nfl-40-nor,.nfl-40-18{
+   background-position:0 -950px}
+ .nfl-40-nyg,.nfl-40-19{
+   background-position:0 -1000px}
+ .nfl-40-nyj,.nfl-40-20{
+   background-position:0 -1050px}
+ .nfl-40-oak,.nfl-40-13{
+   background-position:0 -1100px}
+ .nfl-40-phi,.nfl-40-21{
+   background-position:0 -1150px}
+ .nfl-40-pit,.nfl-40-23{
+   background-position:0 -1200px}
+ .nfl-40-sdg,.nfl-40-24{
+   background-position:0 -1250px}
+ .nfl-40-sfo,.nfl-40-25{
+   background-position:0 -1300px}
+ .nfl-40-sea,.nfl-40-26{
+   background-position:0 -1350px}
+ .nfl-40-stl,.nfl-40-14{
+   background-position:0 -1400px}
+ .nfl-40-tam,.nfl-40-27{
+   background-position:0 -1450px}
+ .nfl-40-ten,.nfl-40-10{
+   background-position:0 -1500px}
+ .nfl-40-was,.nfl-40-28{
+   background-position:0 -1550px}
+ .logo-nfl-small{
+  background-image:url(logo-nfl-teams-small-vert.png);
+  background-position:-50px 0;
+  background-repeat:no-repeat}
+ .ie6 .logo-nfl-small{
+   background-image:url(logo-nfl-teams-small-vert-ie6.png);
+  background-position:-50px 0;
+  background-repeat:no-repeat}
+ .nfl-small-ari,.nfl-small-22{
+   background-position:0 0}
+ .nfl-small-atl,.nfl-small-1{
+   background-position:0 -50px}
+ .nfl-small-bal,.nfl-small-33{
+   background-position:0 -100px}
+ .nfl-small-buf,.nfl-small-2{
+   background-position:0 -150px}
+ .nfl-small-car,.nfl-small-29{
+   background-position:0 -200px}
+ .nfl-small-chi,.nfl-small-3{
+   background-position:0 -250px}
+ .nfl-small-cin,.nfl-small-4{
+   background-position:0 -300px}
+ .nfl-small-cle,.nfl-small-5{
+   background-position:0 -350px}
+ .nfl-small-dal,.nfl-small-6{
+   background-position:0 -400px}
+ .nfl-small-den,.nfl-small-7{
+   background-position:0 -450px}
+ .nfl-small-det,.nfl-small-8{
+   background-position:0 -500px}
+ .nfl-small-gnb,.nfl-small-9{
+   background-position:0 -550px}
+ .nfl-small-hou,.nfl-small-34{
+   background-position:0 -600px}
+ .nfl-small-ind,.nfl-small-11{
+   background-position:0 -650px}
+ .nfl-small-jax,.nfl-small-30{
+   background-position:0 -700px}
+ .nfl-small-kan,.nfl-small-12{
+   background-position:0 -750px}
+ .nfl-small-mia,.nfl-small-15{
+   background-position:0 -800px}
+ .nfl-small-min,.nfl-small-16{
+   background-position:0 -850px}
+ .nfl-small-nwe,.nfl-small-17{
+   background-position:0 -900px}
+ .nfl-small-nor,.nfl-small-18{
+   background-position:0 -950px}
+ .nfl-small-nyg,.nfl-small-19{
+   background-position:0 -1000px}
+ .nfl-small-nyj,.nfl-small-20{
+   background-position:0 -1050px}
+ .nfl-small-oak,.nfl-small-13{
+   background-position:0 -1100px}
+ .nfl-small-phi,.nfl-small-21{
+   background-position:0 -1150px}
+ .nfl-small-pit,.nfl-small-23{
+   background-position:0 -1200px}
+ .nfl-small-sdg,.nfl-small-24{
+   background-position:0 -1250px}
+ .nfl-small-sfo,.nfl-small-25{
+   background-position:0 -1300px}
+ .nfl-small-sea,.nfl-small-26{
+   background-position:0 -1350px}
+ .nfl-small-stl,.nfl-small-14{
+   background-position:0 -1400px}
+ .nfl-small-tam,.nfl-small-27{
+   background-position:0 -1450px}
+ .nfl-small-ten,.nfl-small-10{
+   background-position:0 -1500px}
+ .nfl-small-was,.nfl-small-28{
+   background-position:0 -1550px}
+ .nfl-small-31{
+   background-image:url("afc.png");
+  background-repeat:no-repeat;
+  background-position:0 0}
+ .nfl-small-32{
+   background-image:url("nfc.png");
+  background-repeat:no-repeat;
+  background-position:0 0}
+ .logo-nfl-medium-bg{
+   background-image:url(logo-nfl-teams-medium-bg.png);
+  background-position:-50px 0;
+  background-repeat:no-repeat}
+ .nfl-medium-bg-afc,.nfl-medium-bg-31{
+   background-position:0 0}
+ .nfl-medium-bg-nfc,.nfl-medium-bg-32{
+   background-position:0 -50px}
+ .nfl-medium-bg-ari,.nfl-medium-bg-22{
+   background-position:0 -100px}
+ .nfl-medium-bg-atl,.nfl-medium-bg-1{
+   background-position:0 -150px}
+ .nfl-medium-bg-bal,.nfl-medium-bg-33{
+   background-position:0 -200px}
+ .nfl-medium-bg-buf,.nfl-medium-bg-2{
+   background-position:0 -250px}
+ .nfl-medium-bg-car,.nfl-medium-bg-29{
+   background-position:0 -300px}
+ .nfl-medium-bg-chi,.nfl-medium-bg-3{
+   background-position:0 -350px}
+ .nfl-medium-bg-cin,.nfl-medium-bg-4{
+   background-position:0 -400px}
+ .nfl-medium-bg-cle,.nfl-medium-bg-5{
+   background-position:0 -450px}
+ .nfl-medium-bg-dal,.nfl-medium-bg-6{
+   background-position:0 -500px}
+ .nfl-medium-bg-den,.nfl-medium-bg-7{
+   background-position:0 -550px}
+ .nfl-medium-bg-det,.nfl-medium-bg-8{
+   background-position:0 -600px}
+ .nfl-medium-bg-gnb,.nfl-medium-bg-9{
+   background-position:0 -650px}
+ .nfl-medium-bg-hou,.nfl-medium-bg-34{
+   background-position:0 -700px}
+ .nfl-medium-bg-ind,.nfl-medium-bg-11{
+   background-position:0 -750px}
+ .nfl-medium-bg-jax,.nfl-medium-bg-30{
+   background-position:0 -800px}
+ .nfl-medium-bg-kan,.nfl-medium-bg-12{
+   background-position:0 -850px}
+ .nfl-medium-bg-mia,.nfl-medium-bg-15{
+   background-position:0 -900px}
+ .nfl-medium-bg-min,.nfl-medium-bg-16{
+   background-position:0 -950px}
+ .nfl-medium-bg-nwe,.nfl-medium-bg-17{
+   background-position:0 -1000px}
+ .nfl-medium-bg-nor,.nfl-medium-bg-18{
+   background-position:0 -1050px}
+ .nfl-medium-bg-nyg,.nfl-medium-bg-19{
+   background-position:0 -1100px}
+ .nfl-medium-bg-nyj,.nfl-medium-bg-20{
+   background-position:0 -1150px}
+ .nfl-medium-bg-oak,.nfl-medium-bg-13{
+   background-position:0 -1200px}
+ .nfl-medium-bg-phi,.nfl-medium-bg-21{
+   background-position:0 -1250px}
+ .nfl-medium-bg-pit,.nfl-medium-bg-23{
+   background-position:0 -1300px}
+ .nfl-medium-bg-sdg,.nfl-medium-bg-24{
+   background-position:0 -1350px}
+ .nfl-medium-bg-sfo,.nfl-medium-bg-25{
+   background-position:0 -1400px}
+ .nfl-medium-bg-sea,.nfl-medium-bg-26{
+   background-position:0 -1450px}
+ .nfl-medium-bg-stl,.nfl-medium-bg-14{
+   background-position:0 -1500px}
+ .nfl-medium-bg-tam,.nfl-medium-bg-27{
+   background-position:0 -1550px}
+ .nfl-medium-bg-ten,.nfl-medium-bg-10{
+   background-position:0 -1600px}
+ .nfl-medium-bg-was,.nfl-medium-bg-28{
+   background-position:0 -1650px}

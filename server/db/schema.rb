@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130930013021) do
+ActiveRecord::Schema.define(version: 20131003083712) do
 
   create_table "accounts", force: true do |t|
     t.string   "username"
@@ -19,6 +19,22 @@ ActiveRecord::Schema.define(version: 20130930013021) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "expert_ranks", force: true do |t|
+    t.string   "yahoo_player_key"
+    t.string   "position_type"
+    t.integer  "week"
+    t.integer  "overall_rank"
+    t.integer  "expert_1_rank"
+    t.integer  "expert_2_rank"
+    t.integer  "expert_3_rank"
+    t.integer  "expert_4_rank"
+    t.integer  "expert_5_rank"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "expert_ranks", ["yahoo_player_key", "week", "position_type"], name: "key_week_position_type"
 
   create_table "game_weeks", force: true do |t|
     t.integer "week"
@@ -76,9 +92,15 @@ ActiveRecord::Schema.define(version: 20130930013021) do
     t.string   "position"
     t.string   "position_type"
     t.string   "headshot"
+    t.string   "owner_key"
+    t.date     "waiver_date"
+    t.string   "ownership_type"
   end
 
   add_index "players", ["fantasy_football_nerd_id"], name: "index_players_on_fantasy_football_nerd_id"
+  add_index "players", ["owner_key"], name: "index_players_on_owner_key"
+  add_index "players", ["ownership_type"], name: "index_players_on_ownership_type"
+  add_index "players", ["waiver_date"], name: "index_players_on_waiver_date"
   add_index "players", ["yahoo_key"], name: "index_players_on_yahoo_key"
 
   create_table "projections", force: true do |t|
@@ -170,5 +192,15 @@ ActiveRecord::Schema.define(version: 20130930013021) do
 
   add_index "transactions", ["type"], name: "index_transactions_on_type"
   add_index "transactions", ["yahoo_key"], name: "index_transactions_on_yahoo_key"
+
+  create_table "watches", force: true do |t|
+    t.integer  "player_id"
+    t.integer  "team_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "votes",      default: 1
+  end
+
+  add_index "watches", ["team_id", "player_id"], name: "index_watches_on_team_id_and_player_id"
 
 end

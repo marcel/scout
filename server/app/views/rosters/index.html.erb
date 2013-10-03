@@ -1,0 +1,44 @@
+<%- model_class = RosterSpot -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:yahoo_team_key) %></th>
+      <th><%= model_class.human_attribute_name(:yahoo_player_key) %></th>
+      <th><%= model_class.human_attribute_name(:week) %></th>
+      <th><%= model_class.human_attribute_name(:position) %></th>
+      <th><%= model_class.human_attribute_name(:playing_status) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @roster_spots.each do |roster_spot| %>
+      <tr>
+        <td><%= link_to roster_spot.id, roster_path(roster_spot) %></td>
+        <td><%= roster_spot.yahoo_team_key %></td>
+        <td><%= roster_spot.yahoo_player_key %></td>
+        <td><%= roster_spot.week %></td>
+        <td><%= roster_spot.position %></td>
+        <td><%= roster_spot.playing_status %></td>
+        <td><%=l roster_spot.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_roster_path(roster_spot), :class => 'btn btn-mini' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      roster_path(roster_spot),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_roster_path,
+            :class => 'btn btn-primary' %>

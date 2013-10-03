@@ -1,0 +1,18 @@
+<div class="page-header">
+  <h1>Search</h1>
+</div>
+<table class="table">
+  <tbody>
+    <% @players.each do |player| %>
+      <tr>
+        <td>
+          <div class="row-fluid">
+            <div class="span4">
+              <%= player_profile(player, player_path(player)) %>
+            </div>
+            <div class="span8">&nbsp;</div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

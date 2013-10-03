@@ -61,11 +61,6 @@ module Scout
 
     class Team < Payload
       contains :manager
-
-      def roster(week = nil)
-        week_param = week ? ";week=#{week}" : ''
-        @roster ||= Roster.new(client.get("team/#{team_key}/roster#{week_param}")['roster'], client)
-      end
     end
 
     class Standings < Payload

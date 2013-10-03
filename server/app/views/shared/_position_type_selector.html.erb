@@ -1,0 +1,9 @@
+<div class="pagination">
+  <ul>
+    <% position_types.each do |position_type, position_display, label| -%>
+      <li class="<%= label %>">
+        <span><%= link_to_if(label.blank?, position_display, current_url(position_type: position_type), style: "display: block")  %></span>
+      </li>
+    <% end -%>
+  </ul>
+</div>

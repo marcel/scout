@@ -14,8 +14,9 @@
     <% @teams.each do |team| %>
       <tr>
         <td>
-          <strong><%= team.name %></strong><br /> <small class="muted">(<%= team.manager %>)</small><br />
-          <%= image_tag(team.logo, :size => '75x75', :class => 'img-polaroid') %>
+          <div><strong><%= link_to team.name, roster_team_path(team) %></strong></div> 
+          <div><small class="muted">(<%= team.manager %>)</small></div>
+          <div><%= image_tag(team.logo, :size => '75x75', :class => 'img-polaroid') %></div>
         </td>
         <td>Moves: <%= team.moves %> / Trades: <%= team.trades %></td>
         <td><%= team.faab_balance %></td>

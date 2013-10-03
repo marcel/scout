@@ -40,22 +40,22 @@ module Scout
       Payload::League.new(request(Resource.league + parameters).league)
     end
     
-    def roster(week = nil)
-      week_parameters = week ? {:type => 'week', :week => week} : {}
-      resource        = Resource.league/'teams'/'roster'+week_parameters+'players'
-      
-      request(resource) do |result|
-        result.teams.map do |team|
-          team_key = Payload::Team.new(team).team_key
-          team.css('player').map do |player|
-            Scout::Cache::Roster.from_model(
-              team_key, 
-              Payload::Player.new(player)
-            )
-          end
-        end.flatten
-      end
-    end
+    # def roster(week = nil)
+    #   week_parameters = week ? {:type => 'week', :week => week} : {}
+    #   resource        = Resource.league/'teams'/'roster'+week_parameters+'players'
+    #   
+    #   request(resource) do |result|
+    #     result.teams.map do |team|
+    #       team_key = Payload::Team.new(team).team_key
+    #       team.css('player').map do |player|
+    #         Scout::Cache::Roster.from_model(
+    #           team_key, 
+    #           Payload::Player.new(player)
+    #         )
+    #       end
+    #     end.flatten
+    #   end
+    # end
     
     def team(key = Resource::TEAM_KEY)
       Payload::Team.new(request(Resource.team(key)).team)
@@ -83,7 +83,7 @@ module Scout
     # 
     #   players(:start => 0, :status => 'A', :position => 'WR,RB,TE', :sort => 'PTS', :sort_type => 'season')
     def players(parameters = {}, options = {})
-      request(Resource.league/'players'+parameters, options) do |result|
+      request(Resource.league/'players'+parameters + 'ownership', options) do |result|
         result.players.map {|player| Payload::Player.new(player)}
       end
     end

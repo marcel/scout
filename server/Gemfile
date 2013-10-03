@@ -50,3 +50,10 @@ gem 'fantasy_football_nerd'
 
 gem 'pry'
 gem 'pry-rails', :group => :development
+
+gem 'lazy_high_charts'
+
+gem 'will_paginate'
+
+# Needs RMagick...
+# gem 'sparklines'

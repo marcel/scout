@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  yahoo_player_id: 1
+  week: 1
+  overall_rank: 1
+  expert_1_rank: 1
+  expert_2_rank: 1
+  expert_3_rank: 1
+  expert_4_rank: 1
+  expert_5_rank: 1
+
+two:
+  yahoo_player_id: 1
+  week: 1
+  overall_rank: 1
+  expert_1_rank: 1
+  expert_2_rank: 1
+  expert_3_rank: 1
+  expert_4_rank: 1
+  expert_5_rank: 1
