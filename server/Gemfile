@@ -2,17 +2,13 @@ source 'https://rubygems.org'
 
 ruby "1.9.3"
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
-
-# Use sqlite3 as the database for Active Record
-#gem 'sqlite3'
 
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -31,13 +27,17 @@ end
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
-# Use unicorn as the app server
 gem 'unicorn'
 
-# Use Capistrano for deployment
-# gem 'capistrano', group: :development
+group :development do
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-bundler'
+  # Default capistrano-unicorn doesn't seem to work with latest capistrano
+  # gem 'capistrano-unicorn', :require => false
+  # gem 'capistrano-unicorn', :git => 'https://github.com/sosedoff/capistrano-unicorn.git', :branch => 'master', :require => false
+end
 
-# Use debugger
 gem 'debugger', group: [:development, :test]
 
 # For Bootstrap
@@ -51,15 +51,12 @@ gem 'faster_xml_simple'
 gem 'fantasy_football_nerd'
 
 gem 'pry'
-gem 'pry-rails', :group => :development
+gem 'pry-rails', group: :development
 
 gem 'lazy_high_charts'
-
 gem 'will_paginate'
 
 # Needs RMagick...
 # gem 'sparklines'
 
 gem 'mysql2'
-
-#gem 'cabalist'

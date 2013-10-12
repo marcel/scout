@@ -1,8 +1,30 @@
+- Add Offense section that allows, like the Defense section, to sort teams by Points scored, Passing yards, Rushing Yards, etc
+
+- Be able to sort any view by max minimum anything (e.g. sort by the max minimum points per game, targets, completions, etc))
+
+- Rename ArmchairAnalysis::Team to ArmchairAnalysis::GamePerformance
+
+- Create scipts to detect and try to update the various foreign keys between different data sets. e.g. find all armchair_analysis_id that are nil or fantasy_football_nerd_ids that are nil or armchair_analysis_team_ids that are nil.
+
+- Implement points per reception for WR and points per carry for RB.
+
+- Start building a profile of the features that seem to correlate with player performance. This could be the start of supervised learning. For example, is
+a kicker's home field a dome (i.e. no wind). Do they have a better FG completion rate at home in their dome? Also, does their offense have bad or mediocre 3-rd down conversion? That might lead to more field goals.
+
+- On the league + settings sub-resource there is a stats_modifiers section e.g.
+  "stat_modifiers"=>
+    {"stats"=>
+      {"stat"=>
+        [{"stat_id"=>4, "value"=>"0.04"},
+         {"stat_id"=>5, "value"=>4},
+         {"stat_id"=>6, "value"=>"-1"},
+         {"stat_id"=>9, "value"=>"0.1"},
+  
+  which indicates the point value for each stat which will allow me to determine for every player the things they have gotten their points from. Maybe I could do a pie chart :-o Or actually maybe better yet a stacked graph that shows the % of their total points broken up by how they got them.
+  
 - On the pages that let you filter tables, show a bar at the top of the table with each filter and an [x] that let's you remove filters without clearing everything
 
 - On expert ranking page provide filters to show only Green/Blue/Yellow/Red/Unchanged
-
-- Import http://sports.yahoo.com/news/week-5-rankings--running-back for each position and show week over week rank trends (up or down)
 
 - From Alex:
   It feels like the generalizable product might be
@@ -15,8 +37,6 @@
   
   Then you simply work to continually refine the data and presentation of that "show me possible replacements"
   page where you continually work to the point where you never need to visit any other sites anymore.
-
-- Look for url_for() and replace with current_url()
 
 - Roster spots is messed up. It needs to only include the current recent roster spots for the week.
 
@@ -34,21 +54,13 @@ http://www.armchairanalysis.com/data.php
 
 - Consider having e.g. green up arrow and red down arrow on player info cards if their point production is either trending up or they are playing above projection.
 
-- See if you can force the graph's y axis to start at 0 no matter what. Sometimes people with high averages seem lower because their bottom is always at the bottom relatively.
-
 - Add filtering by waiver in addition to team for all player tables
-
-- Add search for player that shows week over week performance page
 
 - Consider introducing caching for e.g. optimal_lineup per week so the sidebar can be loaded quickly
 
-- Fix bugs and clean up optimal roster computation
+- Fix bugs in and clean up optimal roster computation
 
 - Sometimes rosters seem to be returning with more players than they should. Fix query to only resturn the current roster.
-
-- Import remaining rosters for weeks 1-3
-
-- When looking at the roster view list all teams in the sidebar with links (maybe also include 'projected/actual/best/worst' in the sidebar too)
 
 - Click on 'best possible line up' and 'worst possible line up' to see them
 
@@ -58,13 +70,7 @@ http://www.armchairanalysis.com/data.php
 
 - If a player was picked up on waivers and i can see from the API how much he was bought for, show that
 
-- Should I create a Roster model that is just a has_many RosterSpots for Team?
-
-- Finish RosterSpot.import
-
-- Deal with case where someone has an empty roster spot. Since we only grab the 12 most recent we either need to create an empty tombstone or something. Also don't know whether the payload will return an empty slot or just 11 results.
-
-- When importing teams also include the roster sub-resource and store selected_position for the given player, maybe in a RosterSpot.
+- Should I create a Roster model that is just a has_many RosterSpots for Team? And should I create a Season model so players can get all their games thorugh a season?
 
 - Consider normalizing ownership_type and related freeagent + waiver info
 
@@ -78,8 +84,7 @@ http://www.armchairanalysis.com/data.php
 
 - In the points vs predicted chart maybe show the versus team in the week by week legend + the score
 
-- Fix broken team icons for 2 letter team abbreviations that need to map to a 3 letter abbrevation by just renaming all css to
-same 2 letter abbreviations that the DB stores
+- Fix broken team icons for 2 letter team abbreviations that need to map to a 3 letter abbrevation by just renaming all css to same 2 letter abbreviations that the DB stores
 
 - Share the same player filtering by query string across all applicable resources rather than duplicate the implementation in each controller
 
@@ -162,3 +167,21 @@ Scout::Resource.league + 'players' + {:players_key=>Scout::Cache::Player.find_by
 pulling just the current week's data for the resource will limit how much deduping needs to happen.
 
 - Implement watches.
+
+- Import http://sports.yahoo.com/news/week-5-rankings--running-back for each position and show week over week rank trends (up or down)
+
+- Look for url_for() and replace with current_url()
+
+- See if you can force the graph's y axis to start at 0 no matter what. Sometimes people with high averages seem lower because their bottom is always at the bottom relatively.
+
+- Import remaining rosters for weeks 1-3
+
+- Add search for player that shows week over week performance page
+
+- When looking at the roster view list all teams in the sidebar with links (maybe also include 'projected/actual/best/worst' in the sidebar too)
+
+- Finish RosterSpot.import
+
+- Deal with case where someone has an empty roster spot. Since we only grab the 12 most recent we either need to create an empty tombstone or something. Also don't know whether the payload will return an empty slot or just 11 results.
+
+- When importing teams also include the roster sub-resource and store selected_position for the given player, maybe in a RosterSpot.
