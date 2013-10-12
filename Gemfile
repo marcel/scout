@@ -33,6 +33,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-bundler'
+  gem 'rvm-capistrano'
   # Default capistrano-unicorn doesn't seem to work with latest capistrano
   # gem 'capistrano-unicorn', :require => false
   # gem 'capistrano-unicorn', :git => 'https://github.com/sosedoff/capistrano-unicorn.git', :branch => 'master', :require => false
