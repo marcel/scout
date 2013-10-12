@@ -39,9 +39,8 @@ group :development do
   # gem 'capistrano-unicorn', :git => 'https://github.com/sosedoff/capistrano-unicorn.git', :branch => 'master', :require => false
 end
 
-group :assets do
-  gem 'turbo-sprockets-rails3'
-end
+gem 'turbo-sprockets-rails3'
+
 
 gem 'debugger', group: [:development, :test]
 
