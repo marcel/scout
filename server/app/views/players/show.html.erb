@@ -3,8 +3,8 @@
 </div>
 
 
-  <div><%= player_profile(@player) %></div>
+<div><%= player_profile(@player) %></div>
 
 <div class="row">
-  <%= high_chart("chart", @chart)%>
+  <%= high_chart("chart-point-performance", player_performance_chart(@player)) %>
 </div>

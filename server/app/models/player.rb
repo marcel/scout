@@ -4,38 +4,236 @@ class Player < ActiveRecord::Base
     :foreign_key => :yahoo_player_key
   }
   has_many :roster_spots, { # TODO Implement or not
-    :primary_key => :yahoo_key,
-    :foreign_key => :yahoo_player_key
+    primary_key: :yahoo_key,
+    foreign_key: :yahoo_player_key,
+    inverse_of: :player
   }
 
   belongs_to :owner, {
     foreign_key: :owner_key,
     primary_key: :yahoo_key,
-    class_name: 'Team'
+    class_name: 'Team',
+    inverse_of: :players
   }
 
   has_many :injuries, {
-    :primary_key => :fantasy_football_nerd_id,
-    :foreign_key => :fantasy_football_nerd_id
+    primary_key: :fantasy_football_nerd_id,
+    foreign_key: :fantasy_football_nerd_id,
+    inverse_of: :player
   }
 
   has_many :projections, {
-    :primary_key => :fantasy_football_nerd_id,
-    :foreign_key => :fantasy_football_nerd_id
-  }
+    primary_key: :fantasy_football_nerd_id,
+    foreign_key: :fantasy_football_nerd_id,
+    inverse_of: :player
+  } do 
+    def on_week(week)
+      self.select {|p| p.week == week } # N.B. Explicit self causes the loaded collection to be used rather than querying
+    end
+  end
 
   has_many :points, {
     :primary_key => :yahoo_key,
     :foreign_key => :yahoo_player_key,
-    :class_name  => 'PlayerPointTotal'
+    :class_name  => 'PlayerPointTotal',
+    inverse_of: :player
+  } do
+    def on_week(week)
+      self.select do |point_total|
+        point_total.week == week
+      end.sort_by(&:updated_at).last
+    end
+  end
+  
+  has_many :stats, {
+    primary_key: :yahoo_key,
+    foreign_key: :yahoo_player_key,
+    class_name: 'PlayerStatValue',
+    inverse_of: :player
   }
 
-  has_many :watches
+  has_many :watches, inverse_of: :player
   
   has_many :expert_ranks, {
     primary_key: :yahoo_key,
-    foreign_key: :yahoo_player_key
+    foreign_key: :yahoo_player_key,
+    inverse_of: :player
   }
+  
+  has_many :teammates, {
+    class_name: "Player",
+    foreign_key: "team_abbr",
+    primary_key: "team_abbr"
+  }
+  
+  has_many :home_games, {
+    primary_key: :team_abbr, 
+    foreign_key: :home_team,
+    class_name: 'Game'
+  } do 
+    def on_week(week)
+      self.detect do |game| 
+        game.week == week
+      end
+    end
+  end
+  
+  has_many :away_games, {
+    primary_key: :team_abbr,
+    foreign_key: :away_team,
+    class_name: 'Game'
+  } do 
+    def on_week(week)
+      self.detect do |game| 
+        game.week == week
+      end
+    end
+  end
+  
+  has_many :game_performances_for_team, {
+    primary_key: :armchair_analysis_team_name,
+    foreign_key: :tname,
+    class_name: 'ArmchairAnalysis::Team'
+  } do
+    def by_opponents
+      ArmchairAnalysis::Team.where(gid: self.map(&:gid)).
+        includes(:game).
+        where.not(tname: self.first.tname).
+        sort_by {|t| t.game.wk }
+    end
+  end
+  
+  scope :defense, ->{
+    where(position: 'DEF')
+  }
+  
+  scope :players_with_no_team, ->{
+    where(armchair_analysis_team_id: nil).load
+  }
+  
+  has_many :offensive_performances, {
+    foreign_key: :player,
+    primary_key: :armchair_analysis_id,
+    class_name: 'ArmchairAnalysis::Offense'
+  } do
+    def on_week(week)
+      self.detect do |offensive_performance|
+        offensive_performance.game == week
+      end
+    end
+    
+    def has_targets?
+      !self.map(&:trg).sum.zero?
+    end
+    
+    def has_rush_attempts?
+      !self.map(&:ra).sum.zero?
+    end
+    
+    def has_pass_attempts?
+      !self.map(&:pa).sum.zero?
+    end
+  end
+  
+  def offensive_output
+    performances = game_performances_for_team
+    percent_3rd_down_conversions = (
+      (performances.map(&:s3c).sum + performances.map(&:l3c).sum).to_f / 
+      (performances.map(&:s3a).sum + performances.map(&:l3a).sum)
+    ) * 100
+    
+    {
+      points: performances.map(&:pts).sum,
+      max_points: performances.map(&:pts).max,
+      avg_points: performances.map(&:pts).sum / performances.size,
+      sacked: performances.map(&:sk).sum,
+      intercepted: performances.map(&:int).sum,
+      fumbled: performances.map(&:fum).sum,
+      punts: performances.map(&:pu).sum,
+      penalty_yardage: performances.map(&:pen).sum,
+      drives_in_redzone: performances.map(&:rza).sum,
+      big_rush_yardage: performances.map(&:bry).sum,
+      big_pass_yardage: performances.map(&:bpy).sum,
+      medium_completions: performances.map(&:mpc).sum,
+      long_completions: performances.map(&:lpc).sum,
+      punts_inside_20: performances.map(&:i20).sum,
+      percent_3rd_down_conversions: percent_3rd_down_conversions.round(1),
+      dumb_penalties: performances.map(&:dum).sum
+    }
+  end
+
+  DEFAUL_OFFENSIVE_OUTPUT_BOOSTS = {
+    
+  }
+  
+  def offensive_output_score(boosts = DEFAUL_OFFENSIVE_OUTPUT_BOOSTS)
+    output = offensive_output
+    rest_of_league = Player.defense.where.not(team_abbr: team_abbr).includes(:game_performances_for_team).load
+    output_from_league = rest_of_league.map(&:offensive_output)
+    
+    output.keys.inject({}) do |score, key|
+      # if boosts.has_key?(key)
+        # boost = boosts[key]
+        league_max = output_from_league.max_by {|o| o[key] }[key]
+        team_value = output[key]
+        percentage_in_league = league_max > team_value ? team_value.to_f / league_max * 100 : 100.0
+        # score + (output[key] * boost)
+        score[key] = [percentage_in_league.round(1), league_max, team_value]
+        score
+      # else
+        # score + output[key]
+      # end
+    end
+  end
+  
+  has_one :extended_bio, {
+    foreign_key: :player,
+    primary_key: :armchair_analysis_id,
+    class_name: 'ArmchairAnalysis::Player'
+  }
+  
+  has_many :redzone_opportunities, {
+    primary_key: :armchair_analysis_id,
+    foreign_key: :player,
+    class_name: "ArmchairAnalysis::RedzoneOpportunity"
+  }
+
+  has_many :catches, -> {
+    where(type: 'PASS', conv: 'Y')
+  }, {
+    foreign_key: :trg,
+    primary_key: :armchair_analysis_id,
+    class_name: "ArmchairAnalysis::Conversion"     
+  }
+  
+  def try_to_find_team(force = false)
+    return nil if !armchair_analysis_team_name.nil? && !force
+    
+    team_name_to_match = team_abbr == 'Jax' ? 'JAC' : team_abbr.upcase
+    
+    if match = ArmchairAnalysis::Team.find_by(tname: team_name_to_match)
+      self[:armchair_analysis_team_name] = team_name_to_match
+      self
+    else
+      nil
+    end
+  end 
+  
+  # has_many :games, ->(player) {
+  #   where("games.home_team = ? OR games.away_team = ?", player.team_abbr, player.team_abbr)
+  # }, primary_key: nil, foreign_key: nil
+  
+  def game_on_week(week)
+    home_games.on_week(week) || away_games.on_week(week)
+  end
+  
+  def opponent_on_week(week)
+    if game = game_on_week(week)
+      game.away_team == team_abbr ? game.home_team : game.away_team
+    else
+      nil
+    end
+  end
   
   def expert_rank_on_week(week)
     expert_ranks.detect do |rank|
@@ -53,6 +251,10 @@ class Player < ActiveRecord::Base
     # TODO Decide if defaulting to an empty projection is desirable, probably not
     projections.where(week: week).order(updated_at: :desc).first ||
       Projection.new(standard: 0.0, standard_high: 0.0, standard_low: 0.0)
+  end
+  
+  def total_points
+    points.map(&:total).sum
   end
 
   TEAM_ABBR_LONG = %w[

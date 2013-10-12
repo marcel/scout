@@ -2,7 +2,7 @@ class ProjectionsController < ApplicationController
   before_action :set_projection, only: [:show, :edit, :update, :destroy]
 
   def index
-    @week = params[:week] || GameWeek.current.week
+    @week = (params[:week] || GameWeek.current.week).to_i
     where_clause = {week: @week}    
     query = Projection.where(where_clause)
     query = query.where("standard > ?", params[:above]) if params[:above]
@@ -14,18 +14,16 @@ class ProjectionsController < ApplicationController
     query = query.where("players.owner_key" => params[:owner]) if params[:owner]
     query = query.where("players.ownership_type" => params[:ownership_type].split(',')) if params[:ownership_type]
         
-    query = query.
+    query = query.group(:fantasy_football_nerd_id).
       joins(:player).
       order(updated_at: :desc).order(rank: :asc).
-      group("projections.fantasy_football_nerd_id").
-      distinct.
-      includes(:player)
-      
-    query = query.limit(params[:limit]) if params[:limit]
+      includes(player: [:watches])
+    
+    query = query.limit(params[:limit].to_i) if params[:limit]
     
     @projections = query
   end
-
+  
   def show
   end
 

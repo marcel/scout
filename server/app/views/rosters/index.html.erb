@@ -16,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @roster_spots.each do |roster_spot| %>
+    <% @roster_spots.select(&:active?).each do |roster_spot| %>
       <tr>
         <td><%= link_to roster_spot.id, roster_path(roster_spot) %></td>
         <td><%= roster_spot.yahoo_team_key %></td>

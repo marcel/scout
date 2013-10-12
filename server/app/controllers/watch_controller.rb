@@ -2,7 +2,7 @@ class WatchController < ApplicationController
   def index
     query = Player.joins(:watches).
       includes(:watches, :points, :projections)
-
+    
     query = query.where("players.full_name LIKE ?", "%#{params[:name]}%") if params[:name]
     query = query.where(position: params[:position].split(',')) if params[:position]
     query = query.where(team_abbr: params[:team].split(',')) if params[:team]
@@ -10,7 +10,9 @@ class WatchController < ApplicationController
     query = query.where(owner_key: params[:owner]) if params[:owner]
     query = query.where(ownership_type: params[:ownership_type].split(',')) if params[:ownership_type]
       
-    @players = query.load.sort_by {|player| -player.watches.first.votes}
+    @players = query.load.sort_by do |player| 
+      [-player.watches.first.votes, -player.total_points]
+    end
   end
   
   def update

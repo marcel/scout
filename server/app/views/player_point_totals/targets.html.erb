@@ -1,0 +1,43 @@
+<div class="page-header">
+  <h1><%= link_to(t('.title', :default => "Targets"), url_for()) %> <small>week <%= @week %></small></h1>
+</div>
+<!-- <div class="dropdown">
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+    <li><a tabindex="-1" href="#">Action</a></li>
+    <li><a tabindex="-1" href="#">Another action</a></li>
+    <li><a tabindex="-1" href="#">Something else here</a></li>
+    <li class="divider"></li>
+    <li><a tabindex="-1" href="#">Separated link</a></li>
+  </ul>
+</div> -->
+
+<%= weeks_in_season(@week) %>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Targets</th>
+      <th>Receptions</th>
+      <th>Receiving Yards</th>
+      <th>Receiving TDs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @offensive_performances.each do |offensive_performance| %>
+      <tr>
+        <td class="span4">
+          <%= player_profile(offensive_performance.player) %>
+        </td>
+        <td class="span2">
+        <%= offensive_performance.trg %>
+        <% if (redzone_opportunity = offensive_performance.redzone_opportunity) && !redzone_opportunity.trg.zero? %>
+          (<%= redzone_opportunity.trg %> in red zone)
+        <% end %>
+        </td>
+        <td class="span2"><%= offensive_performance.rec %></td>
+        <td class="span2"><%= offensive_performance.recy %></td>
+        <td class="span2"><%= offensive_performance.tdre %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

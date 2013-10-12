@@ -1,9 +1,16 @@
 class Stat < ActiveRecord::Base
+  has_many :values, {
+    class_name: 'PlayerStatValue',
+    primary_key: :yahoo_stat_id,
+    foreign_key: :yahoo_stat_id,
+    inverse_of: :stat
+  }
+  
   class << self
     def by_stat_id
       @stats ||= begin
         all.inject({}) do |all, stat|
-          all[stat.stat_id] = stat
+          all[stat.yahoo_stat_id] = stat
           all
         end
       end
@@ -19,7 +26,7 @@ class Stat < ActiveRecord::Base
 
     def from_payload(payload)
       new(
-        :stat_id       => payload.stat_id,
+        :yahoo_stat_id => payload.stat_id,
         :name          => payload.name,
         :sort_order    => payload.sort_order,
         :position_type => position_type(payload),

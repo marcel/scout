@@ -7,7 +7,7 @@ class PlayersController < ApplicationController
       joins(:player).
       includes(:player).
       order(rank: :asc, updated_at: :desc).
-      group("projections.fantasy_football_nerd_id")
+      group(:fantasy_football_nerd_id)
   
     query = query.where("players.full_name LIKE ?", "%#{params[:name]}%") if params[:name]
     

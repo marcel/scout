@@ -8,14 +8,11 @@ require 'oauth'
 require 'oauth/consumer'
 require 'nokogiri'
 require 'faster_xml_simple'
-require 'sqlite3'
 require 'logger'
 require 'zlib'
 require 'fantasy_football_nerd'
 require 'active_support/core_ext/array'
 require 'active_support/core_ext/class'
-require 'active_record'
-require 'active_record/schema_dumper'
 
 module Scout
   class << self

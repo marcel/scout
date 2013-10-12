@@ -6,28 +6,30 @@ class Team < ActiveRecord::Base
   
   has_many :players, {
     primary_key: :yahoo_key,
-    foreign_key: :owner_key
+    foreign_key: :owner_key,
+    inverse_of: :owner
   }
   
   has_many :roster_spots, {
     primary_key: :yahoo_key,
-    foreign_key: :yahoo_team_key
+    foreign_key: :yahoo_team_key,
+    inverse_of: :team
   }
   
   def projected_points(week)
     roster_spots.select do |spot| 
-      !spot.bench?
+      spot.active? && !spot.bench?
     end.map(&:player).map do |player|
       player.projection(week)
-    end.compact.sum(&:standard)
+    end.compact.map(&:standard).sum
   end
   
   def points(week)
     roster_spots.select do |spot|
-      !spot.bench?
+      spot.active? && !spot.bench?
     end.map(&:player).map do |player|
       player.points_on_week(week)
-    end.compact.sum(&:total)
+    end.compact.map(&:total).sum
   end
   
   class << self

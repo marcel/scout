@@ -1,0 +1,28 @@
+working_directory "/home/scout/server"
+listen 8080 
+worker_processes 10
+pid "/home/scout/server/tmp/pids/unicorn.pid"
+user "scout", "scout"
+stderr_path "/home/scout/server/log/unicorn.log"
+stdout_path "/home/scout/server/log/unicorn.log"
+
+before_fork do |server, worker|
+
+  Signal.trap 'TERM' do
+    puts 'Unicorn master intercepting TERM and sending myself QUIT instead'
+    Process.kill 'QUIT', Process.pid
+  end
+
+  defined?(ActiveRecord::Base) and
+    ActiveRecord::Base.connection.disconnect!
+end
+
+after_fork do |server, worker|
+
+  Signal.trap 'TERM' do
+    puts 'Unicorn worker intercepting TERM and doing nothing. Wait for master to sent QUIT'
+  end
+
+  defined?(ActiveRecord::Base) and
+    ActiveRecord::Base.establish_connection
+end

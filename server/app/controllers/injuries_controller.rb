@@ -2,7 +2,7 @@ class InjuriesController < ApplicationController
   before_action :set_injury, only: :show
 
   def index
-    @week = params[:week] || GameWeek.current.week
+    @week = (params[:week] || GameWeek.current.week).to_i
     where_clause = {week: @week}
     
     # where_clause.update(game_status: params[:game_status]) if params[:game_status]
@@ -29,8 +29,9 @@ class InjuriesController < ApplicationController
     
     @injuries = query.
       joins(:player).
-      includes(:player).
+      includes(:player => [:points]).
       order(last_update: :desc)
+    @injuries = @injuries.sort_by {|injury| -injury.player.points.map(&:total).sum } if params[:sort].to_s == 'p'
   end
   
   def show

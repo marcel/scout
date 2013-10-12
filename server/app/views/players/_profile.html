@@ -11,7 +11,19 @@
         <%= link_to current_url(team: player.team_abbr) do %>
           <div class="span2 logo logo-small logo-nfl-small nfl-small-<%= player.team_abbr_long %>">&nbsp;</div>
         <% end %>
-        <div class="span10"><strong><%= link_to player.full_name, player_points_path(player) %></strong></div>
+        <div class="span10">
+          <strong><%= link_to player.full_name, player_points_path(player) %></strong>
+          <% if @week %>
+            <span><small class="minor">
+              <% if opponent = player.opponent_on_week(@week) %>
+                vs <%= opponent %>
+              <% else %>
+                bye week
+              <% end %>
+              
+            </small></span>
+          <% end %>
+        </div>
       </div>
       <div>
         <%- if player.uniform_number.present? -%>

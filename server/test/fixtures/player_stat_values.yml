@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  yahoo_player_key: 1
+  season: 1
+  week: 1
+  stat_id: 1
+  value: 1
+
+two:
+  yahoo_player_key: 1
+  season: 1
+  week: 1
+  stat_id: 1
+  value: 1

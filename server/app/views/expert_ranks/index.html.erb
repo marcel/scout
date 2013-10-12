@@ -35,12 +35,13 @@
           <% expert_rank.player.expert_rank_on_week(@week - 1)%>
         </td>
         <td class="span1">
-          <% if @week != GameWeek.current.week %>
-            A: <%= player_points_status(expert_rank.player.points_on_week(@week).total) %><br />
+          <% if points = expert_rank.player.points.on_week(@week) %>
+            A: <%= player_points_status(points.total) %><br />
           <% end %>
-          <% projections = expert_rank.player.projection(@week) %>
-          <% {H: :standard_high, S: :standard, L: :standard_low}.each do |label, projection| %>
-            <%= "#{label}: " %> <%= player_points_status(projections.send(projection)) %><br />
+          <% if projections = expert_rank.player.projections.on_week(@week).last %>
+            <% {H: :standard_high, S: :standard, L: :standard_low}.each do |label, projection| %>
+              <%= "#{label}: " %> <%= player_points_status(projections.send(projection)) %><br />
+            <% end %>
           <% end %>
         <td class="span1"><%= expert_rank.expert_1_rank %></td>
         <td class="span1"><%= expert_rank.expert_2_rank %></td>

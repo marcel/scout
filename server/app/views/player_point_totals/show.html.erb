@@ -7,5 +7,24 @@
 </div>
 
 <div class="row">
-  <%= high_chart("chart", @chart) %>
+  <%= high_chart("player-point-performance-chart", player_performance_chart(@player)) %>
 </div>
+
+
+<% if @player.offensive_performances.has_pass_attempts? %>
+  <div class="row">
+    <%= high_chart("player-passing-performance-chart", player_passing_performance_chart(@player)) %>
+  </div>
+<% end %>
+
+<% if @player.offensive_performances.has_targets? %>
+  <div class="row">
+    <%= high_chart("player-receiving-performance-chart", player_receiving_performance_chart(@player)) %>
+  </div>
+<% end %>
+
+<% if @player.offensive_performances.has_rush_attempts? %>
+  <div class="row">
+    <%= high_chart("player-rushing-performance-chart", player_rushing_performance_chart(@player)) %>
+  </div>
+<% end %>

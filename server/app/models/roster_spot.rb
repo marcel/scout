@@ -1,8 +1,17 @@
 class RosterSpot < ActiveRecord::Base
   include Comparable
   
-  belongs_to :player, :foreign_key => :yahoo_player_key, :primary_key => :yahoo_key
-  belongs_to :team, :foreign_key => :yahoo_team_key, :primary_key => :yahoo_key
+  belongs_to :player, {
+    foreign_key: :yahoo_player_key, 
+    primary_key: :yahoo_key,
+    inverse_of: :roster_spots
+  }
+  
+  belongs_to :team, {
+    foreign_key: :yahoo_team_key,
+    primary_key: :yahoo_key,
+    inverse_of: :roster_spots
+  }
 
   STARTING_POSITIONS = Set.new(%w[QB WR RB TE W/R/T K DEF])
 
@@ -123,7 +132,7 @@ class RosterSpot < ActiveRecord::Base
         }
 
         compute_points = ->(candidate_lineup) {
-          v = candidate_lineup.select(&:starter?).map(&:player).map {|p| p.points_on_week(4)}.sum(&:total)
+          v = candidate_lineup.select(&:starter?).map(&:player).map {|p| p.points_on_week(GameWeek.current.week)}.map(&:total).sum
           p v
           v
         }
@@ -174,8 +183,8 @@ class RosterSpot < ActiveRecord::Base
     def import(week = GameWeek.current.week)
       import_log "Started week #{week} import at #{Time.now}"
 
-      existing_roster_spots_for_week = RosterSpot.where(week: week).
-        joins(:team).
+      existing_roster_spots_for_week = RosterSpot.where(week: week, active: true).
+        includes(:team).
         order(updated_at: :desc).load
 
       import_log "existing_roster_spots_for_week #{week}: #{existing_roster_spots_for_week.size}"
@@ -191,7 +200,8 @@ class RosterSpot < ActiveRecord::Base
 
       lookup = existing_roster_spots_for_week.inject({}) do |team_to_player_keys_to_roster_spot, roster_spot|
         team_to_player_keys_to_roster_spot[roster_spot.yahoo_team_key] ||= {}
-        team_to_player_keys_to_roster_spot[roster_spot.yahoo_team_key][roster_spot.yahoo_player_key] = roster_spot
+        team_to_player_keys_to_roster_spot[roster_spot.yahoo_team_key][roster_spot.yahoo_player_key] ||= [] 
+        team_to_player_keys_to_roster_spot[roster_spot.yahoo_team_key][roster_spot.yahoo_player_key] << roster_spot
         team_to_player_keys_to_roster_spot
       end
       
@@ -202,10 +212,17 @@ class RosterSpot < ActiveRecord::Base
         roster_spot.roster.players.player.map do |payload|
           player = Scout::Payload::Player.new(payload)
           
-          if lookup.has_key?(team_key) && (existing_roster_spot = lookup[team_key][player.player_key])
+          if lookup.has_key?(team_key) && (existing_roster_spots = lookup[team_key][player.player_key])
+            lookup[team_key].delete(player.player_key)
+            sorted = existing_roster_spots.sort_by(&:updated_at)
+            newest_existing_roster_spot = sorted.pop
+            if sorted.any?
+              rest = existing_roster_spots
+              lookup[team_key][player.player_key] = sorted
+            end
             attributes_for_current_roster_spot = RosterSpot.attributes_from_payload(team_key, player)
-            existing_roster_spot.attributes = attributes_for_current_roster_spot
-            if existing_roster_spot.changed?
+            newest_existing_roster_spot.attributes = attributes_for_current_roster_spot
+            if newest_existing_roster_spot.changed?
               updated_roster_spots += 1
               RosterSpot.new(attributes_for_current_roster_spot)
             else
@@ -217,11 +234,17 @@ class RosterSpot < ActiveRecord::Base
           end
         end
       end.flatten.compact
-
+      existing_roster_spots_that_became_inactive = lookup.values.map(&:values).flatten
+      existing_roster_spots_that_became_inactive.each do |inactive_roster_spot|
+        inactive_roster_spot.active = false
+      end
+      
+      import_log "existing_roster_spots_that_became_inactive: #{existing_roster_spots_that_became_inactive.size}"
       import_log "roster_spots_to_save: #{roster_spots_to_save.size}"
       import_log "new_roster_spots: #{new_roster_spots}"
       import_log "updated_roster_spots: #{updated_roster_spots}"
       roster_spots_to_save.each(&:save)
+      existing_roster_spots_that_became_inactive.each(&:save)
       
       import_log "Done at #{Time.now}"
     rescue Exception => e

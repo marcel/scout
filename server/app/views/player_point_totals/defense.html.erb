@@ -1,0 +1,40 @@
+
+
+<div class="page-header">
+  <h1><%= link_to(t('.title', :default => "Defense"), url_for()) %> <small><%= @week ? "week #{@week}" : 'for season' %></small></h1>
+</div>
+
+<%= weeks_in_season(@week, @week.nil?) %>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th><small>Defense</small></th>
+      <th><small><%= link_to 'Fantasy Points', current_url(sort: 'fp') %></small></th>
+      <th><small><%= link_to 'Points Scored', current_url(sort: 'p') %></small></th>
+      <th><small><%= link_to 'Points against', current_url(sort: 'pa') %></small></th>
+      <th><small><%= link_to 'Rushing Yards Allowed', current_url(sort: 'ry') %> </small></th> <!-- And rushing yards per play -->
+      <th><small><%= link_to 'Passing Yards Allowed', current_url(sort: 'py') %></small></th> <!-- And passing yards per play -->
+      <!-- <th>Turnovers (Interceptions/Fumbles)</th>
+      <th>Pick six</th>
+      <th>Safeties</th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <% @players.each do |player| %>
+    <% opponent_performances = player.game_performances_for_team.by_opponents %>
+      <tr>
+        <td class="span4">
+          <%= player_profile(player) %>
+        </td>
+        <td class="span2"><%= player_points_status(player.points.map(&:total).sum) %></td>
+        <td class="span2">
+          <%= player.game_performances_for_team.map(&:dp).sum %>
+        </td>
+        <td class="span2">
+          <%= opponent_performances.map(&:pts).sum - opponent_performances.map(&:dp).sum %></td>
+        <td class="span2"><%= opponent_performances.map(&:ry).sum %></td>
+        <td class="span2"><%= opponent_performances.map(&:py).sum %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

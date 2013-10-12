@@ -15,7 +15,7 @@ Week <%= @week %> performances
       
       <div class="span9">
       <%#= team_points_status(("%.2f" % team.projected_points(@week)).to_f)%> 
-      <%= team_points_status(("%.2f" % team.points(@week)).to_f) %> 
+      <%= team_points_status(team.points(@week).to_f.round(1)) %> 
       <%#= team_points_status(("%.2f" % optimal_roster.max).to_f) %>
       <%#= team_points_status(("%.2f" % optimal_roster.min).to_f) %>
       </div>
@@ -27,10 +27,10 @@ Week <%= @week %> performances
 <%= weeks_in_season(@week) %>
 <table class="table table-striped table-bordered table-condensed">
   <caption class="lead">
-    Projected: <%= team_points_status(("%.2f" % @team.projected_points(@week)).to_f)%> | 
-    Actual: <%= team_points_status(("%.2f" % @team.points(@week)).to_f) %> | 
-    Best possible: <%= team_points_status(("%.2f" % RosterSpot.optimal_roster(@team.roster_spots).max).to_f) %> |
-    Worst possible: <%= team_points_status(("%.2f" % RosterSpot.optimal_roster(@team.roster_spots).min).to_f) %>
+    Projected: <%= team_points_status(@team.projected_points(@week).to_f.round(1))%> | 
+    Actual: <%= team_points_status(@team.points(@week).to_f.round(1)) %> | 
+    Best possible: <%= team_points_status(RosterSpot.optimal_roster(@team.roster_spots.select(&:active?)).max.to_f.round(1)) %> |
+    Worst possible: <%= team_points_status(RosterSpot.optimal_roster(@team.roster_spots.select(&:active?)).min.to_f.round(1)) %>
   </caption>
   <thead>
     <tr>
@@ -43,7 +43,7 @@ Week <%= @week %> performances
     </tr>
   </thead>
   <tbody class="row-fluid">
-    <% @team.roster_spots.sort.each do |roster_spot| %>
+    <% @team.roster_spots.where(week: @week, active: true).order(:updated_at).group(:yahoo_player_key).sort.each do |roster_spot| %>
       <tr>
         <td class="span4">
           <% if roster_spot.player %>
@@ -67,3 +67,46 @@ Week <%= @week %> performances
     <% end %>
   </tbody>
 </table>
+<% dropped = @team.roster_spots.where(week: @week, active: false).where("yahoo_player_key NOT IN (?)", @team.roster_spots.where(week: @week, active: true).select(:yahoo_player_key).map(&:yahoo_player_key)).order(:updated_at).group(:yahoo_player_key).load %>
+<% if dropped.any? %>
+  <table>
+    <table class="table table-striped table-bordered table-condensed">
+      <caption class="lead">
+        <strong>Dropped</strong>
+      </caption>
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Position</th>
+          <th>Points</th>
+          <th>High</th>
+          <th>Standard</th>
+          <th>Low</th>
+        </tr>
+      </thead>
+      <tbody class="row-fluid">
+        <% dropped.sort.each do |roster_spot| %>
+       <tr>
+         <td class="span4">
+           <% if roster_spot.player %>
+             <%= player_profile(roster_spot.player, projection_path(roster_spot.player.projection)) %>
+           <% else %>
+             None
+           <% end -%>
+         </td>
+         <td class="span1"><strong><%= roster_spot.position %></strong></td>
+         <td class="span2">
+           <% if points = roster_spot.player.points_on_week(@week) %>
+             <%= player_points_status(points.total) %>
+           <% else %>
+             0.0
+           <% end %>
+         </td>
+         <td class="span2"><%= player_points_status(roster_spot.player.projection.standard_high) %></td>
+         <td class="span2"><%= link_to player_points_status(roster_spot.player.projection.standard) %></td>
+         <td class="span2"><%= player_points_status(roster_spot.player.projection.standard_low) %></td>
+       </tr>
+     <% end %>
+   </tbody>
+  </table>
+<% end %>

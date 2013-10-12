@@ -93,7 +93,8 @@ module Scout
           when 'true';         true
           when 'false';         false
           # Don't coerce numbers that start with zero
-          when  /^([1-9]+\d*|0)$/;   Integer(self)
+          when  /^(-?[1-9]+\d*|0)$/;   Integer(self)
+          when /^(-?(:?[0-9]\.[1-9]|[1-9]+)(\d+|\.{1})\d+)$/; Float(self)
           when datetime_format; Time.parse(self)
           else
             self

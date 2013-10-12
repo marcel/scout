@@ -1,13 +1,18 @@
 class Projection < ActiveRecord::Base
   belongs_to :player, {
     :primary_key => :fantasy_football_nerd_id,
-    :foreign_key => :fantasy_football_nerd_id
+    :foreign_key => :fantasy_football_nerd_id,
+    inverse_of: :projections
   }
   
   scope :latest, -> {
     where(week: GameWeek.current.week).
     group(:fantasy_football_nerd_id).
     order("projections.rank" => :desc)
+  }
+  
+  scope :on_week, ->(week) {
+    where(week: week)
   }
 
   class << self

@@ -3,8 +3,20 @@
     <li class="disabled"><span>Week:</span></li>
     <% weeks.each do |week, label| -%>
       <li class="<%= label %>">
-        <span><%= link_to_if(label.blank?, week, current_url(week: week), style: "display: block")  %></span>
+        <span><%= link_to_if(label.blank? || @week.nil?, week, current_url(week: week), style: "display: block", id: "week-nav-#{week}")  %></span>
       </li>
     <% end -%>
   </ul>
 </div>
+
+<% if @week -%>
+  <%= javascript_tag do %>
+  $("body").keydown(function(e) {
+    if (e.keyCode == 37) { // left
+     window.location.href = decodeURI('<%= current_url(week: [1, @week - 1].max) %>');
+    } else if (e.keyCode == 39) { // right
+      window.location.href = decodeURI('<%= current_url(week: [GameWeek.current.week, @week + 1].min) %>');
+    }
+  });  
+  <% end %>
+<% end -%>
