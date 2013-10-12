@@ -1,1 +1,1 @@
-require File.dirname(__FILE__) + '/../../../client/lib/scout'
+require File.dirname(__FILE__) + '/../../lib/client/lib/scout'
