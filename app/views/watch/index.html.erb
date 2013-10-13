@@ -4,28 +4,6 @@
 
 <table class="table table-bordered">
   <tbody>
-    <% @players.each do |player| %>
-      <tr>
-        <td>
-        <div class="row-fluid">
-          <div class="span4"><%= player_profile(player) %></div>
-          <div class="span4">
-            <dl class="dl-horizontal">
-              <dt>Total:</dt>
-              <dd><strong><%= player.total_points.round(1) %></strong></dd>
-              <dt>Avg:</dt>
-              <dd><%= player_points_status(player.points.average(:total).to_f.round(1)) %>
-              <dt>Max:</dt>
-              <dd><%= player_points_status(player.points.map(&:total).max) %></dd>
-              <dt>Min:</dt>
-              <dd><%= player_points_status(player.points.map(&:total).min) %></dd>
-            </dl>
-          </div>
-          <div class="span4">&nbsp;</div>
-        </div>
-        <div><%= render_player_performance_chart(player, height: 500) %></div>
-        </td>
-      </tr>
-    <% end %>
+    <%= render partial: 'watched_player', collection: @players, cache: ->(p) { partial_cache_key("watched-player-#{p.id}") } %>
   </tbody>
 </table>

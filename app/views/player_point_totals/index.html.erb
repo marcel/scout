@@ -20,13 +20,6 @@
     </tr>
   </thead>
   <tbody>
-    <% @player_point_totals.each do |player_point_total| %>
-      <tr>
-        <td class="span4">
-          <%= player_profile(player_point_total.player, player_points_path(player_point_total.player)) %>
-        </td>
-        <td class="span8"><%= player_points_status(player_point_total.total) %></td>
-      </tr>
-    <% end %>
+    <%= render partial: 'player_point_total', collection: @player_point_totals, cache: ->(p) { partial_cache_key("player-point-total-#{p.id}") }%>
   </tbody>
 </table>

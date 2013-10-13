@@ -6,7 +6,7 @@ class ArmchairAnalysis::Offense < ActiveRecord::Base
   }
 
   def cached_player
-    Rails.cache.fetch([Player.name, self[:player]]) { player }
+    Rails.cache.fetch([Player.name, 'player', self[:player]]) { player }
   end
 
   # N.B. It's not named just "game" because there is already a 'game' column on this table.

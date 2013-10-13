@@ -1,0 +1,24 @@
+<tr>
+  <td class="span1">
+    <strong><%= expert_rank.overall_rank %></strong>
+    <%= expert_ranking_trend(expert_rank) %>
+  </td>
+  <td class="span3">
+    <%= player_profile(expert_rank.cached_player) %>
+    <% expert_rank.cached_player.expert_rank_on_week(@week - 1)%>
+  </td>
+  <td class="span1">
+    <% if points = expert_rank.cached_player.points_on_week(@week) %>
+      A: <%= player_points_status(points.total) %><br />
+    <% end %>
+    <% if projections = expert_rank.cached_player.projection(@week) %>
+      <% {H: :standard_high, S: :standard, L: :standard_low}.each do |label, projection| %>
+        <%= "#{label}: " %> <%= player_points_status(projections.send(projection)) %><br />
+      <% end %>
+    <% end %>
+  <td class="span1"><%= expert_rank.expert_1_rank %></td>
+  <td class="span1"><%= expert_rank.expert_2_rank %></td>
+  <td class="span1"><%= expert_rank.expert_3_rank %></td>
+  <td class="span1"><%= expert_rank.expert_4_rank %></td>
+  <td class="span1"><%= expert_rank.expert_5_rank %></td>
+</tr>

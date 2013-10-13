@@ -76,6 +76,10 @@ class Player < ActiveRecord::Base
     inverse_of: :player
   }
 
+  def cached_expert_ranks
+    Rails.cache.fetch(['expert_ranks', 'player', id]) { expert_ranks }
+  end
+
   has_many :teammates, {
     class_name: "Player",
     foreign_key: "team_abbr",
@@ -118,13 +122,34 @@ class Player < ActiveRecord::Base
     primary_key: :armchair_analysis_team_name,
     foreign_key: :tname,
     class_name: 'ArmchairAnalysis::Team'
-  } do
-    def by_opponents
-      ArmchairAnalysis::Team.where(gid: self.map(&:gid)).
-        includes(:game).
-        where.not(tname: self.first.tname).
-        sort_by {|t| t.game.wk }
-    end
+  } # do
+   #    def by_opponents
+   #      ArmchairAnalysis::Team.where(gid: self.map(&:gid)).
+   #        includes(:game).
+   #        where.not(tname: self.first.tname).
+   #        sort_by {|t| t.game.wk }
+   #    end
+   #  end
+
+  def cached_game_performances_for_team
+    Rails.cache.fetch(['game_performances_for_team', armchair_analysis_team_name]) {
+      game_performances_for_team.to_a
+    }
+  end
+
+  def game_performances_by_opponents
+    game_performances = cached_game_performances_for_team
+
+    gids = game_performances.map(&:gid)
+    ArmchairAnalysis::Team.where(gid: gids).
+      where.not(tname: game_performances.first.tname).
+      sort_by {|t| t.game.wk }
+  end
+
+  def cached_game_performances_by_opponents
+    Rails.cache.fetch(['game_performances_by_opponents', armchair_analysis_team_name]) {
+      game_performances_by_opponents.to_a
+    }
   end
 
   scope :defense, ->{
@@ -266,7 +291,7 @@ class Player < ActiveRecord::Base
   end
 
   def expert_rank_on_week(week)
-    expert_ranks.detect do |rank|
+    cached_expert_ranks.detect do |rank|
       rank.week == week
     end
   end
@@ -279,12 +304,12 @@ class Player < ActiveRecord::Base
 
   def projection(week = GameWeek.current.week)
     # TODO Decide if defaulting to an empty projection is desirable, probably not
-    cached_projections.select {|p| p.week == week }.sort_by(&:updated_at).last||
+    cached_projections.select {|p| p.week == week }.sort_by(&:updated_at).last ||
       Projection.new(standard: 0.0, standard_high: 0.0, standard_low: 0.0)
   end
 
   def total_points
-    points.map(&:total).sum
+    cached_points.map(&:total).sum
   end
 
   TEAM_ABBR_LONG = %w[

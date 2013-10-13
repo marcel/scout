@@ -1,4 +1,12 @@
 module ApplicationHelper
+  PARAMS_TO_IGNORE = Set.new([:controller, :action, :id, :week])
+  def partial_cache_key(suffix, params_to_include = nil)
+    params_to_ignore = params_to_include ? PARAMS_TO_IGNORE - Set.new(Array(params_to_include)) : PARAMS_TO_IGNORE
+    params_for_key = params.select {|k,v| !params_to_ignore.include?(k.to_sym) }
+    prefix = params_for_key.empty? ? nil : params_for_key.sort.map {|pair| pair.join(':') }.join('-')
+    [prefix, suffix].compact.join('-')
+  end
+
   def player_profile(player, path = nil, include_probably = false)
     render partial: 'players/profile', :locals => {
       player: player,
@@ -200,8 +208,8 @@ module ApplicationHelper
   def player_performance_chart(player, options = {})
     # TODO Rather than using group here to ensure there is only 1 data point per week, figure out if the
     # chart can show multiple data points per week in case projections changed over a week
-    points      = player.points.order(week: :asc, updated_at: :desc).group(:week)
-    projections = player.projections.order(week: :asc, updated_at: :desc).group(:week)
+    points      = player.cached_points.group_by(&:week).map {|w, ps| ps.sort_by {|p| p.updated_at }.last }.flatten.sort_by(&:week)
+    projections = player.cached_projections.group_by(&:week).map {|w, ps| ps.sort_by {|p| p.updated_at }.last }.flatten.sort_by(&:week)
     weeks = points.map {|point| "Week #{point.week} vs #{player.opponent_on_week(point.week) ||'bye'}" }
     # Do something better than this.
     if points.last.week == GameWeek.current.week && points.last.total.zero? && Time.now.wday < 7

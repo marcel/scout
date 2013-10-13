@@ -1,13 +1,13 @@
 <div class="thumbnail">
-  
-  <div class="row-fluid">    
+
+  <div class="row-fluid">
     <div class="player-headshot span3">
       <%= image_tag(player.headshot, :class => 'img-polaroid') %>
     </div>
-  
+
     <div class="player-bio span9">
       <div class="row-fluid">
-        
+
         <%= link_to current_url(team: player.team_abbr) do %>
           <div class="span2 logo logo-small logo-nfl-small nfl-small-<%= player.team_abbr_long %>">&nbsp;</div>
         <% end %>
@@ -20,7 +20,7 @@
               <% else %>
                 bye week
               <% end %>
-              
+
             </small></span>
           <% end %>
         </div>
@@ -32,10 +32,10 @@
         <span class="player-position"><%= link_to(player.position, current_url(position: player.position)) %></span> |
         <small><span><%= player_ownership(player) %></span></small>
       </div>
-      
+
       <%= watch_button(player) %>
-      
-      <div><%= player_playing_status(player) %></div>      
+
+      <div><%= player_playing_status(player) %></div>
     </div>
   </div>
 </div>

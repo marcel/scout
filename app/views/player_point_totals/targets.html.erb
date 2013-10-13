@@ -23,6 +23,6 @@
     </tr>
   </thead>
   <tbody>
-    <%= render partial: 'target_performance', collection: @offensive_performances, cache: ->(t) { "target-performance-#{t.uid}" } %>
+    <%= render partial: 'target_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("target-performance-#{t.uid}") } %>
   </tbody>
 </table>

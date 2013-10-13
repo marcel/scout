@@ -11,30 +11,6 @@
     </tr>
   </thead>
   <tbody>
-    <% @injuries.each do |injury| %>
-      <tr>
-        <td class="span5"> <!-- TODO Why do I have to do this and not on the other table views? -->
-          <%= player_profile(injury.player, injury_path(injury)) %>
-        </td>
-        <td class="span7">
-          <%- if injury.last_update < Date.today -%>
-            <div class="pull-right">
-              <small>
-                <em>Updated <%= distance_of_time_in_words_to_now(injury.last_update) %> ago</em>
-              </small>
-            </div>
-          <%- end -%>
-
-          <% if injury.injury.present? -%>
-            <div><%= link_to(injury.injury, current_url(injury: injury.injury)) %></div>
-          <% end -%>
-          <% if injury.practice_status.present? -%>
-            <div>
-              <%= link_to(injury.practice_status, current_url(practice_status: injury.practice_status)) %> 
-            </div>
-          <% end -%>
-        </td>
-      </tr>
-    <% end %>
+    <%= render partial: 'injury', collection: @injuries, cache: ->(i) { partial_cache_key("injury-#{i.id}") } %>
   </tbody>
 </table>

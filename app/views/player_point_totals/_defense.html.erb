@@ -1,0 +1,14 @@
+<% opponent_performances = defense.cached_game_performances_by_opponents %>
+<tr>
+  <td class="span4">
+    <%= player_profile(defense) %>
+  </td>
+  <td class="span2"><%= player_points_status(defense.total_points) %></td>
+  <td class="span2">
+    <%= defense.cached_game_performances_for_team.map(&:dp).sum %>
+  </td>
+  <td class="span2">
+    <%= opponent_performances.map(&:pts).sum - opponent_performances.map(&:dp).sum %></td>
+  <td class="span2"><%= opponent_performances.map(&:ry).sum %></td>
+  <td class="span2"><%= opponent_performances.map(&:py).sum %></td>
+</tr>

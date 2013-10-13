@@ -8,11 +8,6 @@ set :repo_url, 'git@github.com:marcel/scout.git'
 set :branch, 'master'
 set :deploy_to, "/home/scout/production"
 
-# So that tasks that run e.g. 'rake' use the right one
-set :default_environment, {
-  'PATH' => "#{deploy_to}/current/bin/:$PATH"
-}
-
 set :deploy_via, :remote_cache
 set :scm, :git
 

@@ -4,25 +4,29 @@ class Injury < ActiveRecord::Base
     :foreign_key => :fantasy_football_nerd_id,
     inverse_of: :injuries
   }
-  
+
+  def cached_player
+    Rails.cache.fetch([Player.name, 'fantasy_football_nerd_id', fantasy_football_nerd_id]) { player }
+  end
+
   scope :for_current_week, -> {
     where(week: GameWeek.current.week)
   }
-  
+
   scope :game_statuses, -> {
     for_current_week.
       where.not(game_status: '').
       select(:game_status).
       distinct.map(&:game_status).sort
   }
-  
+
   scope :practice_statuses, -> {
     for_current_week.
       where.not(practice_status: '').
       select(:practice_status).
       distinct.map(&:practice_status).sort
   }
-  
+
   scope :injuries, -> {
     for_current_week.
       where.not(injury: '').
@@ -33,11 +37,11 @@ class Injury < ActiveRecord::Base
   class << self
     include Scout::ImportLogging
     # TODO Implement something like 'include Scout::PayloadConversion'
-    
+
     def from_payload(payload)
       new(attributes_from_payload(payload))
     end
-    
+
     def attributes_from_payload(payload)
       {
         fantasy_football_nerd_id: payload.id,
@@ -48,9 +52,9 @@ class Injury < ActiveRecord::Base
         last_update:              payload.injury.last_update
       }
     end
-    
+
     # TODO Maybe create an importer object that hides away most logging
-    # According to FFN: The data changes daily at 12:00 Eastern and 5:00 PM Eastern. 
+    # According to FFN: The data changes daily at 12:00 Eastern and 5:00 PM Eastern.
     # Policy: Update old one for this week
     def import(week = GameWeek.current.week)
       import_log "Started week #{week} import at #{Time.now}"
@@ -67,7 +71,7 @@ class Injury < ActiveRecord::Base
 
       import_log "injuries_this_week: #{injuries_this_week.size}"
       import_log "newest new injury: #{injuries_this_week.map(&:injury).sort_by(&:last_update).last.last_update}"
-      
+
       new_injuries_this_week = injuries_this_week.select do |injury|
         if most_recent_existing_injury
           injury.injury.last_update >= most_recent_existing_injury.last_update
@@ -76,7 +80,7 @@ class Injury < ActiveRecord::Base
         end
       end
       import_log "new_injuries_this_week: #{new_injuries_this_week.size}"
-      
+
       if new_injuries_this_week.empty?
         import_log "new_injuries_to_save: #{new_injuries_to_save.size}"
       else
@@ -84,7 +88,7 @@ class Injury < ActiveRecord::Base
           id_to_injury[injury.fantasy_football_nerd_id] = injury
           id_to_injury
         end
-        
+
         new_injuries_to_save = new_injuries_this_week.map do |new_injury|
           if existing_injury = lookup[new_injury.id]
             existing_injury.attributes = Injury.attributes_from_payload(new_injury)
@@ -101,7 +105,7 @@ class Injury < ActiveRecord::Base
         import_log "new_injuries_to_save: #{new_injuries_to_save.size}"
         new_injuries_to_save.each(&:save)
       end
-      
+
       import_log "Done at #{Time.now}"
     rescue Exception => e
       import_log "Exception! #{e.message}: #{e.backtrace.join("\n")}"

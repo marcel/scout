@@ -1,31 +1,31 @@
 Scout::Server::Application.routes.draw do
   # get '/cabalist', to: Cabalist::Frontend, :anchor => false, :as => :cabalist
-  get "expert_ranks/index"
+  get "expert_ranks/(:week)", to: "expert_ranks#index", as: :expert_ranks
   get "expert_ranks/show"
   get "watches", to: "watch#index", as: :watch_list
   get "watch/update/:id", to: "watch#update", as: :update_watch
-  
-  resources :teams do 
-    member do 
+
+  resources :teams do
+    member do
       get 'roster/(:week)', to: "rosters#show", as: :roster
     end
     # resource :roster, only: :show
   end
-  
+
   get 'search', to: "players#search", as: :player_search
 
   resources :players do
     resource :player_point_totals, as: :points, path: :points, only: :show
   end
-  
+
   get "/defense/(:week)", to: "player_point_totals#defense", as: :defense
   get "/offense/(:week)", to: "player_point_totals#offense", as: :offense
-  
+
   get "/targets/(:week)", to: "player_point_totals#targets", as: :targets
   get "/carries/(:week)", to: "player_point_totals#carries", as: :carries
   get "/points/season", to: "player_point_totals#season", as: :season
   get "/points/(:week)", to: "player_point_totals#index", as: :points
-  
+
   get "/projections/(:week)", to: "projections#index"
   resources :projections
 
@@ -74,7 +74,7 @@ Scout::Server::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'

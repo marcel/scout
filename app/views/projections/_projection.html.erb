@@ -1,0 +1,13 @@
+<tr>
+  <td class="span1"><%= projection.rank %></td>
+  <td class="span3">
+    <% if projection.cached_player %>
+      <%= player_profile(projection.cached_player, projection_path(projection)) %>
+    <% else %>
+      None
+    <% end -%>
+  </td>
+  <td class="span2"><%= player_points_status(projection.standard_high) %></td>
+  <td class="span2"><%= link_to player_points_status(projection.standard), current_url(above: projection.standard.to_i, below: projection.standard.to_i + 1) %></td>
+  <td class="span2"><%= player_points_status(projection.standard_low) %></td>
+</tr>

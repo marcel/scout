@@ -1,106 +1,111 @@
 class PlayerPointTotalsController < ApplicationController
   before_action :set_player_with_points, only: :show
-  
+
   def index
     @week = (params[:week] || GameWeek.current.week).to_i
-    
+
     query = PlayerPointTotal.
       where(week: @week).
-      includes(:player).
       joins(:player)
-    
+
     @player_point_totals = apply_filters(query).
       order(total: :desc).
       limit(params[:limit] || 100)
   end
-  
+
   def season
     @no_sidebar = true # TODO Do this is a non-janky way
-    
+
     params[:position] ||= 'QB'
-    
+
      query = PlayerPointTotal.where.not(total: 0.0).
       joins(:player).
       includes(:player)
-      
+
       @player_point_totals = apply_filters(query).load.group_by(&:player)
   end
-  
+
   def defense
-    query = Player.defense.
-      includes(:points, :watches, :owner, :game_performances_for_team => :game)
-    
-    if params[:week]
-      @week = params[:week].to_i
-      query = query.where("armchair_analysis_games.wk" => @week) 
-      query = query.where("player_point_totals.week" => @week)
-    end
-    
-    @players = apply_filters(query).sort_by(&defense_sort_function)
-  end
-  
-  def offense
-    query = Player.defense.
-      includes(:points, :watches, :owner, :game_performances_for_team => :game)
+    query = Player.defense
 
     if params[:week]
+      # TODO Fix this. This doesn't work because the cached version is always loaded which
+      # will always be all of them and this where clause is ignored.
+      query = query.includes(:points, game_performances_for_team: :game)
       @week = params[:week].to_i
-      query = query.where("armchair_analysis_games.wk" => @week) 
+      query = query.where("armchair_analysis_games.wk" => @week)
+      query = query.where("player_point_totals.week" => @week)
+    end
+
+    @players = apply_filters(query).sort_by(&defense_sort_function)
+  end
+
+  def offense
+    query = Player.defense
+
+    if params[:week]
+      query = query.includes(:points, game_performances_for_team: :game)
+
+      @week = params[:week].to_i
+      query = query.where("armchair_analysis_games.wk" => @week)
       query = query.where("player_point_totals.week" => @week)
     end
 
     @players = apply_filters(query).sort_by(&offense_sort_function)
   end
-  
+
   def offense_sort_function
     ->(player) {
+      game_performances = player.cached_game_performances_for_team
+
       case params[:sort]
       when 'p'
-        -player.game_performances_for_team.map(&:pts).sum
+        -game_performances.map(&:pts).sum
       when 'pa'
-        player.game_performances_for_team.by_opponents.map(&:pts).sum
+        player.cached_game_performances_by_opponents.map(&:pts).sum
       when 'ry'
-        -player.game_performances_for_team.map(&:ry).sum 
+        -game_performances.map(&:ry).sum
       when 'py'
-        -player.game_performances_for_team.map(&:py).sum
+        -game_performances.map(&:py).sum
       else
-        -player.game_performances_for_team.map(&:pts).sum
+        -game_performances.map(&:pts).sum
       end
     }
   end
-  
+
   def defense_sort_function
     ->(player) {
+      opponent_performances = player.cached_game_performances_by_opponents
+
       case params[:sort]
       when 'fp'
-        -player.points.map(&:total).sum
+        -player.total_points
       when 'p'
-        -player.game_performances_for_team.map(&:dp).sum
+        -player.cached_game_performances_for_team.map(&:dp).sum
       when 'pa'
-        opponent_performances = player.game_performances_for_team.by_opponents
 
         opponent_performances.map(&:pts).sum - opponent_performances.map(&:dp).sum
       when 'ry'
-        player.game_performances_for_team.by_opponents.map(&:ry).sum
+        opponent_performances.map(&:ry).sum
       when 'py'
-        player.game_performances_for_team.by_opponents.map(&:py).sum
+        opponent_performances.map(&:py).sum
       else
-        -player.points.map(&:total).sum
+        -player.total_points
       end
     }
   end
-  
+
   def targets
     @week = (params[:week] || GameWeek.current.week).to_i
-    
+
     query = ArmchairAnalysis::Offense.joins(:player).
       joins(:game_in_season).
       where(armchair_analysis_games: {wk:  @week}).where("armchair_analysis_offenses.trg > 0").
       order(trg: :desc)
-      
+
     @offensive_performances = apply_filters(query).load
   end
-  
+
   def carries
     @week = (params[:week] || GameWeek.current.week).to_i
 
@@ -114,7 +119,7 @@ class PlayerPointTotalsController < ApplicationController
 
   def show
   end
-  
+
   def positions
   end
 
@@ -125,7 +130,7 @@ class PlayerPointTotalsController < ApplicationController
         clause = (["players.full_name LIKE ?"] * names.size).join(' OR ')
         query = query.where(clause, *names)
       end
-      
+
       query = query.joins(:player => :watches) if params[:watched]
       query = query.where("players.position" => params[:position].split(',')) if params[:position]
       query = query.where("players.team_abbr" => params[:team].split(',')) if params[:team]
@@ -137,14 +142,14 @@ class PlayerPointTotalsController < ApplicationController
           when 'owned'
             query.where("players.owner_key IS NOT NULL")
           else
-            query.where("players.ownership_type" => params[:ownership_type].split(',')) 
+            query.where("players.ownership_type" => params[:ownership_type].split(','))
           end
       end
-      
+
       query = query.limit(params[:limit].to_i) if params[:limit]
       query
     end
-    
+
     def set_player_with_points
       @player = Player.where(id: params[:player_id]).includes(:points, :projections, :offensive_performances => [:game_in_season]).first
     end

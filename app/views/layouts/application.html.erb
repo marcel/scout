@@ -39,7 +39,7 @@
               <input type="text" class="input-medium search-query">
               <button type="submit" class="btn">Search</button>
             </form> -->
-            
+
             <%= form_tag player_search_path, :method => 'get', :style => "padding-top: 5px", :class => "form-search pull-right", id: 'player-search'  do %>
               <div><%= text_field_tag :search,  params[:search], :placeholder => 'Player', :class => 'input-medium search-query' %></div>
               <div id="search-preview"></div>
@@ -52,7 +52,7 @@
               <li><%= link_to "Offense", offense_path  %></li>
               <li><%= link_to "Injuries", injuries_path  %></li>
               <li><%= link_to "Projections", projections_path  %></li>
-              <li><%= link_to "Expert Rankings", expert_ranks_index_path %></li>
+              <li><%= link_to "Expert Rankings", expert_ranks_path %></li>
               <li><%= link_to "Teams", teams_path  %></li>
               <li><%= link_to "Watch List", watch_list_path %></li>
               <!-- <li><%= link_to "Players", players_path  %></li> -->
@@ -75,7 +75,7 @@
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
                 <li class="nav-header"><%= content_for?(:sidebar_title) ? yield(:sidebar_title) : '' %></li>
-                <% if content_for?(:sidebar) %> 
+                <% if content_for?(:sidebar) %>
                   <%= yield(:sidebar) %>
                 <% else %>
                   <li><%= link_to "Points", points_path  %></li>
@@ -85,7 +85,7 @@
                   <li><%= link_to "Offense", offense_path  %></li>
                   <li><%= link_to "Injuries", injuries_path  %></li>
                   <li><%= link_to "Projections", projections_path  %></li>
-                  <li><%= link_to "Expert Rankings", expert_ranks_index_path %></li>
+                  <li><%= link_to "Expert Rankings", expert_ranks_path %></li>
                   <li><%= link_to "Teams", teams_path  %></li>
                   <li><%= link_to "Watch List", watch_list_path %></li>
                 <% end %>

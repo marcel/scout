@@ -5,12 +5,16 @@ class ExpertRank < ActiveRecord::Base
     inverse_of: :expert_ranks
   }
 
+  def cached_player
+    Rails.cache.fetch([Player.name, 'yahoo_player_key', yahoo_player_key]) { player }
+  end
+
   def ranked_in_previous_week?
-    week != 1 && player.expert_ranks.any? {|r| r.week == week - 1}
+    week != 1 && cached_player.expert_ranks.any? {|r| r.week == week - 1}
   end
 
   def previous_week
-    player.expert_ranks.detect {|r| r.week == week - 1}
+    cached_player.cached_expert_ranks.detect {|r| r.week == week - 1}
   end
 
   class << self

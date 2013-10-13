@@ -1,0 +1,22 @@
+<tr>
+  <td>
+  <div class="row-fluid">
+    <div class="span4"><%= player_profile(watched_player) %></div>
+    <div class="span4">
+      <dl class="dl-horizontal">
+        <% player_point_totals = watched_player.cached_points.map(&:total) %>
+        <dt>Total:</dt>
+        <dd><strong><%= watched_player.total_points.round(1) %></strong></dd>
+        <dt>Avg:</dt>
+        <dd><%= player_points_status((player_point_totals.inject(:+).to_f / player_point_totals.size).round(1)) %>
+        <dt>Max:</dt>
+        <dd><%= player_points_status(player_point_totals.max) %></dd>
+        <dt>Min:</dt>
+        <dd><%= player_points_status(player_point_totals.min) %></dd>
+      </dl>
+    </div>
+    <div class="span4">&nbsp;</div>
+  </div>
+  <div><%= render_player_performance_chart(watched_player, height: 500) %></div>
+  </td>
+</tr>

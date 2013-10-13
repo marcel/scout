@@ -1,0 +1,23 @@
+<tr>
+  <td class="span5">
+    <%= player_profile(injury.cached_player, injury_path(injury)) %>
+  </td>
+  <td class="span7">
+    <%- if injury.last_update < Date.today -%>
+      <div class="pull-right">
+        <small>
+          <em>Updated <%= distance_of_time_in_words_to_now(injury.last_update) %> ago</em>
+        </small>
+      </div>
+    <%- end -%>
+
+    <% if injury.injury.present? -%>
+      <div><%= link_to(injury.injury, current_url(injury: injury.injury)) %></div>
+    <% end -%>
+    <% if injury.practice_status.present? -%>
+      <div>
+        <%= link_to(injury.practice_status, current_url(practice_status: injury.practice_status)) %>
+      </div>
+    <% end -%>
+  </td>
+</tr>

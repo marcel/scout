@@ -6,6 +6,10 @@ class PlayerPointTotal < ActiveRecord::Base
     inverse_of: :points
   }
 
+  def cached_player
+    Rails.cache.fetch(['Player', 'yahoo_player_key', yahoo_player_key]) { player }
+  end
+
   class << self
     include Scout::ImportLogging
     def from_payload(payload)

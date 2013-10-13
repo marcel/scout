@@ -21,34 +21,6 @@
     </tr>
   </thead>
   <tbody class="row-fluid">
-    <% @expert_ranks.each do |expert_rank| %>
-      <tr>
-        <td class="span1">
-          <strong><%= expert_rank.overall_rank %></strong>
-          <%= expert_ranking_trend(expert_rank) %>
-          <!-- <% if expert_rank.overall_rank != @actual_ranks[expert_rank.player.id] %>
-            <br /><span style="padding: 5px" class="label label-success icon-info-sign">&nbsp;<strong><%= @actual_ranks[expert_rank.player.id] %></strong></span>
-          <% end %> -->
-        </td>
-        <td class="span3">
-          <%= player_profile(expert_rank.player) %>
-          <% expert_rank.player.expert_rank_on_week(@week - 1)%>
-        </td>
-        <td class="span1">
-          <% if points = expert_rank.player.points.on_week(@week) %>
-            A: <%= player_points_status(points.total) %><br />
-          <% end %>
-          <% if projections = expert_rank.player.projections.on_week(@week).last %>
-            <% {H: :standard_high, S: :standard, L: :standard_low}.each do |label, projection| %>
-              <%= "#{label}: " %> <%= player_points_status(projections.send(projection)) %><br />
-            <% end %>
-          <% end %>
-        <td class="span1"><%= expert_rank.expert_1_rank %></td>
-        <td class="span1"><%= expert_rank.expert_2_rank %></td>
-        <td class="span1"><%= expert_rank.expert_3_rank %></td>
-        <td class="span1"><%= expert_rank.expert_4_rank %></td>
-        <td class="span1"><%= expert_rank.expert_5_rank %></td>
-      </tr>
-    <% end %>
+    <%= render partial: 'expert_rank', collection: @expert_ranks, cache: ->(e) { partial_cache_key("expert-rank-#{e.id}") } %>
   </tbody>
 </table>
