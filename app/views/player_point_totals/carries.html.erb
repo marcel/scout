@@ -15,26 +15,6 @@
     </tr>
   </thead>
   <tbody>
-    <% @offensive_performances.each do |offensive_performance| %>
-      <tr>
-        <td class="span4">
-          <%= player_profile(offensive_performance.player) %>
-        </td>
-        <td class="span2">
-        <%= offensive_performance.ra %>
-        <% if (redzone_opportunity = offensive_performance.redzone_opportunity) && !redzone_opportunity.ra.zero? %>
-          (<%= redzone_opportunity.ra %> in RZ)
-        <% end %>
-        </td>
-        <td class="span2">
-          <%= offensive_performance.sra %> (<%= (offensive_performance.sra.to_f / offensive_performance.ra * 100).to_i %>%)
-        </td>
-        <td class="span2">
-          <%= offensive_performance.ry %> (<%= (offensive_performance.ry.to_f / offensive_performance.ra).round(1) %> avg)
-        </td>
-        <td class="span2"><%= offensive_performance.tdr %></td>
-        <td class="span2"><%= offensive_performance.tdre %></td>
-      </tr>
-    <% end %>
+    <%= render partial: 'carry_performance', collection: @offensive_performances, cache: ->(t) { "carry-performance-#{t.uid}" } %>
   </tbody>
 </table>

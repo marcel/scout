@@ -1,4 +1,4 @@
-# encoding: UTF-8
+ encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131006222019) do
+ActiveRecord::Schema.define(version: 20131013020037) do
 
   create_table "accounts", force: true do |t|
     t.string   "username"
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(version: 20131006222019) do
     t.string  "team",   limit: 3,                         null: false
   end
 
+  add_index "armchair_analysis_offenses", ["gid"], name: "index_armchair_analysis_offenses_on_gid", using: :btree
   add_index "armchair_analysis_offenses", ["uid"], name: "uid", unique: true, using: :btree
 
   create_table "armchair_analysis_offensive_lines", id: false, force: true do |t|
@@ -428,148 +429,149 @@ ActiveRecord::Schema.define(version: 20131006222019) do
   add_index "armchair_analysis_tackles", ["uid"], name: "uid", unique: true, using: :btree
 
   create_table "armchair_analysis_teams", id: false, force: true do |t|
-    t.integer "tid",                                     null: false
-    t.integer "gid",                                     null: false
-    t.string  "tname", limit: 3,                         null: false
-    t.integer "pts",                                     null: false
-    t.integer "1qp",                                     null: false
-    t.integer "2qp",                                     null: false
-    t.integer "3qp",                                     null: false
-    t.integer "4qp",                                     null: false
-    t.integer "rfd",                                     null: false
-    t.integer "pfd",                                     null: false
-    t.integer "ifd",                                     null: false
-    t.integer "ry",                                      null: false
-    t.integer "ra",                                      null: false
-    t.integer "py",                                      null: false
-    t.integer "pa",                                      null: false
-    t.integer "pc",                                      null: false
-    t.integer "sk",                                      null: false
-    t.integer "int",                                     null: false
-    t.integer "fum",                                     null: false
-    t.integer "pu",                                      null: false
-    t.integer "gpy",                                     null: false
-    t.integer "pr",                                      null: false
-    t.integer "pry",                                     null: false
-    t.integer "kr",                                      null: false
-    t.integer "kry",                                     null: false
-    t.integer "ir",                                      null: false
-    t.integer "iry",                                     null: false
-    t.integer "pen",                                     null: false
-    t.decimal "top",             precision: 3, scale: 1, null: false
-    t.integer "td",                                      null: false
-    t.integer "tdr",                                     null: false
-    t.integer "tdp",                                     null: false
-    t.integer "tdt",                                     null: false
-    t.integer "fgm",                                     null: false
-    t.integer "fgat",                                    null: false
-    t.integer "fgy",                                     null: false
-    t.integer "rza",                                     null: false
-    t.integer "rzc",                                     null: false
-    t.integer "bry",                                     null: false
-    t.integer "bpy",                                     null: false
-    t.integer "srp",                                     null: false
-    t.integer "s1rp",                                    null: false
-    t.integer "s2rp",                                    null: false
-    t.integer "s3rp",                                    null: false
-    t.integer "spp",                                     null: false
-    t.integer "s1pp",                                    null: false
-    t.integer "s2pp",                                    null: false
-    t.integer "s3pp",                                    null: false
-    t.integer "lea",                                     null: false
-    t.integer "ley",                                     null: false
-    t.integer "lta",                                     null: false
-    t.integer "lty",                                     null: false
-    t.integer "lga",                                     null: false
-    t.integer "lgy",                                     null: false
-    t.integer "mda",                                     null: false
-    t.integer "mdy",                                     null: false
-    t.integer "rga",                                     null: false
-    t.integer "rgy",                                     null: false
-    t.integer "rta",                                     null: false
-    t.integer "rty",                                     null: false
-    t.integer "rea",                                     null: false
-    t.integer "rey",                                     null: false
-    t.integer "r1a",                                     null: false
-    t.integer "r1y",                                     null: false
-    t.integer "r2a",                                     null: false
-    t.integer "r2y",                                     null: false
-    t.integer "r3a",                                     null: false
-    t.integer "r3y",                                     null: false
-    t.integer "qba",                                     null: false
-    t.integer "qby",                                     null: false
-    t.integer "sla",                                     null: false
-    t.integer "sly",                                     null: false
-    t.integer "sma",                                     null: false
-    t.integer "smy",                                     null: false
-    t.integer "sra",                                     null: false
-    t.integer "sry",                                     null: false
-    t.integer "dla",                                     null: false
-    t.integer "dly",                                     null: false
-    t.integer "dma",                                     null: false
-    t.integer "dmy",                                     null: false
-    t.integer "dra",                                     null: false
-    t.integer "dry",                                     null: false
-    t.integer "wr1a",                                    null: false
-    t.integer "wr1y",                                    null: false
-    t.integer "wr3a",                                    null: false
-    t.integer "wr3y",                                    null: false
-    t.integer "tea",                                     null: false
-    t.integer "tey",                                     null: false
-    t.integer "rba",                                     null: false
-    t.integer "rby",                                     null: false
-    t.integer "sga",                                     null: false
-    t.integer "sgy",                                     null: false
-    t.integer "p1a",                                     null: false
-    t.integer "p1y",                                     null: false
-    t.integer "p2a",                                     null: false
-    t.integer "p2y",                                     null: false
-    t.integer "p3a",                                     null: false
-    t.integer "p3y",                                     null: false
-    t.integer "spc",                                     null: false
-    t.integer "mpc",                                     null: false
-    t.integer "lpc",                                     null: false
-    t.integer "q1ra",                                    null: false
-    t.integer "q1ry",                                    null: false
-    t.integer "q1pa",                                    null: false
-    t.integer "q1py",                                    null: false
-    t.integer "lcra",                                    null: false
-    t.integer "lcry",                                    null: false
-    t.integer "lcpa",                                    null: false
-    t.integer "lcpy",                                    null: false
-    t.integer "rzra",                                    null: false
-    t.integer "rzry",                                    null: false
-    t.integer "rzpa",                                    null: false
-    t.integer "rzpy",                                    null: false
-    t.integer "sky",                                     null: false
-    t.decimal "lbs",             precision: 3, scale: 1, null: false
-    t.decimal "dbs",             precision: 3, scale: 1, null: false
-    t.integer "sfpy",                                    null: false
-    t.integer "drv",                                     null: false
-    t.integer "npy",                                     null: false
-    t.integer "tb",                                      null: false
-    t.integer "i20",                                     null: false
-    t.integer "rtd",                                     null: false
-    t.decimal "lnr",             precision: 3, scale: 1, null: false
-    t.decimal "lnp",             precision: 3, scale: 1, null: false
-    t.decimal "lbr",             precision: 3, scale: 1, null: false
-    t.decimal "lbp",             precision: 3, scale: 1, null: false
-    t.decimal "dbr",             precision: 3, scale: 1, null: false
-    t.decimal "dbp",             precision: 3, scale: 1, null: false
-    t.integer "nha",                                     null: false
-    t.integer "s3a",                                     null: false
-    t.integer "s3c",                                     null: false
-    t.integer "l3a",                                     null: false
-    t.integer "l3c",                                     null: false
-    t.integer "stf",                                     null: false
-    t.integer "dp",                                      null: false
-    t.integer "fsp",                                     null: false
-    t.integer "ohp",                                     null: false
-    t.integer "pbep",                                    null: false
-    t.integer "dlp",                                     null: false
-    t.integer "dsp",                                     null: false
-    t.integer "dum",                                     null: false
-    t.integer "pfn",                                     null: false
+    t.integer  "tid",                                                 null: false
+    t.integer  "gid",                                                 null: false
+    t.string   "tname",             limit: 3,                         null: false
+    t.integer  "pts",                                                 null: false
+    t.integer  "1qp",                                                 null: false
+    t.integer  "2qp",                                                 null: false
+    t.integer  "3qp",                                                 null: false
+    t.integer  "4qp",                                                 null: false
+    t.integer  "rfd",                                                 null: false
+    t.integer  "pfd",                                                 null: false
+    t.integer  "ifd",                                                 null: false
+    t.integer  "ry",                                                  null: false
+    t.integer  "ra",                                                  null: false
+    t.integer  "py",                                                  null: false
+    t.integer  "pa",                                                  null: false
+    t.integer  "pc",                                                  null: false
+    t.integer  "sk",                                                  null: false
+    t.integer  "int",                                                 null: false
+    t.integer  "fum",                                                 null: false
+    t.integer  "pu",                                                  null: false
+    t.integer  "gpy",                                                 null: false
+    t.integer  "pr",                                                  null: false
+    t.integer  "pry",                                                 null: false
+    t.integer  "kr",                                                  null: false
+    t.integer  "kry",                                                 null: false
+    t.integer  "ir",                                                  null: false
+    t.integer  "iry",                                                 null: false
+    t.integer  "pen",                                                 null: false
+    t.decimal  "top",                         precision: 3, scale: 1, null: false
+    t.integer  "td",                                                  null: false
+    t.integer  "tdr",                                                 null: false
+    t.integer  "tdp",                                                 null: false
+    t.integer  "tdt",                                                 null: false
+    t.integer  "fgm",                                                 null: false
+    t.integer  "fgat",                                                null: false
+    t.integer  "fgy",                                                 null: false
+    t.integer  "rza",                                                 null: false
+    t.integer  "rzc",                                                 null: false
+    t.integer  "bry",                                                 null: false
+    t.integer  "bpy",                                                 null: false
+    t.integer  "srp",                                                 null: false
+    t.integer  "s1rp",                                                null: false
+    t.integer  "s2rp",                                                null: false
+    t.integer  "s3rp",                                                null: false
+    t.integer  "spp",                                                 null: false
+    t.integer  "s1pp",                                                null: false
+    t.integer  "s2pp",                                                null: false
+    t.integer  "s3pp",                                                null: false
+    t.integer  "lea",                                                 null: false
+    t.integer  "ley",                                                 null: false
+    t.integer  "lta",                                                 null: false
+    t.integer  "lty",                                                 null: false
+    t.integer  "lga",                                                 null: false
+    t.integer  "lgy",                                                 null: false
+    t.integer  "mda",                                                 null: false
+    t.integer  "mdy",                                                 null: false
+    t.integer  "rga",                                                 null: false
+    t.integer  "rgy",                                                 null: false
+    t.integer  "rta",                                                 null: false
+    t.integer  "rty",                                                 null: false
+    t.integer  "rea",                                                 null: false
+    t.integer  "rey",                                                 null: false
+    t.integer  "r1a",                                                 null: false
+    t.integer  "r1y",                                                 null: false
+    t.integer  "r2a",                                                 null: false
+    t.integer  "r2y",                                                 null: false
+    t.integer  "r3a",                                                 null: false
+    t.integer  "r3y",                                                 null: false
+    t.integer  "qba",                                                 null: false
+    t.integer  "qby",                                                 null: false
+    t.integer  "sla",                                                 null: false
+    t.integer  "sly",                                                 null: false
+    t.integer  "sma",                                                 null: false
+    t.integer  "smy",                                                 null: false
+    t.integer  "sra",                                                 null: false
+    t.integer  "sry",                                                 null: false
+    t.integer  "dla",                                                 null: false
+    t.integer  "dly",                                                 null: false
+    t.integer  "dma",                                                 null: false
+    t.integer  "dmy",                                                 null: false
+    t.integer  "dra",                                                 null: false
+    t.integer  "dry",                                                 null: false
+    t.integer  "wr1a",                                                null: false
+    t.integer  "wr1y",                                                null: false
+    t.integer  "wr3a",                                                null: false
+    t.integer  "wr3y",                                                null: false
+    t.integer  "tea",                                                 null: false
+    t.integer  "tey",                                                 null: false
+    t.integer  "rba",                                                 null: false
+    t.integer  "rby",                                                 null: false
+    t.integer  "sga",                                                 null: false
+    t.integer  "sgy",                                                 null: false
+    t.integer  "p1a",                                                 null: false
+    t.integer  "p1y",                                                 null: false
+    t.integer  "p2a",                                                 null: false
+    t.integer  "p2y",                                                 null: false
+    t.integer  "p3a",                                                 null: false
+    t.integer  "p3y",                                                 null: false
+    t.integer  "spc",                                                 null: false
+    t.integer  "mpc",                                                 null: false
+    t.integer  "lpc",                                                 null: false
+    t.integer  "q1ra",                                                null: false
+    t.integer  "q1ry",                                                null: false
+    t.integer  "q1pa",                                                null: false
+    t.integer  "q1py",                                                null: false
+    t.integer  "lcra",                                                null: false
+    t.integer  "lcry",                                                null: false
+    t.integer  "lcpa",                                                null: false
+    t.integer  "lcpy",                                                null: false
+    t.integer  "rzra",                                                null: false
+    t.integer  "rzry",                                                null: false
+    t.integer  "rzpa",                                                null: false
+    t.integer  "rzpy",                                                null: false
+    t.integer  "sky",                                                 null: false
+    t.decimal  "lbs",                         precision: 3, scale: 1, null: false
+    t.decimal  "dbs",                         precision: 3, scale: 1, null: false
+    t.integer  "sfpy",                                                null: false
+    t.integer  "drv",                                                 null: false
+    t.integer  "npy",                                                 null: false
+    t.integer  "tb",                                                  null: false
+    t.integer  "i20",                                                 null: false
+    t.integer  "rtd",                                                 null: false
+    t.decimal  "lnr",                         precision: 3, scale: 1, null: false
+    t.decimal  "lnp",                         precision: 3, scale: 1, null: false
+    t.decimal  "lbr",                         precision: 3, scale: 1, null: false
+    t.decimal  "lbp",                         precision: 3, scale: 1, null: false
+    t.decimal  "dbr",                         precision: 3, scale: 1, null: false
+    t.decimal  "dbp",                         precision: 3, scale: 1, null: false
+    t.integer  "nha",                                                 null: false
+    t.integer  "s3a",                                                 null: false
+    t.integer  "s3c",                                                 null: false
+    t.integer  "l3a",                                                 null: false
+    t.integer  "l3c",                                                 null: false
+    t.integer  "stf",                                                 null: false
+    t.integer  "dp",                                                  null: false
+    t.integer  "fsp",                                                 null: false
+    t.integer  "ohp",                                                 null: false
+    t.integer  "pbep",                                                null: false
+    t.integer  "dlp",                                                 null: false
+    t.integer  "dsp",                                                 null: false
+    t.integer  "dum",                                                 null: false
+    t.integer  "pfn",                                                 null: false
+    t.datetime "autoclassified_at"
   end
 
   add_index "armchair_analysis_teams", ["gid", "tname"], name: "index_armchair_analysis_teams_on_gid_and_tname", using: :btree

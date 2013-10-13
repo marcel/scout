@@ -23,21 +23,6 @@
     </tr>
   </thead>
   <tbody>
-    <% @offensive_performances.each do |offensive_performance| %>
-      <tr>
-        <td class="span4">
-          <%= player_profile(offensive_performance.player) %>
-        </td>
-        <td class="span2">
-        <%= offensive_performance.trg %>
-        <% if (redzone_opportunity = offensive_performance.redzone_opportunity) && !redzone_opportunity.trg.zero? %>
-          (<%= redzone_opportunity.trg %> in red zone)
-        <% end %>
-        </td>
-        <td class="span2"><%= offensive_performance.rec %></td>
-        <td class="span2"><%= offensive_performance.recy %></td>
-        <td class="span2"><%= offensive_performance.tdre %></td>
-      </tr>
-    <% end %>
+    <%= render partial: 'target_performance', collection: @offensive_performances, cache: ->(t) { "target-performance-#{t.uid}" } %>
   </tbody>
 </table>

@@ -16,6 +16,10 @@ class Player < ActiveRecord::Base
     inverse_of: :players
   }
 
+  def cached_owner
+    Rails.cache.fetch(['Team', owner_key]) { owner }
+  end
+
   has_many :injuries, {
     primary_key: :fantasy_football_nerd_id,
     foreign_key: :fantasy_football_nerd_id,
@@ -26,10 +30,14 @@ class Player < ActiveRecord::Base
     primary_key: :fantasy_football_nerd_id,
     foreign_key: :fantasy_football_nerd_id,
     inverse_of: :player
-  } do 
-    def on_week(week)
-      self.select {|p| p.week == week } # N.B. Explicit self causes the loaded collection to be used rather than querying
-    end
+  } # do
+  #     def on_week(week)
+  #       self.select {|p| p.week == week } # N.B. Explicit self causes the loaded collection to be used rather than querying
+  #     end
+  #   end
+
+  def cached_projections
+    Rails.cache.fetch(['projections', id]) { projections.to_a }
   end
 
   has_many :points, {
@@ -37,14 +45,18 @@ class Player < ActiveRecord::Base
     :foreign_key => :yahoo_player_key,
     :class_name  => 'PlayerPointTotal',
     inverse_of: :player
-  } do
-    def on_week(week)
-      self.select do |point_total|
-        point_total.week == week
-      end.sort_by(&:updated_at).last
-    end
-  end
-  
+  } # do
+   #    def on_week(week)
+   #      self.select do |point_total|
+   #        point_total.week == week
+   #      end.sort_by(&:updated_at).last
+   #    end
+   #  end
+
+   def cached_points
+     Rails.cache.fetch(['points', id]) { points.to_a }
+   end
+
   has_many :stats, {
     primary_key: :yahoo_key,
     foreign_key: :yahoo_player_key,
@@ -53,43 +65,55 @@ class Player < ActiveRecord::Base
   }
 
   has_many :watches, inverse_of: :player
-  
+
+  def cached_watches
+    Rails.cache.fetch(['watches', id]) { watches.to_a }
+  end
+
   has_many :expert_ranks, {
     primary_key: :yahoo_key,
     foreign_key: :yahoo_player_key,
     inverse_of: :player
   }
-  
+
   has_many :teammates, {
     class_name: "Player",
     foreign_key: "team_abbr",
     primary_key: "team_abbr"
   }
-  
+
   has_many :home_games, {
-    primary_key: :team_abbr, 
+    primary_key: :team_abbr,
     foreign_key: :home_team,
     class_name: 'Game'
-  } do 
+  } do
     def on_week(week)
-      self.detect do |game| 
+      self.detect do |game|
         game.week == week
       end
     end
   end
-  
+
+  def cached_home_games
+    Rails.cache.fetch(['home_games', id]) { home_games.to_a }
+  end
+
+  def cached_away_games
+    Rails.cache.fetch(['away_games', id]) { away_games.to_a }
+  end
+
   has_many :away_games, {
     primary_key: :team_abbr,
     foreign_key: :away_team,
     class_name: 'Game'
-  } do 
+  } do
     def on_week(week)
-      self.detect do |game| 
+      self.detect do |game|
         game.week == week
       end
     end
   end
-  
+
   has_many :game_performances_for_team, {
     primary_key: :armchair_analysis_team_name,
     foreign_key: :tname,
@@ -102,15 +126,15 @@ class Player < ActiveRecord::Base
         sort_by {|t| t.game.wk }
     end
   end
-  
+
   scope :defense, ->{
     where(position: 'DEF')
   }
-  
+
   scope :players_with_no_team, ->{
     where(armchair_analysis_team_id: nil).load
   }
-  
+
   has_many :offensive_performances, {
     foreign_key: :player,
     primary_key: :armchair_analysis_id,
@@ -121,27 +145,27 @@ class Player < ActiveRecord::Base
         offensive_performance.game == week
       end
     end
-    
+
     def has_targets?
       !self.map(&:trg).sum.zero?
     end
-    
+
     def has_rush_attempts?
       !self.map(&:ra).sum.zero?
     end
-    
+
     def has_pass_attempts?
       !self.map(&:pa).sum.zero?
     end
   end
-  
+
   def offensive_output
     performances = game_performances_for_team
     percent_3rd_down_conversions = (
-      (performances.map(&:s3c).sum + performances.map(&:l3c).sum).to_f / 
+      (performances.map(&:s3c).sum + performances.map(&:l3c).sum).to_f /
       (performances.map(&:s3a).sum + performances.map(&:l3a).sum)
     ) * 100
-    
+
     {
       points: performances.map(&:pts).sum,
       max_points: performances.map(&:pts).max,
@@ -163,14 +187,14 @@ class Player < ActiveRecord::Base
   end
 
   DEFAUL_OFFENSIVE_OUTPUT_BOOSTS = {
-    
+
   }
-  
+
   def offensive_output_score(boosts = DEFAUL_OFFENSIVE_OUTPUT_BOOSTS)
     output = offensive_output
     rest_of_league = Player.defense.where.not(team_abbr: team_abbr).includes(:game_performances_for_team).load
     output_from_league = rest_of_league.map(&:offensive_output)
-    
+
     output.keys.inject({}) do |score, key|
       # if boosts.has_key?(key)
         # boost = boosts[key]
@@ -185,48 +209,54 @@ class Player < ActiveRecord::Base
       # end
     end
   end
-  
+
   has_one :extended_bio, {
     foreign_key: :player,
     primary_key: :armchair_analysis_id,
     class_name: 'ArmchairAnalysis::Player'
   }
-  
+
   has_many :redzone_opportunities, {
     primary_key: :armchair_analysis_id,
     foreign_key: :player,
     class_name: "ArmchairAnalysis::RedzoneOpportunity"
   }
 
+  def cached_redzone_opportunities
+    Rais.cache.fetch(['redzone_opportunities', armchair_analysis_id]) {
+      redzone_opportunities.to_a
+    }
+  end
+
   has_many :catches, -> {
     where(type: 'PASS', conv: 'Y')
   }, {
     foreign_key: :trg,
     primary_key: :armchair_analysis_id,
-    class_name: "ArmchairAnalysis::Conversion"     
+    class_name: "ArmchairAnalysis::Conversion"
   }
-  
+
   def try_to_find_team(force = false)
     return nil if !armchair_analysis_team_name.nil? && !force
-    
+
     team_name_to_match = team_abbr == 'Jax' ? 'JAC' : team_abbr.upcase
-    
+
     if match = ArmchairAnalysis::Team.find_by(tname: team_name_to_match)
       self[:armchair_analysis_team_name] = team_name_to_match
       self
     else
       nil
     end
-  end 
-  
+  end
+
   # has_many :games, ->(player) {
   #   where("games.home_team = ? OR games.away_team = ?", player.team_abbr, player.team_abbr)
   # }, primary_key: nil, foreign_key: nil
-  
+
   def game_on_week(week)
-    home_games.on_week(week) || away_games.on_week(week)
+    cached_home_games.find {|g| g.week == week } || cached_away_games.find {|g| g.week == week }
   end
-  
+
   def opponent_on_week(week)
     if game = game_on_week(week)
       game.away_team == team_abbr ? game.home_team : game.away_team
@@ -234,7 +264,7 @@ class Player < ActiveRecord::Base
       nil
     end
   end
-  
+
   def expert_rank_on_week(week)
     expert_ranks.detect do |rank|
       rank.week == week
@@ -242,17 +272,17 @@ class Player < ActiveRecord::Base
   end
 
   def points_on_week(week)
-    # TODO Is there a way to not make this do N+1 queries?
-    # points.where(week: week).first
-    points.detect {|point_total| point_total.week == week }
+    cached_points.select do |point_total|
+      point_total.week == week
+    end.sort_by(&:updated_at).last
   end
 
   def projection(week = GameWeek.current.week)
     # TODO Decide if defaulting to an empty projection is desirable, probably not
-    projections.where(week: week).order(updated_at: :desc).first ||
+    cached_projections.select {|p| p.week == week }.sort_by(&:updated_at).last||
       Projection.new(standard: 0.0, standard_high: 0.0, standard_low: 0.0)
   end
-  
+
   def total_points
     points.map(&:total).sum
   end

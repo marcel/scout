@@ -20,7 +20,7 @@ class ExpertRanksController < ApplicationController
     @expert_ranks = query.load
       
     @actual_ranks = @expert_ranks.map(&:player).sort_by do |player| 
-        -player.points.on_week(@week).total
+        -player.points_on_week(@week).total
     end.each_with_index.inject({}) do |actual_ranks, (player, index)|
       actual_ranks[player.id] = index + 1
       actual_ranks

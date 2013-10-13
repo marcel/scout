@@ -4,24 +4,24 @@ class Projection < ActiveRecord::Base
     :foreign_key => :fantasy_football_nerd_id,
     inverse_of: :projections
   }
-  
+
   scope :latest, -> {
     where(week: GameWeek.current.week).
     group(:fantasy_football_nerd_id).
     order("projections.rank" => :desc)
   }
-  
+
   scope :on_week, ->(week) {
     where(week: week)
   }
 
   class << self
     include Scout::ImportLogging
-    
+
     def from_payload(payload)
       new(attributes_from_payload(payload))
     end
-    
+
     def attributes_from_payload(payload)
       projection = payload.projection
       {
@@ -50,12 +50,12 @@ class Projection < ActiveRecord::Base
       projections_for_this_week = FFNerd.projections(week)
 
       import_log "projections_for_this_week: #{projections_for_this_week.size}"
-            
+
       lookup = existing_projections.inject({}) do |id_to_projection, projection|
         id_to_projection[projection.fantasy_football_nerd_id] = projection
         id_to_projection
       end
-      
+
       new_records         = 0
       updated_projections = 0
       updated_ranks       = 0
@@ -85,7 +85,7 @@ class Projection < ActiveRecord::Base
       import_log "updated projections: #{updated_projections}"
       import_log "updated ranks: #{updated_ranks}"
       projections_to_save.each(&:save)
-      
+
       import_log "Done at #{Time.now}"
     rescue Exception => e
       import_log "Exception! #{e.message}:\n #{e.backtrace.join("\n ")}"

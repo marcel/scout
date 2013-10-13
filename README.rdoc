@@ -3,7 +3,11 @@
 * Starting the dev server
 
    % bundle exec unicorn
-   
+
+* Starting the staging server
+
+  % bundle exec unicorn_rails -E staging
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

@@ -53,7 +53,7 @@ gem 'faster_xml_simple'
 gem 'fantasy_football_nerd'
 
 gem 'pry'
-gem 'pry-rails', group: :development
+gem 'pry-rails', group: [:development, :staging]
 
 gem 'lazy_high_charts'
 gem 'will_paginate'
@@ -62,3 +62,13 @@ gem 'will_paginate'
 # gem 'sparklines'
 
 gem 'mysql2'
+
+# Doesn't work with associations that have custom primary/foreign_keys
+#gem 'identity_cache'
+#gem 'cityhash'
+
+gem 'dalli'
+
+gem 'rack-mini-profiler'
+
+gem 'multi_fetch_fragments'

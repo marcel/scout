@@ -1,0 +1,19 @@
+<tr>
+  <td class="span4">
+    <%= player_profile(carry_performance.cached_player) %>
+  </td>
+  <td class="span2">
+  <%= carry_performance.ra %>
+  <% if (redzone_opportunity = carry_performance.cached_redzone_opportunity) && !redzone_opportunity.ra.zero? %>
+    (<%= redzone_opportunity.ra %> in RZ)
+  <% end %>
+  </td>
+  <td class="span2">
+    <%= carry_performance.sra %> (<%= (carry_performance.sra.to_f / carry_performance.ra * 100).to_i %>%)
+  </td>
+  <td class="span2">
+    <%= carry_performance.ry %> (<%= (carry_performance.ry.to_f / carry_performance.ra).round(1) %> avg)
+  </td>
+  <td class="span2"><%= carry_performance.tdr %></td>
+  <td class="span2"><%= carry_performance.tdre %></td>
+</tr>

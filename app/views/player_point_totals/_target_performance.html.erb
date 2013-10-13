@@ -1,0 +1,14 @@
+<tr>
+  <td class="span4">
+    <%= player_profile(target_performance.cached_player) %>
+  </td>
+  <td class="span2">
+  <%= target_performance.trg %>
+  <% if (redzone_opportunity = target_performance.cached_redzone_opportunity) && !redzone_opportunity.trg.zero? %>
+    (<%= redzone_opportunity.trg %> in red zone)
+  <% end %>
+  </td>
+  <td class="span2"><%= target_performance.rec %></td>
+  <td class="span2"><%= target_performance.recy %></td>
+  <td class="span2"><%= target_performance.tdre %></td>
+</tr>

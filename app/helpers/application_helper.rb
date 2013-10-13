@@ -3,7 +3,6 @@ module ApplicationHelper
     render partial: 'players/profile', :locals => {
       player: player,
       path:  path ? link_to(player.full_name, path) : player.full_name
-
     }
   end
 
@@ -36,7 +35,7 @@ module ApplicationHelper
   def player_ownership(player)
     case player.ownership_type
     when 'team'
-      content_tag(:strong, link_to(player.owner.name, current_url(:owner => player.owner_key)))
+      content_tag(:strong, link_to(player.cached_owner.name, current_url(:owner => player.owner_key)))
     when 'waivers'
       content_tag(:em, link_to("Waivers (#{player.waiver_date.strftime('%-m/%-d')})", current_url(ownership_type: 'waivers')))
     when 'freeagents'
@@ -45,12 +44,12 @@ module ApplicationHelper
       ''
     end
   end
-  
+
   def watch_button(player)
     watch_params = {id: player.id, upvote: 1}
-    
-    button_class = if player.watches.any? 
-      if player.watches.first.voted_up?
+
+    button_class = if player.cached_watches.any?
+      if player.cached_watches.first.voted_up?
         watch_params.delete(:upvote)
         'btn-success'
       else
@@ -63,7 +62,7 @@ module ApplicationHelper
     button_classes = [button_class, default_classes].join(' ')
     onclick = %[
       button = $('.watch-button-#{player.id}');
-    
+
       if (button.hasClass('btn-primary')) {
         button.addClass('btn-success').removeClass('btn-primary');
       } else if (button.hasClass('btn-success')) {
@@ -72,11 +71,11 @@ module ApplicationHelper
         button.addClass('btn-primary').removeClass('btn');
       }; return false;
     ]
-    
-    
+
+
     link_to(
-      content_tag(:i, '', :class => 'icon-star'), 
-      update_watch_path(watch_params), 
+      content_tag(:i, '', :class => 'icon-star'),
+      update_watch_path(watch_params),
       {remote: true, :class => button_classes, onclick: onclick}
     )
   end
@@ -118,7 +117,7 @@ module ApplicationHelper
   def points_badge(points, badge_class)
     content_tag(:span, points, class: "badge badge-#{badge_class}")
   end
-  
+
   def expert_ranking_trend(expert_rank)
     icon = ''
     label = ''
@@ -128,7 +127,7 @@ module ApplicationHelper
       if previous_week_rank > expert_rank.overall_rank
         icon = 'icon-arrow-up'
         delta = previous_week_rank - expert_rank.overall_rank
-        
+
         label = delta >= 5 ? 'label-success' : 'label-info'
       elsif previous_week_rank < expert_rank.overall_rank
         icon = 'icon-arrow-down'
@@ -140,38 +139,38 @@ module ApplicationHelper
       label = ''
       delta = expert_rank.week == 1 ? '' : 'new'
     end
-    
+
     css_class = delta.present? ? [icon, label, 'label'].select(&:present?).join(' ') : ''
-      
+
     content_tag(:span, content_tag(:strong, " #{delta}"), style: "padding: 5px", :class => css_class)
       # <span style="padding: 5px" class="label label-success icon-arrow-up">&nbsp;<strong>5</strong></span>
   end
-  
+
   def position_type_selector(position_type)
     mapping = {
       'quarterback'           => 'QB',
       'running-back'          => 'RB',
-      'wide-receiver'         => 'WR', 
+      'wide-receiver'         => 'WR',
       'tight-end'             => 'TE',
       'kicker'                => 'K',
       'defense-special-teams' => 'DST'
     }
-    
+
     current = position_type.to_s
-    
+
     position_types = mapping.map do |type, display|
       label = if type == position_type
         'active'
       else
         ''
       end
-      
+
       [type, display, label]
     end
-    
+
     render partial: "shared/position_type_selector", locals: {position_types: position_types}
   end
-  
+
   def weeks_in_season(week, season_view = false)
     current = GameWeek.current.week
     active = (week || current).to_i
@@ -197,9 +196,9 @@ module ApplicationHelper
   def current_url(parameters_to_add)
     url_for(params.merge(parameters_to_add))
   end
-  
+
   def player_performance_chart(player, options = {})
-    # TODO Rather than using group here to ensure there is only 1 data point per week, figure out if the 
+    # TODO Rather than using group here to ensure there is only 1 data point per week, figure out if the
     # chart can show multiple data points per week in case projections changed over a week
     points      = player.points.order(week: :asc, updated_at: :desc).group(:week)
     projections = player.projections.order(week: :asc, updated_at: :desc).group(:week)
@@ -220,7 +219,7 @@ module ApplicationHelper
       f.series(type: 'spline', name: 'Projected Low',     data: projections.map(&:standard_low), color: '#b94a48')
     end
   end
-  
+
   def season_performance_chart(player_point_totals_by_player)
     weeks = 1.upto(GameWeek.current.week).map {|week| "Week #{week}" }
     max = player_point_totals_by_player.values.flatten.max_by(&:total).total
@@ -229,11 +228,11 @@ module ApplicationHelper
         points.all? {|point| point.total >= min_filter.to_f || (point.week == GameWeek.current.week && point.total == 0.0)}
       end
     end
-    
+
     LazyHighCharts::HighChart.new('graph') do |f|
       f.title text: "Weekly points by position"
       f.exporting(enabled: true)
-      
+
       f.plotOptions(series: {dashStyle: 'ShortDot', dataLabels: {enabled: true}}, xAxis: {labels: {useHTML: true}})
       f.yAxis(title: {text: "Points"}, min: -5, max: max, startOnTick: false, tickInterval: 5)
       f.chart(borderWidth: 1, borderColor: '#aaa', spacingRight: 20, height: 500)
@@ -248,20 +247,20 @@ module ApplicationHelper
     end
   end
 
-  
+
   def player_receiving_performance_chart(player)
     performances = player.offensive_performances.sort_by {|o| o.game_in_season.wk }
-    weeks = performances.map do |performance| 
-      "Week #{performance.game_in_season.wk} vs #{player.opponent_on_week(performance.game_in_season.wk)}" 
+    weeks = performances.map do |performance|
+      "Week #{performance.game_in_season.wk} vs #{player.opponent_on_week(performance.game_in_season.wk)}"
     end
-    
+
     LazyHighCharts::HighChart.new('graph') do |f|
       f.title text: "Weekly receiving performance"
       f.plotOptions(series: {dashStyle: 'Solid', dataLabels: {enabled: true, color: '#000'}}, xAxis: {labels: {useHTML: true}})
       f.yAxis(min: -5, max: 20, minPadding: 0, maxPadding: 0, startOnTick: false, tickInterval: 5)
       f.chart(borderWidth: 1, borderColor: '#aaa', height: 500)
       f.options[:xAxis][:categories] = weeks
-      
+
       f.series(type: 'column', color: '#3a87ad', name: 'Targets', data: performances.each_with_index.map do |performance, index|
         label = weeks[index]
 
@@ -271,12 +270,12 @@ module ApplicationHelper
           label = label + "<br />#{performance.trg} targets of #{team_pass_attempts} attempts (#{percent.round(1)}%)"
           [label, performance.trg]
         end
-        
+
         [label, performance.trg]
       end)
 
-       
-      f.series(type: 'column', color: '#f89406', name: 'Receptions', data: performances.each_with_index.map do |performance, index| 
+
+      f.series(type: 'column', color: '#f89406', name: 'Receptions', data: performances.each_with_index.map do |performance, index|
         label = weeks[index]
         receiving_yards = performance.recy
         receptions      = performance.rec
@@ -289,23 +288,23 @@ module ApplicationHelper
            redzone_opportunity.trg
          else
            0
-         end 
+         end
        end)
        f.series(type: 'column', color: '#468847', name: 'Receiving TDs', data: performances.map(&:tdre))
-       
+
        f.series(dataLabels: {enabled: false}, type: 'spline', dashStyle: 'ShortDot', color: '#3a87ad', name: 'League median targets', data: performances.map {|p| p.league_median(:trg)})
        f.series(dataLabels: {enabled: false},type: 'spline', dashStyle: 'ShortDot', color: '#f89406', name: 'League median receptions', data: performances.map {|p| p.league_median(:rec)})
        # f.series(type: 'spline', dashStyle: 'ShortDot', color: '#3a87ad', name: 'League median targets', data: performances.map {|p| p.league_median(:trg)})
-       
+
      end
   end
-  
+
   def player_rushing_performance_chart(player)
     performances = player.offensive_performances.sort_by {|o| o.game_in_season.wk }
-    weeks = performances.map do |performance| 
-      "Week #{performance.game_in_season.wk} vs #{player.opponent_on_week(performance.game_in_season.wk)}" 
+    weeks = performances.map do |performance|
+      "Week #{performance.game_in_season.wk} vs #{player.opponent_on_week(performance.game_in_season.wk)}"
     end
-    
+
     LazyHighCharts::HighChart.new('graph') do |f|
       f.title text: "Weekly rushing performance"
       f.plotOptions(series: {dashStyle: 'Solid', dataLabels: {enabled: true, color: '#000'}}, xAxis: {labels: {useHTML: true}})
@@ -321,7 +320,7 @@ module ApplicationHelper
 
           team_rushing_yards = team_performance.ry
           percent_of_yards = performance.ry.to_f / team_rushing_yards * 100
-          label = label + 
+          label = label +
             "<br />#{performance.ra} carries of #{team_rush_attempts} running plays (#{percent.round(1)}%)" +
             "<br />#{performance.ry} rushing yards of #{team_performance.ry} team total (#{percent_of_yards.round(1)}%)"
           [label, performance.ra]
@@ -336,19 +335,19 @@ module ApplicationHelper
           redzone_opportunity.ra
         else
           0
-        end 
+        end
       end)
       f.series(type: 'column', color: '#b94a48', name: 'Fumbles', data: performances.map(&:fuml))
       f.series(type: 'spline', dashStyle: 'ShortDot', color: 'black', name: 'League median carries', data: performances.map {|p| p.league_median(:ra)})
     end
   end
-  
+
   def player_passing_performance_chart(player)
     performances = player.offensive_performances.sort_by {|o| o.game_in_season.wk }
-    weeks = performances.map do |performance| 
-      "Week #{performance.game_in_season.wk} vs #{player.opponent_on_week(performance.game_in_season.wk)}" 
+    weeks = performances.map do |performance|
+      "Week #{performance.game_in_season.wk} vs #{player.opponent_on_week(performance.game_in_season.wk)}"
     end
-    
+
     LazyHighCharts::HighChart.new('graph') do |f|
       f.title text: "Weekly passing performance"
       f.plotOptions(series: {dashStyle: 'Solid', dataLabels: {enabled: true, color: '#000'}}, xAxis: {labels: {useHTML: true}})
@@ -366,7 +365,7 @@ module ApplicationHelper
       f.series(type: 'spline', dashStyle: 'ShortDot', color: '#bbb', name: 'League median completions', data: performances.map {|p| p.league_median(:pc)})
      end
   end
-      
+
   def render_player_performance_chart(player, options = {})
     high_chart("chart-#{player.id}", player_performance_chart(player, options))
   end

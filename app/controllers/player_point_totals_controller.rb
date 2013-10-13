@@ -93,11 +93,9 @@ class PlayerPointTotalsController < ApplicationController
   def targets
     @week = (params[:week] || GameWeek.current.week).to_i
     
-    # TODO This query is slow add some indexes
     query = ArmchairAnalysis::Offense.joins(:player).
-      includes(:game_in_season, :player => [:watches, :owner]). # TODO Figure out how to load redzone opportunities so it isn't N+1
-      # references(:game_in_season).
-      where("armchair_analysis_games.wk" => @week).where("trg > 0").
+      joins(:game_in_season).
+      where(armchair_analysis_games: {wk:  @week}).where("armchair_analysis_offenses.trg > 0").
       order(trg: :desc)
       
     @offensive_performances = apply_filters(query).load
@@ -106,11 +104,9 @@ class PlayerPointTotalsController < ApplicationController
   def carries
     @week = (params[:week] || GameWeek.current.week).to_i
 
-    # TODO This query is slow add some indexes
     query = ArmchairAnalysis::Offense.joins(:player).
-      includes(:game_in_season, :player => [:watches, :owner]). # TODO Figure out how to load redzone opportunities so it isn't N+1
-      # references(:game_in_season).
-      where("armchair_analysis_games.wk" => @week).where("ra > 0").
+      joins(:game_in_season).
+      where(armchair_analysis_games: {wk:  @week}).where("ra > 0").
       order(ra: :desc)
 
     @offensive_performances = apply_filters(query).load
