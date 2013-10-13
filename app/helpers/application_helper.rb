@@ -1,9 +1,12 @@
 module ApplicationHelper
-  PARAMS_TO_IGNORE = Set.new([:controller, :action, :id, :week])
-  def partial_cache_key(suffix, params_to_include = nil)
+  PARAMS_TO_IGNORE = Set.new([:controller, :action, :id, :week, :profile])
+  def partial_cache_key(key_name, object, identifier = :id, params_to_include = nil)
     params_to_ignore = params_to_include ? PARAMS_TO_IGNORE - Set.new(Array(params_to_include)) : PARAMS_TO_IGNORE
     params_for_key = params.select {|k,v| !params_to_ignore.include?(k.to_sym) }
     prefix = params_for_key.empty? ? nil : params_for_key.sort.map {|pair| pair.join(':') }.join('-')
+    object_identifier = object.send(identifier).to_s
+    object_identifier << "-#{object.updated_at.to_i}" if object.respond_to?(:updated_at)
+    suffix = [key_name, object_identifier].join('-')
     [prefix, suffix].compact.join('-')
   end
 

@@ -21,6 +21,6 @@
     </tr>
   </thead>
   <tbody class="row-fluid">
-    <%= render partial: 'expert_rank', collection: @expert_ranks, cache: ->(e) { partial_cache_key("expert-rank-#{e.id}") } %>
+    <%= render partial: 'expert_rank', collection: @expert_ranks, cache: ->(e) { partial_cache_key("expert-rank", e) } %>
   </tbody>
 </table>

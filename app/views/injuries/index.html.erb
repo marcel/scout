@@ -11,6 +11,6 @@
     </tr>
   </thead>
   <tbody>
-    <%= render partial: 'injury', collection: @injuries, cache: ->(i) { partial_cache_key("injury-#{i.id}") } %>
+    <%= render partial: 'injury', collection: @injuries, cache: ->(i) { partial_cache_key("injury", i) } %>
   </tbody>
 </table>

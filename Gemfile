@@ -72,3 +72,5 @@ gem 'dalli'
 gem 'rack-mini-profiler'
 
 gem 'multi_fetch_fragments'
+
+gem 'newrelic_rpm', group: :production

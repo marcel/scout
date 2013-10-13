@@ -4,6 +4,6 @@
 
 <table class="table table-bordered">
   <tbody>
-    <%= render partial: 'watched_player', collection: @players, cache: ->(p) { partial_cache_key("watched-player-#{p.id}") } %>
+    <%= render partial: 'watched_player', collection: @players, cache: ->(p) { partial_cache_key("watched-player", p) } %>
   </tbody>
 </table>
