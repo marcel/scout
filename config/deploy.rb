@@ -13,7 +13,6 @@ set :scm, :git
 
 set :format, :pretty
 set :log_level, :debug
-set :pty, true
 
 set :rvm_type, :user
 
@@ -23,6 +22,28 @@ set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public
 set :keep_releases, 5
 
 set :normalize_asset_timestamps, %{public/images public/javascripts public/stylesheets}
+
+task :foo do
+  on roles(:app) do
+    execute "whoami"
+    execute "cd /home/scout/production/current; pwd"
+    execute "which rake"
+    execute "which bundle"
+    execute "which ruby"
+    execute "ruby -v"
+    execute "env"
+  end
+end
+
+namespace :import do
+  task :all do
+    on roles(:app) do
+      within release_path do
+        execute :rake, "RAILS_ENV=production import:all"
+      end
+    end
+  end
+end
 
 namespace :deploy do
   %w[start stop restart].each do |command|

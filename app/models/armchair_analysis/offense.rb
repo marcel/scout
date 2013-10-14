@@ -1,4 +1,8 @@
 class ArmchairAnalysis::Offense < ActiveRecord::Base
+  def cache_key
+    [super, uid].join
+  end
+  
   belongs_to :player, {
     primary_key: :armchair_analysis_id,
     foreign_key: :player,

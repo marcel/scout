@@ -3,7 +3,7 @@ class Projection < ActiveRecord::Base
     :primary_key => :fantasy_football_nerd_id,
     :foreign_key => :fantasy_football_nerd_id,
     inverse_of: :projections
-  }
+  }, touch: true
   
   def cached_player
     Rails.cache.fetch([Player.name, 'fantasy_football_nerd_id', fantasy_football_nerd_id]) { player }

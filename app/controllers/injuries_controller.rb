@@ -2,7 +2,7 @@ class InjuriesController < ApplicationController
   before_action :set_injury, only: :show
 
   def index
-    @week = (params[:week] || GameWeek.current.week).to_i
+    @week = (params[:week] ||= GameWeek.current.week).to_i
     where_clause = {week: @week}
 
     # where_clause.update(game_status: params[:game_status]) if params[:game_status]
@@ -31,6 +31,7 @@ class InjuriesController < ApplicationController
       joins(:player).
       order(last_update: :desc)
     @injuries = @injuries.sort_by {|injury| -injury.cached_player.cached_points.map(&:total).sum } if params[:sort].to_s == 'p'
+    fresh_when(etag: collection_etag(@injuries, :week), :public => true)
   end
 
   def show

@@ -15,6 +15,6 @@
     </tr>
   </thead>
   <tbody>
-    <%= render partial: 'carry_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("carry-performance", t, :uid) } %>
+    <%= render partial: 'carry_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("carry-performance", t) } %>
   </tbody>
 </table>

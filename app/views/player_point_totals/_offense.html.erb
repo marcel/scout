@@ -1,0 +1,15 @@
+<% performances = offense.cached_game_performances_for_team %>
+<% opponent_performances = offense.cached_game_performances_by_opponents %>
+<tr>
+  <td class="span4">
+    <%= player_profile(offense) %>
+  </td>
+  <td class="span2">
+    <%= offense.cached_game_performances_for_team.map(&:pts).sum %>
+  </td>
+  <td class="span2">
+    <%= opponent_performances.map(&:pts).sum %>
+  </td>
+  <td class="span2"><%= performances.map(&:ry).sum %></td>
+  <td class="span2"><%= performances.map(&:py).sum %></td>
+</tr>

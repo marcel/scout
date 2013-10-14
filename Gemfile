@@ -3,14 +3,8 @@ source 'https://rubygems.org'
 ruby "1.9.3"
 
 gem 'rails', '4.0.0'
-
-# Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
-
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
-
-# Use jquery as the JavaScript library
 gem 'jquery-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -39,7 +33,6 @@ group :development do
   # gem 'capistrano-unicorn', :git => 'https://github.com/sosedoff/capistrano-unicorn.git', :branch => 'master', :require => false
 end
 
-
 gem 'debugger', group: [:development, :test]
 
 # For Bootstrap
@@ -52,7 +45,7 @@ gem 'nokogiri'
 gem 'faster_xml_simple'
 gem 'fantasy_football_nerd'
 
-gem 'pry'
+gem 'pry', group: [:development, :staging]
 gem 'pry-rails', group: [:development, :staging]
 
 gem 'lazy_high_charts'
@@ -65,7 +58,7 @@ gem 'mysql2'
 
 # Doesn't work with associations that have custom primary/foreign_keys
 #gem 'identity_cache'
-#gem 'cityhash'
+gem 'cityhash', '0.8.0'
 
 gem 'dalli'
 
@@ -74,3 +67,5 @@ gem 'rack-mini-profiler'
 gem 'multi_fetch_fragments'
 
 gem 'newrelic_rpm', group: :production
+
+gem 'rack-cache'

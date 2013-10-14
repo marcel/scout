@@ -5,12 +5,14 @@ class RosterChange < ActiveRecord::Base
     :foreign_key => :yahoo_player_key, 
     :primary_key => :yahoo_key, 
     :class_name  => "Player"
-  }
+  }, touch: true
+  
   belongs_to :source_team, {
     :foreign_key => :source_team_key, 
     :primary_key => :yahoo_key, 
     :class_name  => "Team"
   }
+  
   belongs_to :destination_team, {
     :foreign_key => :destination_team_key, 
     :primary_key => :yahoo_key, 

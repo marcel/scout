@@ -5,7 +5,7 @@ class RosterSpot < ActiveRecord::Base
     foreign_key: :yahoo_player_key, 
     primary_key: :yahoo_key,
     inverse_of: :roster_spots
-  }
+  }, touch: true
   
   belongs_to :team, {
     foreign_key: :yahoo_team_key,

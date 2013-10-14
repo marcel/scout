@@ -10,7 +10,7 @@ class ExpertRank < ActiveRecord::Base
   end
 
   def ranked_in_previous_week?
-    week != 1 && cached_player.expert_ranks.any? {|r| r.week == week - 1}
+    week != 1 && cached_player.cached_expert_ranks.any? {|r| r.week == week - 1}
   end
 
   def previous_week

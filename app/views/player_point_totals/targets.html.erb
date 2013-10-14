@@ -23,6 +23,8 @@
     </tr>
   </thead>
   <tbody>
-    <%= render partial: 'target_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("target-performance", t, :uid) } %>
+    <% cache ['targets-table', collection_cache_key(@offensive_performances, :week) ] do %>
+      <%= render partial: 'target_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("target-performance", t) } %>
+    <% end %>
   </tbody>
 </table>

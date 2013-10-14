@@ -20,6 +20,8 @@
     </tr>
   </thead>
   <tbody>
-    <%= render partial: 'defense', collection: @players, cache: ->(d) { partial_cache_key("defense", d, :id, :week) } %>
+    <% cache ['defense-table', collection_cache_key(@players, :week) ] do %>
+      <%= render partial: 'defense', collection: @players, cache: ->(d) { partial_cache_key("defense", d, :week) } %>
+    <% end %>
   </tbody>
 </table>

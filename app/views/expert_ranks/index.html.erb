@@ -21,6 +21,8 @@
     </tr>
   </thead>
   <tbody class="row-fluid">
-    <%= render partial: 'expert_rank', collection: @expert_ranks, cache: ->(e) { partial_cache_key("expert-rank", e) } %>
+    <% cache ['expert-ranks-table', collection_cache_key(@expert_ranks, :week) ] do %>
+      <%= render partial: 'expert_rank', collection: @expert_ranks, cache: ->(e) { partial_cache_key("expert-rank", e) } %>
+    <% end %>
   </tbody>
 </table>

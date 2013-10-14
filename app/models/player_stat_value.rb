@@ -8,5 +8,5 @@ class PlayerStatValue < ActiveRecord::Base
     primary_key: :yahoo_key,
     foreign_key: :yahoo_player_key,
     inverse_of: :stats
-  }
+  }, touch: true
 end

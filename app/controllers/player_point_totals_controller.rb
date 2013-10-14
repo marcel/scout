@@ -2,15 +2,21 @@ class PlayerPointTotalsController < ApplicationController
   before_action :set_player_with_points, only: :show
 
   def index
-    @week = (params[:week] || GameWeek.current.week).to_i
-
+    @week  = (params[:week] ||= GameWeek.current.week).to_i
+    @limit = (params[:limit] ||= 100).to_i
     query = PlayerPointTotal.
       where(week: @week).
       joins(:player)
 
     @player_point_totals = apply_filters(query).
       order(total: :desc).
-      limit(params[:limit] || 100)
+      limit(@limit)
+    
+    fresh_when(etag: collection_etag(@player_point_totals, :week), :public => true)
+  end
+  
+  def show
+    fresh_when(@player)
   end
 
   def season
@@ -38,6 +44,7 @@ class PlayerPointTotalsController < ApplicationController
     end
 
     @players = apply_filters(query).sort_by(&defense_sort_function)
+    fresh_when(etag: collection_etag(@players, :week), :public => true)
   end
 
   def offense
@@ -52,6 +59,7 @@ class PlayerPointTotalsController < ApplicationController
     end
 
     @players = apply_filters(query).sort_by(&offense_sort_function)
+    fresh_when(etag: collection_etag(@players, :week), :public => true)
   end
 
   def offense_sort_function
@@ -96,7 +104,7 @@ class PlayerPointTotalsController < ApplicationController
   end
 
   def targets
-    @week = (params[:week] || GameWeek.current.week).to_i
+    @week = (params[:week] ||= GameWeek.current.week).to_i
 
     query = ArmchairAnalysis::Offense.joins(:player).
       joins(:game_in_season).
@@ -104,6 +112,8 @@ class PlayerPointTotalsController < ApplicationController
       order(trg: :desc)
 
     @offensive_performances = apply_filters(query).load
+    etag = CityHash.hash256crc(collection_cache_key(@offensive_performances, :week))
+    fresh_when(etag: etag, :public => true)
   end
 
   def carries
@@ -115,14 +125,9 @@ class PlayerPointTotalsController < ApplicationController
       order(ra: :desc)
 
     @offensive_performances = apply_filters(query).load
+    fresh_when(etag: collection_etag(@offensive_performances, :week), :public => true)
   end
-
-  def show
-  end
-
-  def positions
-  end
-
+  
   private
     def apply_filters(query)
       if params[:name]

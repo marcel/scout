@@ -4,7 +4,7 @@ class PlayerPointTotal < ActiveRecord::Base
     :primary_key => :yahoo_key,
     :class_name  => "Player",
     inverse_of: :points
-  }
+  }, touch: true
 
   def cached_player
     Rails.cache.fetch(['Player', 'yahoo_player_key', yahoo_player_key]) { player }

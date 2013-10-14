@@ -17,22 +17,8 @@
     </tr>
   </thead>
   <tbody>
-    <% @players.each do |player| %>
-      <% performances = player.game_performances_for_team %>
-      <% opponent_performances = performances.by_opponents %>
-      <tr>
-        <td class="span4">
-          <%= player_profile(player) %>
-        </td>
-        <td class="span2">
-          <%= player.game_performances_for_team.map(&:pts).sum %>
-        </td>
-        <td class="span2">
-          <%= opponent_performances.map(&:pts).sum %>
-        </td>
-        <td class="span2"><%= performances.map(&:ry).sum %></td>
-        <td class="span2"><%= performances.map(&:py).sum %></td>
-      </tr>
+    <% cache ['offense-table', collection_cache_key(@players, :week) ] do %>
+      <%= render partial: 'offense', collection: @players, cache: ->(d) { partial_cache_key("offense", d, :week) } %>
     <% end %>
   </tbody>
 </table>

@@ -17,7 +17,7 @@ class Player < ActiveRecord::Base
   }
 
   def cached_owner
-    Rails.cache.fetch(['Team', owner_key]) { owner }
+    Rails.cache.fetch(['Team', owner_key, updated_at]) { owner }
   end
 
   has_many :injuries, {
@@ -37,7 +37,7 @@ class Player < ActiveRecord::Base
   #   end
 
   def cached_projections
-    Rails.cache.fetch(['projections', id]) { projections.to_a }
+    Rails.cache.fetch(['projections', id, updated_at]) { projections.to_a }
   end
 
   has_many :points, {
@@ -52,10 +52,9 @@ class Player < ActiveRecord::Base
    #      end.sort_by(&:updated_at).last
    #    end
    #  end
-
-   def cached_points
-     Rails.cache.fetch(['points', id]) { points.to_a }
-   end
+  def cached_points
+    Rails.cache.fetch(['points', id, updated_at]) { points.to_a }
+  end
 
   has_many :stats, {
     primary_key: :yahoo_key,
@@ -67,7 +66,7 @@ class Player < ActiveRecord::Base
   has_many :watches, inverse_of: :player
 
   def cached_watches
-    Rails.cache.fetch(['watches', id]) { watches.to_a }
+    Rails.cache.fetch(['watches', id, updated_at]) { watches.to_a }
   end
 
   has_many :expert_ranks, {
@@ -77,7 +76,7 @@ class Player < ActiveRecord::Base
   }
 
   def cached_expert_ranks
-    Rails.cache.fetch(['expert_ranks', 'player', id]) { expert_ranks }
+    Rails.cache.fetch(['expert_ranks', 'player', id, updated_at]) { expert_ranks }
   end
 
   has_many :teammates, {
@@ -99,11 +98,11 @@ class Player < ActiveRecord::Base
   end
 
   def cached_home_games
-    Rails.cache.fetch(['home_games', id]) { home_games.to_a }
+    Rails.cache.fetch(['home_games', id, updated_at]) { home_games.to_a }
   end
 
   def cached_away_games
-    Rails.cache.fetch(['away_games', id]) { away_games.to_a }
+    Rails.cache.fetch(['away_games', id, updated_at]) { away_games.to_a }
   end
 
   has_many :away_games, {
@@ -132,7 +131,7 @@ class Player < ActiveRecord::Base
    #  end
 
   def cached_game_performances_for_team
-    Rails.cache.fetch(['game_performances_for_team', armchair_analysis_team_name]) {
+    Rails.cache.fetch(['game_performances_for_team', armchair_analysis_team_name, updated_at]) {
       game_performances_for_team.to_a
     }
   end
@@ -147,7 +146,7 @@ class Player < ActiveRecord::Base
   end
 
   def cached_game_performances_by_opponents
-    Rails.cache.fetch(['game_performances_by_opponents', armchair_analysis_team_name]) {
+    Rails.cache.fetch(['game_performances_by_opponents', armchair_analysis_team_name, updated_at]) {
       game_performances_by_opponents.to_a
     }
   end
