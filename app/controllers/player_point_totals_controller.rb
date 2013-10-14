@@ -112,8 +112,7 @@ class PlayerPointTotalsController < ApplicationController
       order(trg: :desc)
 
     @offensive_performances = apply_filters(query).load
-    etag = CityHash.hash256crc(collection_cache_key(@offensive_performances, :week))
-    fresh_when(etag: etag, :public => true)
+    fresh_when(etag: collection_etag(@offensive_performances, :week), :public => true)
   end
 
   def carries

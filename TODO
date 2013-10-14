@@ -1,6 +1,4 @@
-- Add Offense section that allows, like the Defense section, to sort teams by Points scored, Passing yards, Rushing Yards, etc
-
-- Be able to sort any view by max minimum anything (e.g. sort by the max minimum points per game, targets, completions, etc))
+  - Be able to sort any view by max minimum anything (e.g. sort by the max minimum points per game, targets, completions, etc))
 
 - Rename ArmchairAnalysis::Team to ArmchairAnalysis::GamePerformance
 
@@ -148,6 +146,8 @@ end
 
 DONE:
 =====
+- Add Offense section that allows, like the Defense section, to sort teams by Points scored, Passing yards, Rushing Yards, etc
+
 - Create points/projections permalink page per player with a chart showing week over week projections and actual points
 
 - Method to import each model that is idempotent

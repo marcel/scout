@@ -57,13 +57,13 @@ class ApplicationController < ActionController::Base
   def collection_cache_key(collection, params_to_include = nil)
     [
       params_cache_prefix(params_to_include), 
-      CityHash.hash256crc(ActiveSupport::Cache.expand_cache_key(collection))
+      CityHash.hash128(ActiveSupport::Cache.expand_cache_key(collection))
     ].compact.join('/')
   end
   helper_method :collection_cache_key
   
   def collection_etag(collection, params_to_include = nil)
-    CityHash.hash256crc(
+    CityHash.hash128(
       controller_name   + 
       action_name + 
       collection_cache_key(collection, params_to_include)
