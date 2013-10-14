@@ -16,6 +16,7 @@ class InjuriesController < ApplicationController
     query = query.where("players.position" => params[:position].split(',')) if params[:position]
     query = query.where("players.team_abbr" => params[:team].split(',')) if params[:team]
     query = query.where("players.position_type" => params[:position_type].split(',')) if params[:position_type]
+    query = query.where("players.ownership_type" => params[:ownership_type].split(',')) if params[:ownership_type]
 
     if params[:game_status]
       if player_status = Player::PlayingStatus.lookup(params[:game_status])

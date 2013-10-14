@@ -18,7 +18,7 @@ Scout::Server::Application.configure do
   config.action_dispatch.rack_cache = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
-  config.serve_static_assets = true # Enabled so rack-cache works
+  config.serve_static_assets = false # Enabled so rack-cache works
   config.static_cache_control = "public, max-age=2592000"
 
 
