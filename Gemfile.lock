@@ -188,6 +188,7 @@ DEPENDENCIES
   hashie
   jbuilder (~> 1.2)
   jquery-rails
+  kgio
   lazy_high_charts
   multi_fetch_fragments
   mysql2

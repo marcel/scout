@@ -14,6 +14,8 @@
     </tr>
   </thead>
   <tbody class="row-fluid">
-    <%= render partial: 'projection', collection: @projections, cache: ->(p) { partial_cache_key("projection", p) } %>
+    <% cache ['projections-table', collection_cache_key(@projections, :week) ] do %>
+      <%= render partial: 'projection', collection: @projections, cache: ->(p) { partial_cache_key("projection", p) } %>
+    <% end %>
   </tbody>
 </table>

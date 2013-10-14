@@ -1,6 +1,6 @@
 class ProjectionsController < ApplicationController
   def index
-    @week = (params[:week] || GameWeek.current.week).to_i
+    @week = (params[:week] ||= GameWeek.current.week).to_i
     where_clause = {week: @week}
     query = Projection.where(where_clause)
     query = query.where("standard > ?", params[:above]) if params[:above]
@@ -19,5 +19,6 @@ class ProjectionsController < ApplicationController
     query = query.limit(params[:limit].to_i) if params[:limit]
 
     @projections = query
+    fresh_when(etag: collection_etag(@projections, :week), :public => true)
   end
 end

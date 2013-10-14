@@ -69,3 +69,4 @@ gem 'multi_fetch_fragments'
 gem 'newrelic_rpm', group: :production
 
 gem 'rack-cache'
+gem 'kgio'

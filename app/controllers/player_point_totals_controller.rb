@@ -3,7 +3,7 @@ class PlayerPointTotalsController < ApplicationController
 
   def index
     @week  = (params[:week] ||= GameWeek.current.week).to_i
-    @limit = (params[:limit] ||= 100).to_i
+    @limit = (params[:limit] || 100).to_i
     query = PlayerPointTotal.
       where(week: @week).
       joins(:player)

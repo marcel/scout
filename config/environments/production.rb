@@ -1,6 +1,4 @@
 Scout::Server::Application.configure do
-  # Settings specified here will take precedence over those in config/application.rb.
-
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -20,7 +18,8 @@ Scout::Server::Application.configure do
   config.action_dispatch.rack_cache = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
-  config.serve_static_assets = false
+  config.serve_static_assets = true # Enabled so rack-cache works
+  config.static_cache_control = "public, max-age=2592000"
 
 
   # Specifies the header that your server uses for sending files.
@@ -40,7 +39,7 @@ Scout::Server::Application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production.
-  config.cache_store = :mem_cache_store
+  config.cache_store = :dalli_store, {compress: true, value_max_bytes: 5.megabytes}
   # config.cache_store = :memory_store, { size: 64.megabytes }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
