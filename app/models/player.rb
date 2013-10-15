@@ -490,7 +490,7 @@ class Player < ActiveRecord::Base
     end
 
     # Policy: Update old one
-    def import
+    def import(week = GameWeek.current.week)
       import_log "Started import at #{Time.now}"
 
       client = Scout::Client.new
