@@ -1,0 +1,6 @@
+<div class="alert alert-info">
+  <h5>No data yet for week <%= week %></h5>
+  <% if week.to_i > 1 %>
+    Try <%= link_to "week #{week - 1}", current_url(week: week - 1) %>
+  <% end %>
+</div>

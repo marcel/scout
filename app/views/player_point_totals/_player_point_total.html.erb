@@ -1,6 +1,11 @@
+<% player = player_point_total.cached_player %>
 <tr>
   <td class="span4">
-    <%= player_profile(player_point_total.cached_player, player_points_path(player_point_total.cached_player)) %>
+    <%= player_profile(player, player_points_path(player)) %>
   </td>
-  <td class="span8"><%= player_points_status(player_point_total.total) %></td>
+  <td class="span2"><%= player_points_status(player_point_total.total) %></td>
+  <td class="span2"><%= player_points_status(player.weekly_average_points) %></td>
+  <td class="span2"><%= player_points_status(player.weekly_average_points_excluding_max) %></td>
+  <td class="span2"><%= player_points_status(player.best_point_performance) %></td>
+  <td class="span2"><%= player_points_status(player.worst_point_performance) %></td>
 </tr>

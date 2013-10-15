@@ -12,16 +12,24 @@
 </div> -->
 
 <%= weeks_in_season(@week) %>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Player</th>
-      <th>Points</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% cache ['points-table', collection_cache_key(@players, :week) ] do %>
-      <%= render partial: 'player_point_total', collection: @player_point_totals, cache: ->(p) { partial_cache_key("player-point-total", p) }%>
-    <% end %>
-  </tbody>
-</table>
+<% if @player_point_totals.any? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th><%= link_to 'Points', current_url(sort: 'p') %></th>
+        <th><%= link_to 'Weekly avg', current_url(sort: 'wa') %></th>
+        <th><%= link_to 'Weekly avg w/out max', current_url(sort: 'waxmax') %></th>
+        <th><%= link_to 'Max', current_url(sort: 'max') %></th>
+        <th><%= link_to 'Min', current_url(sort: 'min') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cache ['points-table', collection_cache_key(@players, :week) ] do %>
+        <%= render partial: 'player_point_total', collection: @player_point_totals, cache: ->(p) { partial_cache_key("player-point-total", p) }%>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= render partial: 'shared/no_data_yet', locals: {week: @week} %>
+<% end %>

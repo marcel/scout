@@ -3,18 +3,22 @@
 </div>
 
 <%= weeks_in_season(@week) %>
-<table class="table table-striped table-bordered">
-  <thead>
-    <tr>
-      <th>Player</th>
-      <th>Carries</th>
-      <th>Successful Runs</th>
-      <th>Rushing Yards</th>
-      <th>Rushing TDs</th>
-      <th>Receiving TDs</th>
-    </tr>
-  </thead>
-  <tbody>
-    <%= render partial: 'carry_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("carry-performance", t) } %>
-  </tbody>
-</table>
+<% if @offensive_performances.any? %>
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Carries</th>
+        <th>Successful Runs</th>
+        <th>Rushing Yards</th>
+        <th>Rushing TDs</th>
+        <th>Receiving TDs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'carry_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("carry-performance", t) } %>
+    </tbody>
+  </table>
+<% else %>
+  <%= render partial: 'shared/no_data_yet', locals: {week: @week} %>
+<% end %>

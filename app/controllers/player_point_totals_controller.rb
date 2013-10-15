@@ -10,11 +10,31 @@ class PlayerPointTotalsController < ApplicationController
 
     @player_point_totals = apply_filters(query).
       order(total: :desc).
-      limit(@limit)
-    
+      limit(@limit).sort_by(&points_sort_function)
+
     fresh_when(etag: collection_etag(@player_point_totals, :week), :public => true)
   end
-  
+
+  def points_sort_function
+    ->(player_point_total) {
+      player = player_point_total.cached_player
+      case params[:sort]
+      when 'p'
+        -player_point_total.total
+      when 'wa'
+        -player.weekly_average_points
+      when 'waxmax'
+        -player.weekly_average_points_excluding_max
+      when 'max'
+        -player.best_point_performance
+      when 'min'
+        -player.worst_point_performance
+      else
+        -player_point_total.total
+      end
+    }
+  end
+
   def show
     fresh_when(@player)
   end
@@ -91,7 +111,6 @@ class PlayerPointTotalsController < ApplicationController
       when 'p'
         -player.cached_game_performances_for_team.map(&:dp).sum
       when 'pa'
-
         opponent_performances.map(&:pts).sum - opponent_performances.map(&:dp).sum
       when 'ry'
         opponent_performances.map(&:ry).sum
@@ -111,8 +130,25 @@ class PlayerPointTotalsController < ApplicationController
       where(armchair_analysis_games: {wk:  @week}).where("armchair_analysis_offenses.trg > 0").
       order(trg: :desc)
 
-    @offensive_performances = apply_filters(query).load
+    @offensive_performances = apply_filters(query).sort_by(&targets_sort_function)
     fresh_when(etag: collection_etag(@offensive_performances, :week), :public => true)
+  end
+
+  def targets_sort_function
+    ->(performance) {
+      case params[:sort]
+      when 'trg'
+        -performance.trg
+      when 'rec'
+        -performance.rec
+      when 'rz'
+        -(performance.cached_redzone_opportunity.try(:trg) || 0)
+      when 'tdre'
+        -performance.tdre
+      else
+        -performance.trg
+      end
+    }
   end
 
   def carries
@@ -126,7 +162,7 @@ class PlayerPointTotalsController < ApplicationController
     @offensive_performances = apply_filters(query).load
     fresh_when(etag: collection_etag(@offensive_performances, :week), :public => true)
   end
-  
+
   private
     def apply_filters(query)
       if params[:name]

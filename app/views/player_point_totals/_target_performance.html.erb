@@ -8,7 +8,7 @@
     (<%= redzone_opportunity.trg %> in red zone)
   <% end %>
   </td>
-  <td class="span2"><%= target_performance.rec %></td>
+  <td class="span2"><%= target_performance.rec %> (<%= (target_performance.rec.to_f / target_performance.trg.to_f * 100).to_i %>%)</td>
   <td class="span2"><%= target_performance.recy %></td>
   <td class="span2"><%= target_performance.tdre %></td>
 </tr>

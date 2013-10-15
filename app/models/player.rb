@@ -53,7 +53,27 @@ class Player < ActiveRecord::Base
    #    end
    #  end
   def cached_points
-    @cached_points ||= Rails.cache.fetch(['points', cache_key]) { points.to_a }
+    @cached_points ||= Rails.cache.fetch(['points', cache_key]) {
+      points.to_a.select do |point|
+        !cached_bye_weeks.include?(point.week)
+      end
+    }
+  end
+
+  def weekly_average_points
+    (cached_points.map(&:total).sum.to_f / cached_points.size).round(1)
+  end
+
+  def weekly_average_points_excluding_max
+    ((cached_points.map(&:total).sum.to_f - cached_points.max_by(&:total).total) / (cached_points.size - 1)).round(1)
+  end
+
+  def best_point_performance
+    cached_points.max_by(&:total).total
+  end
+
+  def worst_point_performance
+    cached_points.min_by(&:total).total
   end
 
   has_many :stats, {
@@ -103,6 +123,15 @@ class Player < ActiveRecord::Base
 
   def cached_away_games
     @cached_away_games ||= Rails.cache.fetch(['away_games', cache_key]) { away_games.to_a }
+  end
+
+  # Figure out if there is a better way to get this
+  def bye_weeks
+    Set.new(((1..17).to_a - (cached_home_games.map(&:week) + cached_away_games.map(&:week))))
+  end
+
+  def cached_bye_weeks
+    @cached_bye_weeks ||= Rails.cache.fetch(['bye_weeks', team_abbr]) { bye_weeks }
   end
 
   has_many :away_games, {

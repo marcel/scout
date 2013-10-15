@@ -12,19 +12,23 @@
 </div> -->
 
 <%= weeks_in_season(@week) %>
-<table class="table table-striped table-bordered">
-  <thead>
-    <tr>
-      <th>Player</th>
-      <th>Targets</th>
-      <th>Receptions</th>
-      <th>Receiving Yards</th>
-      <th>Receiving TDs</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% cache ['targets-table', collection_cache_key(@offensive_performances, :week) ] do %>
-      <%= render partial: 'target_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("target-performance", t) } %>
-    <% end %>
-  </tbody>
-</table>
+<% if @offensive_performances.any? %>
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th><%= link_to 'Targets', current_url(sort: 'trg') %> (<%= link_to 'in RZ', current_url(sort: 'rz') %>)</th>
+        <th><%= link_to 'Receptions', current_url(sort: 'rec') %></th>
+        <th><%= link_to 'Receiving Yards', current_url(sort: 'recy') %></th>
+        <th><%= link_to 'Receiving TDs', current_url(sort: 'tdre') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cache ['targets-table', collection_cache_key(@offensive_performances, :week) ] do %>
+        <%= render partial: 'target_performance', collection: @offensive_performances, cache: ->(t) { partial_cache_key("target-performance", t) } %>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= render partial: 'shared/no_data_yet', locals: {week: @week} %>
+<% end %>
