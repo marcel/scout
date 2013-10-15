@@ -5,6 +5,9 @@ class ProjectionsController < ApplicationController
     query = Projection.where(where_clause)
     query = query.where("standard > ?", params[:above]) if params[:above]
     query = query.where("standard < ?", params[:below]) if params[:below]
+    if !params[:above] && !params[:below]
+      query = query.where("standard != ? AND standard_high != ? and standard_low != ?", 0.0, 0.0, 0.0)
+    end
     query = query.where("players.full_name LIKE ?", "%#{params[:name]}%") if params[:name]
     query = query.where("players.position" => params[:position].split(',')) if params[:position]
     query = query.where("players.team_abbr" => params[:team].split(',')) if params[:team]

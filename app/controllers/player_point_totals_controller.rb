@@ -145,6 +145,8 @@ class PlayerPointTotalsController < ApplicationController
         -performance.rec
       when 'rz'
         -(performance.cached_redzone_opportunity.try(:trg) || 0)
+      when 'recy'
+        -performance.recy
       when 'tdre'
         -performance.tdre
       else
