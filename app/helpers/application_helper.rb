@@ -1,4 +1,80 @@
 module ApplicationHelper
+  POSITIONS = [
+    ['QB'],
+    ['WR'],
+    ['RB'],
+    ['TE'],
+    ['WR/RB/TE', 'WR,RB,TE'],
+    ['K'],
+    ['DEF']
+  ]
+
+  def positions_dropdown_menu
+    @positions_dropdown_menu ||= DropdownMenu.new do
+      label 'Position'
+
+      POSITIONS.each do |l, v|
+        option do
+          label l
+          parameter :position
+          value v
+        end
+      end
+    end
+  end
+
+  def team_dropdown_menu
+    @team_dropdown_menu ||= DropdownMenu.new do
+      label 'Team'
+
+      Player.defense.order(:team_full_name).each do |team|
+        option do
+          label team.team_full_name
+          parameter :team
+          value team.team_abbr
+        end
+      end
+    end
+  end
+
+  def availability_dropdown_menu
+    @availability_drop_down_menu ||= DropdownMenu.new do
+      label 'Availability'
+
+      option do
+        label 'Available'
+        parameter :ownership_type
+        value 'waivers,freeagents'
+      end
+
+      option do
+        label 'Waivers'
+        parameter :ownership_type
+        value 'waivers'
+      end
+
+      option do
+        label 'Free agents'
+        parameter :ownership_type
+        value 'freeagents'
+      end
+
+      divider!
+
+      Team.order(:name).each do |team|
+        option do
+          label team.name
+          parameter :owner
+          value team.yahoo_key
+        end
+      end
+    end
+  end
+
+  def dropdown_menu_filters
+    render partial: 'shared/dropdown_menu_filters'
+  end
+
   def player_profile(player, path = nil, include_probably = false)
     render partial: 'players/profile', :locals => {
       player: player,

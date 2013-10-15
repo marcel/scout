@@ -5,7 +5,7 @@
   <td class="span2">
   <%= target_performance.trg %>
   <% if (redzone_opportunity = target_performance.cached_redzone_opportunity) && !redzone_opportunity.trg.zero? %>
-    (<%= redzone_opportunity.trg %> in red zone)
+    (<%= redzone_opportunity.trg %>)</span>
   <% end %>
   </td>
   <td class="span2"><%= target_performance.rec %> (<%= (target_performance.rec.to_f / target_performance.trg.to_f * 100).to_i %>%)</td>

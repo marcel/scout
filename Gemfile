@@ -70,3 +70,5 @@ gem 'newrelic_rpm', group: :production
 
 gem 'rack-cache'
 gem 'kgio'
+
+gem 'numeric_array'

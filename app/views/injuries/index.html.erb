@@ -2,7 +2,9 @@
   <h1><%= link_to(t('.title', :default => "Injuries"), url_for()) %> <small>week <%= @week %></small></h1>
 </div>
 <%= weeks_in_season(@week) %>
+<%= dropdown_menu_filters %>
 <%= link_to 'Sort by fantasy points', current_url(sort: 'p')%>
+
 <table class="table table-striped">
   <thead>
     <tr>

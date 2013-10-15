@@ -12,6 +12,9 @@
 </div> -->
 
 <%= weeks_in_season(@week) %>
+
+<%= dropdown_menu_filters %>
+
 <% if @player_point_totals.any? %>
   <table class="table table-striped">
     <thead>
@@ -19,7 +22,7 @@
         <th>Player</th>
         <th><%= link_to 'Points', current_url(sort: 'p') %></th>
         <th><%= link_to 'Weekly avg', current_url(sort: 'wa') %></th>
-        <th><%= link_to 'Weekly avg w/out max', current_url(sort: 'waxmax') %></th>
+        <th><%= link_to 'Weekly avg w/out max', current_url(sort: 'waxmax') %> (<%= link_to 'std dev', current_url(sort: 'stdev') %>)</th>
         <th><%= link_to 'Max', current_url(sort: 'max') %></th>
         <th><%= link_to 'Min', current_url(sort: 'min') %></th>
       </tr>

@@ -1,0 +1,19 @@
+<div class="btn-group">
+  <button class="btn btn-small <%= menu.button_type(params) %>" onclick="location.href='<%= current_url(menu.reset_values) %>'">
+    <% if menu.has_current_value?(params) %>
+      <i class="icon-remove icon-white"></i>
+    <% end %>
+    <strong><%= menu.label %></strong>: <%= menu.current_value(params) %>
+  </button>
+  <button class="btn dropdown-toggle <%= menu.button_type(params) %> btn-small" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <% menu.options.each do |option| %>
+      <li><%= link_to option.label, current_url(option.parameters) %></li>
+      <% if option.add_divider? %>
+        <li class="divider">&nbsp;</li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>

@@ -37,7 +37,11 @@ class Player < ActiveRecord::Base
   #   end
 
   def cached_projections
-    @cached_projections ||= Rails.cache.fetch(['projections', cache_key]) { projections.to_a }
+    @cached_projections ||= Rails.cache.fetch(['projections', cache_key]) {
+      projections.to_a.select do |projection|
+        !cached_bye_weeks.include?(projection.week)
+      end
+    }
   end
 
   has_many :points, {
@@ -66,6 +70,10 @@ class Player < ActiveRecord::Base
 
   def weekly_average_points_excluding_max
     ((cached_points.map(&:total).sum.to_f - cached_points.max_by(&:total).total) / (cached_points.size - 1)).round(1)
+  end
+
+  def std_dev_of_points
+    cached_points.map(&:total).standard_deviation.round(1)
   end
 
   def best_point_performance

@@ -3,9 +3,9 @@
   <td class="span4">
     <%= player_profile(player, player_points_path(player)) %>
   </td>
-  <td class="span2"><%= player_points_status(player_point_total.total) %></td>
-  <td class="span2"><%= player_points_status(player.weekly_average_points) %></td>
-  <td class="span2"><%= player_points_status(player.weekly_average_points_excluding_max) %></td>
-  <td class="span2"><%= player_points_status(player.best_point_performance) %></td>
-  <td class="span2"><%= player_points_status(player.worst_point_performance) %></td>
+  <td class="span2" title="Points on week <%= @week %>"><%= player_points_status(player_point_total.total) %></td>
+  <td class="span2" title="Average weekly points"><%= player_points_status(player.weekly_average_points) %></td>
+  <td class="span2" title="Average weekly points without best point performance"><%= player_points_status(player.weekly_average_points_excluding_max) %> (<%= player.std_dev_of_points %>)</td>
+  <td class="span2" title="Best point performance"><%= player_points_status(player.best_point_performance) %></td>
+  <td class="span2" title="Worst point performance"><%= player_points_status(player.worst_point_performance) %></td>
 </tr>

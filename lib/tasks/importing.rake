@@ -5,10 +5,12 @@ namespace :import do
     model.singleton_methods.include?(:import)
   end
 
+  week = ENV['WEEK'] ? ENV['WEEK'].to_i : GameWeek.current.week
+
   importing_models.each do |importing_model|
     desc "Import #{importing_model.name}"
     task importing_model.name.pluralize.underscore.to_sym do
-      importing_model.import
+      importing_model.import(week)
     end
   end
 

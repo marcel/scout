@@ -4,6 +4,7 @@
 
 <%= weeks_in_season(@week) %>
 <%= position_type_selector(@position_type) %>
+<%= dropdown_menu_filters %>
 <% if !GameWeek.current?(@week) %>
   <%= link_to 'Show ranking based on points', current_url(rank_by: :points) %>
 <% end %>

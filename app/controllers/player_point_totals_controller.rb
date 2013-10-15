@@ -25,6 +25,8 @@ class PlayerPointTotalsController < ApplicationController
         -player.weekly_average_points
       when 'waxmax'
         -player.weekly_average_points_excluding_max
+      when 'stdev'
+        player.std_dev_of_points
       when 'max'
         -player.best_point_performance
       when 'min'
@@ -172,6 +174,7 @@ class PlayerPointTotalsController < ApplicationController
       end
 
       query = query.joins(:player => :watches) if params[:watched]
+      query = query.where("players.owner_key" => params[:owner]) if params[:owner]
       query = query.where("players.position" => params[:position].split(',')) if params[:position]
       query = query.where("players.team_abbr" => params[:team].split(',')) if params[:team]
       query = query.where("players.position_type" => params[:position_type].split(',')) if params[:position_type]

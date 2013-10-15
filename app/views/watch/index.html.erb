@@ -2,6 +2,7 @@
   <h1><%= link_to(t('.title', :default => "Watch list"), url_for()) %></h1>
 </div>
 
+<%= dropdown_menu_filters %>
 <table class="table table-bordered">
   <tbody>
     <%= render partial: 'watched_player', collection: @players, cache: ->(p) { partial_cache_key("watched-player", p) } %>
