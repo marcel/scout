@@ -1,4 +1,10 @@
-  - Be able to sort any view by max minimum anything (e.g. sort by the max minimum points per game, targets, completions, etc))
+- Pagination (someting like infinite scroll) to mitigate slow load time
+
+- Highlight which column is the sort column
+
+- If requests continue to be slow make all link clicks do some progress spinner in the top like the iphone shows you that network stuff is happening
+
+- Be able to sort any view by max minimum anything (e.g. sort by the max minimum points per game, targets, completions, etc))
 
 - Rename ArmchairAnalysis::Team to ArmchairAnalysis::GamePerformance
 
@@ -17,9 +23,9 @@ a kicker's home field a dome (i.e. no wind). Do they have a better FG completion
          {"stat_id"=>5, "value"=>4},
          {"stat_id"=>6, "value"=>"-1"},
          {"stat_id"=>9, "value"=>"0.1"},
-  
+
   which indicates the point value for each stat which will allow me to determine for every player the things they have gotten their points from. Maybe I could do a pie chart :-o Or actually maybe better yet a stacked graph that shows the % of their total points broken up by how they got them.
-  
+
 - On the pages that let you filter tables, show a bar at the top of the table with each filter and an [x] that let's you remove filters without clearing everything
 
 - On expert ranking page provide filters to show only Green/Blue/Yellow/Red/Unchanged
@@ -28,11 +34,11 @@ a kicker's home field a dome (i.e. no wind). Do they have a better FG completion
   It feels like the generalizable product might be
 
   Click on a member of my team (any position, DEF etc) "Show me possible replacements"
-  
-  This renders a page which shows a number of other players, along with projections / rankings for both the 
-  upcoming week and remainder of the year. This would include all kinds of secondary analytics (like targets) 
+
+  This renders a page which shows a number of other players, along with projections / rankings for both the
+  upcoming week and remainder of the year. This would include all kinds of secondary analytics (like targets)
   as well as aggregated human projections
-  
+
   Then you simply work to continually refine the data and presentation of that "show me possible replacements"
   page where you continually work to the point where you never need to visit any other sites anymore.
 
@@ -40,7 +46,7 @@ a kicker's home field a dome (i.e. no wind). Do they have a better FG completion
 
 - Do research on running analytics and clustering on this corpus
 
-- Import csv of play by play data (though check http://www.armchairanalysis.com/data.php before as it might be easier to import) (apparently CBSSports.com has play by play data by game. see if there are other stats i can import). Also look at what Football Outsiders,  and Pro Football Focus offer. Some links: 
+- Import csv of play by play data (though check http://www.armchairanalysis.com/data.php before as it might be easier to import) (apparently CBSSports.com has play by play data by game. see if there are other stats i can import). Also look at what Football Outsiders,  and Pro Football Focus offer. Some links:
 http://www.footballoutsiders.com/products
 https://www.profootballfocus.com/?tab=by_team&season=2008&teamid=21&stats=&gameid=
 https://www.profootballfocus.com/?tab=by_team&season=2008&teamid=21&stats=&gameid=
