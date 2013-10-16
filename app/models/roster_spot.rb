@@ -156,7 +156,6 @@ class RosterSpot < ActiveRecord::Base
 
         p "max is #{permutations.values.max}"
         p "min is #{permutations.values.min}"
-        pp permutations
         [permutations.values.max, permutations.values.min]
       end.flatten
       
