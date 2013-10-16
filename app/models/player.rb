@@ -26,6 +26,44 @@ class Player < ActiveRecord::Base
     inverse_of: :player
   }
 
+  def intercepted
+    ArmchairAnalysis::Interception.
+      joins(:play).
+      where("armchair_analysis_plays.off = ?", armchair_analysis_team_name)
+  end
+
+  def cached_intercepted
+    @cached_intercepted ||= Rails.cache.fetch(['intercepted', armchair_analysis_team_name], expires_in: 1.day) {
+      intercepted.to_a
+    }
+  end
+
+  def interceptions
+    ArmchairAnalysis::Interception.
+      joins(:play).
+      where("armchair_analysis_plays.def = ?", armchair_analysis_team_name)
+  end
+
+  def cached_interceptions
+    @cached_interceptions ||= Rails.cache.fetch(['interceptions', armchair_analysis_team_name], expires_in: 1.day) {
+      interceptions.to_a
+    }
+  end
+
+  def recovered_fumbles
+     ArmchairAnalysis::Defense.where(team: armchair_analysis_team_name).where("frcv != 0")
+  end
+
+  def cached_recovered_fumbles
+    @cached_recovered_fumbles ||= Rails.cache.fetch(['recovered-fumbles', armchair_analysis_team_name], expires_in: 1.day) {
+      recovered_fumbles.to_a
+    }
+  end
+
+  def total_turnovers
+    cached_interceptions.size + cached_recovered_fumbles.map(&:frcv).sum
+  end
+
   has_many :projections, {
     primary_key: :fantasy_football_nerd_id,
     foreign_key: :fantasy_football_nerd_id,
@@ -168,7 +206,7 @@ class Player < ActiveRecord::Base
    #  end
 
   def cached_game_performances_for_team
-    @cached_game_performances_for_team ||= Rails.cache.fetch(['game_performances_for_team', armchair_analysis_team_name, updated_at]) {
+    @cached_game_performances_for_team ||= Rails.cache.fetch(['game_performances_for_team', armchair_analysis_team_name], expires_in: 1.day) {
       game_performances_for_team.to_a
     }
   end
@@ -183,7 +221,7 @@ class Player < ActiveRecord::Base
   end
 
   def cached_game_performances_by_opponents
-    @cached_game_performances_by_opponents ||= Rails.cache.fetch(['game_performances_by_opponents', armchair_analysis_team_name, updated_at]) {
+    @cached_game_performances_by_opponents ||= Rails.cache.fetch(['game_performances_by_opponents', armchair_analysis_team_name], expires_in: 1.day) {
       game_performances_by_opponents.to_a
     }
   end
@@ -284,7 +322,7 @@ class Player < ActiveRecord::Base
   }
 
   def cached_redzone_opportunities
-    @cached_redzone_opportunities ||= Rais.cache.fetch(['redzone_opportunities', armchair_analysis_id]) {
+    @cached_redzone_opportunities ||= Rais.cache.fetch(['redzone_opportunities', cache_key]) {
       redzone_opportunities.to_a
     }
   end

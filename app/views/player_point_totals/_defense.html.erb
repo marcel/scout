@@ -3,12 +3,16 @@
   <td class="span4">
     <%= player_profile(defense) %>
   </td>
-  <td class="span2"><%= player_points_status(defense.total_points) %></td>
-  <td class="span2">
+  <td class="span1"><%= player_points_status(defense.total_points) %></td>
+  <td class="span1">
     <%= defense.cached_game_performances_for_team.map(&:dp).sum %>
   </td>
-  <td class="span2">
+  <td class="span1">
     <%= opponent_performances.map(&:pts).sum - opponent_performances.map(&:dp).sum %></td>
-  <td class="span2"><%= opponent_performances.map(&:ry).sum %></td>
-  <td class="span2"><%= opponent_performances.map(&:py).sum %></td>
+  <td class="span1"><%= opponent_performances.map(&:ry).sum %></td>
+  <td class="span1"><%= opponent_performances.map(&:py).sum %></td>
+  <td class="span1">
+    <%= defense.total_turnovers %>
+    (<%= defense.cached_interceptions.size %> / <%= defense.cached_recovered_fumbles.map(&:frcv).sum %>)
+  </td>
 </tr>

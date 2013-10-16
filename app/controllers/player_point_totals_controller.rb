@@ -97,6 +97,8 @@ class PlayerPointTotalsController < ApplicationController
         -game_performances.map(&:ry).sum
       when 'py'
         -game_performances.map(&:py).sum
+      when 'int'
+        player.cached_intercepted.size
       else
         -game_performances.map(&:pts).sum
       end
@@ -118,6 +120,12 @@ class PlayerPointTotalsController < ApplicationController
         opponent_performances.map(&:ry).sum
       when 'py'
         opponent_performances.map(&:py).sum
+      when 'int'
+        -player.interceptions.size
+      when 'rf'
+        -player.cached_recovered_fumbles.map(&:frcv).sum
+      when 't'
+        -player.total_turnovers
       else
         -player.total_points
       end

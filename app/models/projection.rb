@@ -6,7 +6,7 @@ class Projection < ActiveRecord::Base
   }, touch: true
   
   def cached_player
-    Rails.cache.fetch([Player.name, 'fantasy_football_nerd_id', fantasy_football_nerd_id]) { player }
+    Rails.cache.fetch([Player.name, 'fantasy_football_nerd_id', fantasy_football_nerd_id], expires_in: 20.minutes) { player }
   end
 
   scope :latest, -> {

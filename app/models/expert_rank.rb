@@ -6,7 +6,7 @@ class ExpertRank < ActiveRecord::Base
   }
 
   def cached_player
-    Rails.cache.fetch([Player.name, 'yahoo_player_key', yahoo_player_key]) { player }
+    Rails.cache.fetch([Player.name, cache_key]) { player }
   end
 
   def ranked_in_previous_week?
@@ -23,7 +23,10 @@ class ExpertRank < ActiveRecord::Base
     # Policy: Update existing for the week
     def import(week = GameWeek.current.week, positions = %w[quarterback wide-receiver running-back tight-end defense-special-teams kicker])
       import_log "Started week #{week} import at #{Time.now}"
-
+      if SLUGS.values.first.size < week
+        import_log "No slugs for week #{week}"
+        return
+      end
       new_records     = 0
       updated_records = 0
       ranks_to_save = Array(positions).flatten.shuffle.map do |position|
@@ -36,7 +39,7 @@ class ExpertRank < ActiveRecord::Base
 
         if week_returned != week
           import_log "WARNING: Requested week #{week} but got #{week_returned}. Skipping."
-          next
+          next []
         end
 
         doc = Nokogiri::HTML(h)
@@ -90,11 +93,14 @@ class ExpertRank < ActiveRecord::Base
           end
         end
       end.flatten.compact
-
-      import_log "new_records: #{new_records}"
-      import_log "updated_records: #{updated_records}"
-      import_log "ranks_to_save: #{ranks_to_save.size}"
-      ranks_to_save.each(&:save)
+      if ranks_to_save.empty?
+        import_log "nothing to import"
+      else
+        import_log "new_records: #{new_records}"
+        import_log "updated_records: #{updated_records}"
+        import_log "ranks_to_save: #{ranks_to_save.size}"
+        ranks_to_save.each(&:save)
+      end
 
       import_log "Done at #{Time.now}"
     rescue Exception => e
