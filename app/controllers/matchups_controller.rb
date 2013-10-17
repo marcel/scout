@@ -29,7 +29,6 @@ class MatchupsController < ApplicationController
       *(@games.map(&:home_offense_points_scored_score) + @games.map(&:away_offense_points_scored_score)).minmax
     )
     @opposing_offense_points_scored_score_value_bucket.buckets.reverse!
-
   end
 
   class ValueBucket
