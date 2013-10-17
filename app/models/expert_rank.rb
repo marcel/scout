@@ -21,7 +21,7 @@ class ExpertRank < ActiveRecord::Base
     include Scout::ImportLogging
 
     # Policy: Update existing for the week
-    def import(week = GameWeek.current.week, positions = %w[quarterback wide-receiver running-back tight-end defense-special-teams kicker])
+    def import(week = GameWeek.current, positions = %w[quarterback wide-receiver running-back tight-end defense-special-teams kicker])
       import_log "Started week #{week} import at #{Time.now}"
       if SLUGS.values.first.size < week
         import_log "No slugs for week #{week}"

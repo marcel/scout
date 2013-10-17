@@ -376,7 +376,7 @@ class Player < ActiveRecord::Base
     end.sort_by(&:updated_at).last
   end
 
-  def projection(week = GameWeek.current.week)
+  def projection(week = GameWeek.current)
     # TODO Decide if defaulting to an empty projection is desirable, probably not
     cached_projections.select {|p| p.week == week }.sort_by(&:updated_at).last ||
       Projection.new(standard: 0.0, standard_high: 0.0, standard_low: 0.0)
@@ -528,7 +528,7 @@ class Player < ActiveRecord::Base
     end
 
     # Policy: Update old one
-    def import(week = GameWeek.current.week)
+    def import(week = GameWeek.current)
       import_log "Started import at #{Time.now}"
 
       client = Scout::Client.new

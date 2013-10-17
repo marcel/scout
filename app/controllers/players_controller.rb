@@ -3,7 +3,7 @@ class PlayersController < ApplicationController
   
   def index        
     query = Projection.
-      where(week: GameWeek.current.week).
+      where(week: GameWeek.current).
       joins(:player).
       includes(:player).
       order(rank: :asc, updated_at: :desc).

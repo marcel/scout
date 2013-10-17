@@ -26,7 +26,7 @@ class PlayerPointTotal < ActiveRecord::Base
     end
 
     # Policy: Update old one for this week
-    def import(week = GameWeek.current.week)
+    def import(week = GameWeek.current)
       import_log "Started week #{week} import at #{Time.now}"
 
       existing_player_points = where(week: week).load

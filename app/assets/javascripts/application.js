@@ -17,6 +17,7 @@
 //= require_tree .
 //= require highcharts/highcharts                                                           
 //= require highcharts/highcharts-more                                                         
+//= require jquery.inview.min.js
 
 $("#player-search input").keyup(function() {
   $.get($("#player-search").attr("action"), $("#player-search").serialize(), null, "script");

@@ -1,13 +1,15 @@
 class GameWeek < ActiveRecord::Base
+  @cache ||= {}
   class << self
     def current
-      @cache ||= {}
       today = Date.today
-      @cache[today] ||= where("start_date <= :today AND end_date >= :today", today: Date.today).take!
+      key   = today.to_s
+      game_week  = @cache[key] ||= where("start_date <= :today AND end_date >= :today", today: Date.today).take
+      today.wday < 4 ? game_week.week - 1 : game_week.week
     end
     
     def current?(week)
-      current.week == week
+      current == week
     end
   end
 end

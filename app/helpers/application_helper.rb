@@ -1,4 +1,29 @@
 module ApplicationHelper
+  
+  def scroll_pagination_button(collection)
+    if collection.next_page
+      link_to(raw(content_tag(:button, 'Load More', :class => 'load-more btn btn-large btn-primary', type: 'button')),
+        current_url(page: collection.next_page), :class => 'load-more', :remote => true) 
+    end
+  end
+  
+  def render_scroll_pagination_js(element, collection, partial = nil)
+    render partial: 'shared/scroll_pagination', locals: {element: element, collection: collection, partial: (partial || element)}
+  end
+  
+  def pageless(total_pages, url=nil, container=nil)
+    opts = {
+      :totalPages => total_pages,
+      :url        => url,
+      :loaderMsg  => 'Loading more results',
+      :loaderImage => image_path("load.gif")
+    }
+    
+    container && opts[:container] ||= container
+    
+    javascript_tag("$('.projections').pageless(#{opts.to_json});")
+  end
+  
   POSITIONS = [
     ['QB'],
     ['WR'],
@@ -248,7 +273,7 @@ module ApplicationHelper
   end
 
   def weeks_in_season(week, season_view = false)
-    current = GameWeek.current.week
+    current = GameWeek.current
     active = (week || current).to_i
     active = -1 if season_view
     label = ->(number) {
@@ -280,7 +305,7 @@ module ApplicationHelper
     projections = player.cached_projections.group_by(&:week).map {|w, ps| ps.sort_by {|p| p.updated_at }.last }.flatten.sort_by(&:week)
     weeks = points.map {|point| "Week #{point.week} vs #{player.opponent_on_week(point.week) ||'bye'}" }
     # Do something better than this.
-    if points.last.week == GameWeek.current.week && points.last.total.zero? && Time.now.wday < 7
+    if points.last.week == GameWeek.current && points.last.total.zero? && Time.now.wday < 7
       points = points[0...-1]
     end
     LazyHighCharts::HighChart.new('graph') do |f|
@@ -297,11 +322,11 @@ module ApplicationHelper
   end
 
   def season_performance_chart(player_point_totals_by_player)
-    weeks = 1.upto(GameWeek.current.week).map {|week| "Week #{week}" }
+    weeks = 1.upto(GameWeek.current).map {|week| "Week #{week}" }
     max = player_point_totals_by_player.values.flatten.max_by(&:total).total
     if min_filter = params[:min]
       player_point_totals_by_player = player_point_totals_by_player.select do |player, points|
-        points.all? {|point| point.total >= min_filter.to_f || (point.week == GameWeek.current.week && point.total == 0.0)}
+        points.all? {|point| point.total >= min_filter.to_f || (point.week == GameWeek.current && point.total == 0.0)}
       end
     end
 

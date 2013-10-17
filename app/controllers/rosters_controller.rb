@@ -6,7 +6,7 @@ class RostersController < ApplicationController
 
   private
     def set_team_with_roster
-      @week = (params[:week] || GameWeek.current.week).to_i
+      @week = (params[:week] || GameWeek.current).to_i
       
       @team = Team.where(id: params[:id]).
         joins(:roster_spots).

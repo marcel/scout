@@ -1,6 +1,6 @@
 class ExpertRanksController < ApplicationController
   def index
-    @week          = (params[:week] ||= GameWeek.current.week).to_i
+    @week          = (params[:week] ||= GameWeek.current).to_i
     @position_type = (params[:position_type] ||= 'quarterback')
 
     query = ExpertRank.where(week: @week, position_type: @position_type).

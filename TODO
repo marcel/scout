@@ -1,3 +1,7 @@
+- Add deeper per position stats like for RBs show things like the number of runnings backs they use per game so you see what the depth chart is actually like in practice (from the Team rush attempts adn related metrics. Also look at Rush attempts in the red zone. For receivers look at how they split workload between WR1A/WR1Y and WR3A/WR3Y. Also look at break down of short vs medium vs long completions.
+
+
+
 - Pagination (someting like infinite scroll) to mitigate slow load time
 
 - Highlight which column is the sort column

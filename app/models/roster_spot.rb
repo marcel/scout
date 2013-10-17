@@ -132,7 +132,7 @@ class RosterSpot < ActiveRecord::Base
         }
 
         compute_points = ->(candidate_lineup) {
-          v = candidate_lineup.select(&:starter?).map(&:player).map {|p| p.points_on_week(GameWeek.current.week)}.map(&:total).sum
+          v = candidate_lineup.select(&:starter?).map(&:player).map {|p| p.points_on_week(GameWeek.current)}.map(&:total).sum
           p v
           v
         }
@@ -179,7 +179,7 @@ class RosterSpot < ActiveRecord::Base
     end
     
     # Policy: Create new one for this week
-    def import(week = GameWeek.current.week)
+    def import(week = GameWeek.current)
       import_log "Started week #{week} import at #{Time.now}"
 
       existing_roster_spots_for_week = RosterSpot.where(week: week, active: true).

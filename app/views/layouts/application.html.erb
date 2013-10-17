@@ -28,11 +28,11 @@
     <div class="navbar navbar-fluid-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+          <!-- <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </a>
+          </a> -->
           <a class="brand" href="#">Scout</a>
           <div class="container-fluid nav-collapse">
             <!-- <form class="form-search pull-right" style="padding-top: 5px">
@@ -44,7 +44,7 @@
               <div><%= text_field_tag :search,  params[:search], :placeholder => 'Player', :class => 'input-medium search-query' %></div>
               <div id="search-preview"></div>
             <% end %>
-            <ul class="nav">
+            <!-- <ul class="nav">
               <li><%= link_to "Points", points_path  %></li>
               <li><%= link_to "Targets", targets_path  %></li>
               <li><%= link_to "Carries", carries_path  %></li>
@@ -55,9 +55,9 @@
               <li><%= link_to "Expert Rankings", expert_ranks_path %></li>
               <li><%= link_to "Teams", teams_path  %></li>
               <li><%= link_to "Watch List", watch_list_path %></li>
-              <!-- <li><%= link_to "Players", players_path  %></li> -->
+              <<li><%= link_to "Players", players_path  %></li>
 
-            </ul>
+            </ul> -->
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -78,12 +78,14 @@
                 <% if content_for?(:sidebar) %>
                   <%= yield(:sidebar) %>
                 <% else %>
+                  <!-- <li class="nav-header">Performance</li> -->
                   <li><%= link_to "Points", points_path  %></li>
-                  <li><%= link_to "Targets", targets_path  %></li>
+                  <li><%= link_to "Targets", targets_path %></li>
                   <li><%= link_to "Carries", carries_path  %></li>
                   <li><%= link_to "Defense", defense_path  %></li>
                   <li><%= link_to "Offense", offense_path  %></li>
                   <li><%= link_to "Injuries", injuries_path  %></li>
+                  <!-- <li class="nav-header">Projections</li> -->
                   <li><%= link_to "Projections", projections_path  %></li>
                   <li><%= link_to "Expert Rankings", expert_ranks_path %></li>
                   <li><%= link_to "Teams", teams_path  %></li>

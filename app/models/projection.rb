@@ -44,7 +44,7 @@ class Projection < ActiveRecord::Base
     # TODO Maybe create an importer object that hides away most logging
     # According to FFN: The data changes daily at 12:00 Eastern.
     # Policy: Create new one for this week if changed
-    def import(week = GameWeek.current.week)
+    def import(week = GameWeek.current)
       import_log "Started week #{week} import at #{Time.now}"
 
       existing_projections = where(week: week).load

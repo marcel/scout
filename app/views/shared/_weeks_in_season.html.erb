@@ -15,7 +15,7 @@
     if (e.keyCode == 37) { // left
      window.location.href = '<%= current_url(week: [1, @week - 1].max).html_safe %>';
     } else if (e.keyCode == 39) { // right
-      window.location.href = '<%= current_url(week: [GameWeek.current.week, @week + 1].min).html_safe %>';
+      window.location.href = '<%= current_url(week: [GameWeek.current, @week + 1].min).html_safe %>';
     }
   });
   <% end %>

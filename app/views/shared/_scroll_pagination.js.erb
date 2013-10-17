@@ -1,0 +1,6 @@
+$(".<%= element %>").append("<%= escape_javascript(render partial: partial, collection: collection) %>");
+$('a.load-more').attr('href', "<%= current_url(page: collection.next_page) %>");
+ 
+<% if !collection.next_page %>
+  $('a.load-more').remove();
+<% end %>

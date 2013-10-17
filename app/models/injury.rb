@@ -10,7 +10,7 @@ class Injury < ActiveRecord::Base
   end
 
   scope :for_current_week, -> {
-    where(week: GameWeek.current.week)
+    where(week: GameWeek.current)
   }
 
   scope :game_statuses, -> {
@@ -56,7 +56,7 @@ class Injury < ActiveRecord::Base
     # TODO Maybe create an importer object that hides away most logging
     # According to FFN: The data changes daily at 12:00 Eastern and 5:00 PM Eastern.
     # Policy: Update old one for this week
-    def import(week = GameWeek.current.week)
+    def import(week = GameWeek.current)
       import_log "Started week #{week} import at #{Time.now}"
 
       existing_injuries  = where(week: week).order(last_update: :desc).load

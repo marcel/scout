@@ -2,7 +2,7 @@ class InjuriesController < ApplicationController
   before_action :set_injury, only: :show
 
   def index
-    @week = (params[:week] ||= GameWeek.current.week).to_i
+    @week = (params[:week] ||= GameWeek.current).to_i
     where_clause = {week: @week}
 
     # where_clause.update(game_status: params[:game_status]) if params[:game_status]

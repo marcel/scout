@@ -1,18 +1,23 @@
+require 'will_paginate/array'
 class PlayerPointTotalsController < ApplicationController
   before_action :set_player_with_points, only: :show
 
   def index
-    @week  = (params[:week] ||= GameWeek.current.week).to_i
-    @limit = (params[:limit] || 100).to_i
+    @week  = (params[:week] || GameWeek.current).to_i
+    @limit = (params[:limit] || 50).to_i
     query = PlayerPointTotal.
       where(week: @week).
       joins(:player)
 
     @player_point_totals = apply_filters(query).
-      order(total: :desc).
-      limit(@limit).sort_by(&points_sort_function)
-
-    fresh_when(etag: collection_etag(@player_point_totals, :week), :public => true)
+      # paginate(page: params[:page], per_page: @limit).
+      order(total: :desc).sort_by(&points_sort_function).paginate(page: params[:page], per_page: @limit)
+    
+    response = fresh_when(etag: collection_etag(@player_point_totals, :week), :public => true)
+    respond_to do |format|
+      format.html { response }
+      format.js { response }
+    end
   end
 
   def points_sort_function
@@ -133,7 +138,7 @@ class PlayerPointTotalsController < ApplicationController
   end
 
   def targets
-    @week = (params[:week] ||= GameWeek.current.week).to_i
+    @week = (params[:week] ||= GameWeek.current).to_i
 
     query = ArmchairAnalysis::Offense.joins(:player).
       joins(:game_in_season).
@@ -164,7 +169,7 @@ class PlayerPointTotalsController < ApplicationController
   end
 
   def carries
-    @week = (params[:week] || GameWeek.current.week).to_i
+    @week = (params[:week] || GameWeek.current).to_i
 
     query = ArmchairAnalysis::Offense.joins(:player).
       joins(:game_in_season).

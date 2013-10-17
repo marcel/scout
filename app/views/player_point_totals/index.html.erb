@@ -27,12 +27,13 @@
         <th><%= link_to 'Min', current_url(sort: 'min') %></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="playerpointtotals">
       <% cache ['points-table', collection_cache_key(@players, :week) ] do %>
         <%= render partial: 'player_point_total', collection: @player_point_totals, cache: ->(p) { partial_cache_key("player-point-total", p) }%>
       <% end %>
     </tbody>
   </table>
+  <%= scroll_pagination_button(@player_point_totals) %>
 <% else %>
   <%= render partial: 'shared/no_data_yet', locals: {week: @week} %>
 <% end %>

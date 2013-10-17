@@ -1,8 +1,9 @@
 class ProjectionsController < ApplicationController
   def index
-    @week = (params[:week] ||= GameWeek.current.week).to_i
+    @week = (params[:week] || GameWeek.current).to_i
     where_clause = {week: @week}
-    query = Projection.where(where_clause)
+    query = Projection.where(where_clause).paginate(page: params[:page], per_page: 50)
+    
     query = query.where("standard > ?", params[:above]) if params[:above]
     query = query.where("standard < ?", params[:below]) if params[:below]
     if !params[:above] && !params[:below]
@@ -15,13 +16,22 @@ class ProjectionsController < ApplicationController
     query = query.where("players.owner_key" => params[:owner]) if params[:owner]
     query = query.where("players.ownership_type" => params[:ownership_type].split(',')) if params[:ownership_type]
 
-    query = query.group(:fantasy_football_nerd_id).
+    query = query.group("projections.fantasy_football_nerd_id").
       joins(:player).
       order(updated_at: :desc).order(rank: :asc)
 
     query = query.limit(params[:limit].to_i) if params[:limit]
 
     @projections = query
-    fresh_when(etag: collection_etag(@projections, :week), :public => true)
+    
+    response = fresh_when(etag: collection_etag(@projections, :week), :public => true)
+    respond_to do |format|
+      format.html {
+        response
+      }
+      format.js {
+        response
+      }
+    end
   end
 end
