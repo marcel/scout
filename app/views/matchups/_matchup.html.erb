@@ -3,7 +3,10 @@
     <tr>
       <th><small>
         <% if outcome = matchup.outcome %>
-          Final: <%= outcome.h %> <%= outcome.ptsh %> &mdash; <%= outcome.ptsv %> <%= outcome.v %>
+          <h5>Final: <%= outcome.h %> <%= outcome.ptsh %> &mdash; <%= outcome.ptsv %> <%= outcome.v %></h5>
+          <%= outcome.stad %><br />
+          <small class="muted"><%= outcome.cond %> on <%= outcome.surf.downcase %><%= outcome.temp.present? ? raw(' ' + outcome.temp + '&#8457;') : '' %>
+          <%= outcome.humd.present? ? " / #{outcome.humd}% humidity" : '' %></small>
         <% end %>
       </small></th>
       <th><small>Matchup score</small></th>

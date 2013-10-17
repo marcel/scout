@@ -1,15 +1,25 @@
 <div class="thumbnail">
 
   <div class="row-fluid">
-    <div class="player-headshot span3">
-      <%= image_tag(player.headshot, :class => 'img-polaroid') %>
+    <% if player.defense? %>
+    <div class="span3 img-polaroid">
+      <%= link_to current_url(team: player.team_abbr) do %>
+        <div style="height: 53px" class="logo logo-medium logo-nfl-medium nfl-medium-<%= player.team_abbr_long %>"></div>
+      <% end %>
     </div>
+    <% else %>
+      <div class="player-headshot span3">
+        <%= image_tag(player.headshot, :class => 'img-polaroid') %>
+      </div>
+    <% end %>
 
     <div class="player-bio span9">
       <div class="row-fluid">
 
-        <%= link_to current_url(team: player.team_abbr) do %>
-          <div class="span2 logo logo-small logo-nfl-small nfl-small-<%= player.team_abbr_long %>">&nbsp;</div>
+        <% if !player.defense? %>
+          <%= link_to current_url(team: player.team_abbr) do %>
+            <div class="span2 logo logo-small logo-nfl-small nfl-small-<%= player.team_abbr_long %>">&nbsp;</div>
+          <% end %>
         <% end %>
         <div class="span10">
           <strong><%= link_to player.full_name, player_points_path(player) %></strong>

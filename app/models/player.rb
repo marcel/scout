@@ -26,6 +26,10 @@ class Player < ActiveRecord::Base
     inverse_of: :player
   }
 
+  def defense?
+    position == 'DEF'
+  end
+
   def intercepted
     ArmchairAnalysis::Interception.
       joins(:play).
