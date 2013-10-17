@@ -64,6 +64,8 @@ class Player < ActiveRecord::Base
     cached_interceptions.size + cached_recovered_fumbles.map(&:frcv).sum
   end
 
+
+
   has_many :projections, {
     primary_key: :fantasy_football_nerd_id,
     foreign_key: :fantasy_football_nerd_id,
@@ -80,6 +82,10 @@ class Player < ActiveRecord::Base
         !cached_bye_weeks.include?(projection.week)
       end
     }
+  end
+
+  def defensive_performances
+
   end
 
   has_many :points, {

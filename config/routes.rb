@@ -5,6 +5,7 @@ Scout::Server::Application.routes.draw do
   get "watches", to: "watch#index", as: :watch_list
   get "watch/update/:id", to: "watch#update", as: :update_watch
 
+  get "/matchups/(:week)", to: "matchups#index", as: :matchups
   resources :teams do
     member do
       get 'roster/(:week)', to: "rosters#show", as: :roster
