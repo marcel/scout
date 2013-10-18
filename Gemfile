@@ -75,4 +75,5 @@ gem 'numeric_array'
 
 #gem 'forecast_io'
 gem 'typhoeus'
+gem 'oj'
 gem 'multi_json'
