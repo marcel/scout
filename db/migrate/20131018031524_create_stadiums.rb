@@ -33,6 +33,7 @@ class CreateStadiums < ActiveRecord::Migration
       {:name=>"Mall of America Field at HHH Metrodome", :zip=>"55415", :armchair_analysis_team_name=>"MIN", :team_abbr=>"Min"},
       {:name=>"Mercedes-Benz Superdome", :zip=>"70112", :armchair_analysis_team_name=>"NO", :team_abbr=>"NO"},
       {:name=>"MetLife Stadium", :zip=>"07073", :armchair_analysis_team_name=>"NYG", :team_abbr=>"NYG"},
+      {:name=>"MetLife Stadium", :zip=>"07073", :armchair_analysis_team_name=>"NYJ", :team_abbr=>"NYJ"},
       {:name=>"O.Co Coliseum", :zip=>"94621", :armchair_analysis_team_name=>"OAK", :team_abbr=>"Oak"},
       {:name=>"Paul Brown Stadium", :zip=>"45202", :armchair_analysis_team_name=>"CIN", :team_abbr=>"Cin"},
       {:name=>"Qualcomm Stadium", :zip=>"92108", :armchair_analysis_team_name=>"SD", :team_abbr=>"SD"},

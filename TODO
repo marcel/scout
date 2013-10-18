@@ -1,3 +1,19 @@
+- From Alex:
+  It feels like the generalizable product might be
+
+  Click on a member of my team (any position, DEF etc) "Show me possible replacements"
+
+  This renders a page which shows a number of other players, along with projections / rankings for both the
+  upcoming week and remainder of the year. This would include all kinds of secondary analytics (like targets)
+  as well as aggregated human projections
+
+  Then you simply work to continually refine the data and presentation of that "show me possible replacements"
+  page where you continually work to the point where you never need to visit any other sites anymore.
+
+- Consider sending weather warning notifications like "Heads up this defense that is availble will be playing in rain"
+
+- Add support for authentication and accounts
+
 - Pagination (someting like infinite scroll) to mitigate slow load time
 
 - Highlight which column is the sort column
@@ -29,18 +45,6 @@ a kicker's home field a dome (i.e. no wind). Do they have a better FG completion
 - On the pages that let you filter tables, show a bar at the top of the table with each filter and an [x] that let's you remove filters without clearing everything
 
 - On expert ranking page provide filters to show only Green/Blue/Yellow/Red/Unchanged
-
-- From Alex:
-  It feels like the generalizable product might be
-
-  Click on a member of my team (any position, DEF etc) "Show me possible replacements"
-
-  This renders a page which shows a number of other players, along with projections / rankings for both the
-  upcoming week and remainder of the year. This would include all kinds of secondary analytics (like targets)
-  as well as aggregated human projections
-
-  Then you simply work to continually refine the data and presentation of that "show me possible replacements"
-  page where you continually work to the point where you never need to visit any other sites anymore.
 
 - Roster spots is messed up. It needs to only include the current recent roster spots for the week.
 
@@ -84,11 +88,7 @@ http://www.armchairanalysis.com/data.php
 
 - Maybe create player permalink with stats per game if that's useful
 
-- Maybe add js to map right and left arrow to move forward and backward week to week in index views that have week links
-
 - In the points vs predicted chart maybe show the versus team in the week by week legend + the score
-
-- Fix broken team icons for 2 letter team abbreviations that need to map to a 3 letter abbrevation by just renaming all css to same 2 letter abbreviations that the DB stores
 
 - Share the same player filtering by query string across all applicable resources rather than duplicate the implementation in each controller
 
@@ -98,14 +98,9 @@ enqueue batches of concurrent requests for start=N where N is the estimated tota
 
 - Make the sidebar menu contextual to the current section (e.g. for Injuries provide filters)
 
-- Introduce a notion of something like a "watch list" where you can mark a player as on your watch list. Additionally, you could
-choose to watch particular things, like injuries or projections. So if during an import anything changes you'll be notified. Also send a digest "Here is how all the people on your watch list performed this week".
+- Ability to choose to watch particular things, like injuries or projections. So if during an import anything changes you'll be notified. Also send a digest "Here is how all the people on your watch list performed this week".
 
 - Add authority data like GameWeeks and Stats to seed.rb
-
-- Look into Heroku add-ons that could do email or sms
-
-- Finish specifying all support filters and sub-resources for each resource
 
 - NB: The league resource has a 'league_update_timestamp'. Don't yet know if that applies to only
 changes to the league itself or any changes made by teams in the league but if the latter then
@@ -117,17 +112,9 @@ changes made by the commissioner
 
 - NB: League + standings has <points_for>276.93</points_for> and <points_against>198.47</points_against> per team.
 
-- Import fantasy_football_nerd_id for defensive teams in Cache::Player
-
-- Have a way of returning the current roster for a team from the DB
-
 - Consider shaving the yak of storing just ids for yahoo entities in the DB and know how to construct the key based on
 their conventions. This probably isn't worth the hassle. It would improve the performance of the indexes but the data set
 is so small right now that it doesn't matter at all.
-
-- Show aggregate high, normal and low projections for a roster for the week
-
-- Store matchups in the db
 
 - Investigate if there are any benefits to using 'oauth/request_proxy/typhoeus_request'
 
@@ -152,6 +139,24 @@ end
 
 DONE:
 =====
+- Maybe add js to map right and left arrow to move forward and backward week to week in index views that have week links
+
+- Fix broken team icons for 2 letter team abbreviations that need to map to a 3 letter abbrevation by just renaming all css to same 2 letter abbreviations that the DB stores
+
+- Introduce a notion of something like a "watch list" where you can mark a player as on your watch list.
+
+- Show aggregate high, normal and low projections for a roster for the week
+
+- [NOT USING HEROKU] Look into Heroku add-ons that could do email or sms
+
+- [NOT FINISHED BUT NOT NECESSARY] Finish specifying all support filters and sub-resources for each resource
+
+- Import fantasy_football_nerd_id for defensive teams in Cache::Player
+
+- Have a way of returning the current roster for a team from the DB
+
+- Store matchups in the db
+
 - Add Offense section that allows, like the Defense section, to sort teams by Points scored, Passing yards, Rushing Yards, etc
 
 - Create points/projections permalink page per player with a chart showing week over week projections and actual points

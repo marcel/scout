@@ -1,4 +1,6 @@
 module ApplicationHelper
+  
+  FORECAST_CONDITIONS = %w[clear-day clear-night rain snow sleet wind fog cloudy partly-cloudy-day partly-cloudy-night]
   POSITIONS = [
     ['QB'],
     ['WR'],

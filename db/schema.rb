@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131018051520) do
+ActiveRecord::Schema.define(version: 20131018084857) do
 
   create_table "accounts", force: true do |t|
     t.string   "username"
@@ -761,6 +761,10 @@ ActiveRecord::Schema.define(version: 20131018051520) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "type"
+    t.string   "surface"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
   add_index "stadiums", ["armchair_analysis_team_name"], name: "index_stadiums_on_armchair_analysis_team_name", using: :btree

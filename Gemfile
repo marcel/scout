@@ -72,3 +72,7 @@ gem 'rack-cache'
 gem 'kgio'
 
 gem 'numeric_array'
+
+#gem 'forecast_io'
+gem 'typhoeus'
+gem 'multi_json'

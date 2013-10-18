@@ -1,0 +1,177 @@
+class AddMoreInformationToStadiums < ActiveRecord::Migration
+  def change
+    change_table :stadiums do |t|
+      t.string :type
+      t.string :surface
+      t.float :latitude
+      t.float :longitude
+    end
+
+    stadium_updates = {1=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>39.0577566,
+       :longitude=>-94.4902774},
+     2=>
+      {:surface=>"AstroTurf",
+       :type=>"Retractable Roof",
+       :latitude=>37.7618242,
+       :longitude=>-122.3985871},
+     3=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>35.2326781,
+       :longitude=>-80.8460822},
+     4=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>37.7304167,
+       :longitude=>-122.384425},
+     5=>
+      {:surface=>"FieldTurf",
+       :type=>"Open Air",
+       :latitude=>47.583863,
+       :longitude=>-122.3406748},
+     6=>
+      {:surface=>"AstroTurf",
+       :type=>"Dome",
+       :latitude=>38.6305392,
+       :longitude=>-90.19282160000002},
+     7=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>30.3276337,
+       :longitude=>-81.6555607},
+     8=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>38.9140455,
+       :longitude=>-76.8778612},
+     9=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>41.5139193,
+       :longitude=>-81.6747295},
+     10=>
+      {:surface=>"FieldTurf",
+       :type=>"Dome",
+       :latitude=>42.328245,
+       :longitude=>-83.0495622},
+     11=>
+      {:surface=>"AstroTurf",
+       :type=>"Dome",
+       :latitude=>33.7657549,
+       :longitude=>-84.39493999999999},
+     12=>
+      {:surface=>"FieldTurf",
+       :type=>"Open Air",
+       :latitude=>42.0706608,
+       :longitude=>-71.2517835},
+     13=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>40.4828051,
+       :longitude=>-80.0367259},
+     14=>
+      {:surface=>"DD GrassMaster",
+       :type=>"Open Air",
+       :latitude=>44.4866783,
+       :longitude=>-88.0607565},
+     15=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>39.9350642,
+       :longitude=>-75.1516194},
+     16=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>36.1667268,
+       :longitude=>-86.7680322},
+     17=>
+      {:surface=>"AstroTurf",
+       :type=>"Retractable Roof",
+       :latitude=>39.7379842,
+       :longitude=>-86.15991489999999},
+     18=>
+      {:surface=>"MomentumTurf",
+       :type=>"Open Air",
+       :latitude=>39.2635174,
+       :longitude=>-76.6239423},
+     19=>
+      {:surface=>"UBU Speed Series S5M",
+       :type=>"Dome",
+       :latitude=>44.97583909999999,
+       :longitude=>-93.25710339999999},
+     20=>
+      {:surface=>"UBU Speed Series S5M",
+       :type=>"Dome",
+       :latitude=>29.95957689999999,
+       :longitude=>-90.0770127},
+     21=>
+      {:surface=>"UBU Speed Series S5M",
+       :type=>"Open Air",
+       :latitude=>40.8136765,
+       :longitude=>-74.0828839},
+     22=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>37.7347438,
+       :longitude=>-122.2143323},
+     23=>
+      {:surface=>"UBU Sports Speed S5-M",
+       :type=>"Open Air",
+       :latitude=>39.1031971,
+       :longitude=>-84.5064881},
+     24=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>32.7742488,
+       :longitude=>-117.1411815},
+     25=>
+      {:surface=>"A Turf Titan",
+       :type=>"Open Air",
+       :latitude=>42.7576584,
+       :longitude=>-78.77028949999999},
+     26=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>27.9717504,
+       :longitude=>-82.4915194},
+     27=>
+      {:surface=>"Grass",
+       :type=>"Retractable Roof",
+       :latitude=>29.684552,
+       :longitude=>-95.40966329999999},
+     28=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>41.8703314,
+       :longitude=>-87.62357420000001},
+     29=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>39.7380371,
+       :longitude=>-105.0265195},
+     30=>
+      {:surface=>"Grass",
+       :type=>"Open Air",
+       :latitude=>25.9595052,
+       :longitude=>-80.2432839},
+     31=>
+      {:surface=>"Grass",
+       :type=>"Retractable Roof",
+       :latitude=>33.5321111,
+       :longitude=>-112.256285},
+     32=>
+      {:surface=>"UBU Speed Series S5M",
+       :type=>"Open Air",
+       :latitude=>40.8136765,
+       :longitude=>-74.0828839}}
+
+     stadium_updates.each do |id, attributes|
+       stadium = Stadium.find(id)
+       stadium.attributes = attributes
+       stadium.save
+     end
+  end
+end

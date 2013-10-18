@@ -37,6 +37,11 @@
           <%= points_badge('OPPONENT', @opposing_offense_points_scored_score_value_bucket[matchup.offense_points_scored_score]) %>
         <!-- TODO Safety + Points allowed vs Points scored -->
         </div>
+        <% forecast = matchup.game.forecast %>
+        <%= forecast.summary %> / <%= forecast.temperature %>F 
+        <%= image_tag("weather/Cloudy-with-Rain.png", size: '25x25') %>
+        <!-- <object type="image/svg+xml" data="assets/images/meteocon/33.svg">Your browser does not support SVG</object> -->
+        
       </td>
       <%= render partial: 'matchup', locals: {matchup: matchup} %>
       </tr>
