@@ -6,39 +6,41 @@
 <%# cache ['defense-matchups', collection_cache_key(@games, :week) ] do %>
   <%#= render partial: 'matchup', collection: @games, cache: ->(p) { partial_cache_key("game-matchup", p) } %>
 <%# end %>
+<% cache ['defense-matchups', collection_cache_key(@defensive_matchups, :week) ] do %>
 
-<% @defensive_matchups.each_with_index do |matchup, index| %>
-<table class="table table-condensed">
-  <thead>
-    <tr>
-      <th>
-        <%= index + 1 %> <%= points_badge('MATCHUP SCORE', @overall_matchup_score_value_bucket[matchup.overall_matchup_score]) %>
-      </th>
-      <th><small><%= sort_column('Matchup score', 'm') %></small></th>
-      <th><small><%= sort_column('Points scored score', 'p') %></small></th>
-      <th><small><%= sort_column('Turnover score', 't') %> (<%= sort_column('INT', 'i') %> / <%= sort_column('FUM', 'f') %>)</small></th>
-      <th><small><%= sort_column('Sack score', 's') %></small></th> <!-- TODO Factor in how much opponent gets sacked -->
-      <th><small><%= sort_column('Opponent point production', 'o') %></small></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-    <td class="span4">
-      <!-- <p class="pull-right"><%#= matchup.home_team? ? 'Home' : 'Away' %></p> -->
+  <% @defensive_matchups.each_with_index do |matchup, index| %>
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>
+          <%= index + 1 %> <%= points_badge('MATCHUP SCORE', @overall_matchup_score_value_bucket[matchup.overall_matchup_score]) %>
+        </th>
+        <th><small><%= sort_column('Matchup score', 'm') %></small></th>
+        <th><small><%= sort_column('Points scored score', 'p') %></small></th>
+        <th><small><%= sort_column('Turnover score', 't') %> (<%= sort_column('INT', 'i') %> / <%= sort_column('FUM', 'f') %>)</small></th>
+        <th><small><%= sort_column('Sack score', 's') %></small></th> <!-- TODO Factor in how much opponent gets sacked -->
+        <th><small><%= sort_column('Opponent point production', 'o') %></small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      <td class="span4">
+        <!-- <p class="pull-right"><%#= matchup.home_team? ? 'Home' : 'Away' %></p> -->
 
-      <%= player_profile(matchup.defense) %>
-      <div class="well well-small">
-        <%= points_badge('SCORING', @points_scored_value_bucket[matchup.points_scored_score]) %>
-        <%= points_badge('INT + FUM', @turnover_score_value_bucket[matchup.turnover_score]) %>
-        <%= points_badge('INT', @interception_score_value_bucket[matchup.interception_score]) %>
-        <%= points_badge('FUM', @fumble_score_value_bucket[matchup.fumble_score]) %>
-        <%= points_badge('SACK', @sack_score_value_bucket[matchup.sack_score]) %>
-        <%= points_badge('OPPONENT', @opposing_offense_points_scored_score_value_bucket[matchup.offense_points_scored_score]) %>
-      <!-- TODO Safety + Points allowed vs Points scored -->
-      </div>
-    </td>
-    <%= render partial: 'matchup', locals: {matchup: matchup} %>
-    </tr>
-  </tbody>
-</table>
+        <%= player_profile(matchup.defense) %>
+        <div class="well well-small">
+          <%= points_badge('SCORING', @points_scored_value_bucket[matchup.points_scored_score]) %>
+          <%= points_badge('INT + FUM', @turnover_score_value_bucket[matchup.turnover_score]) %>
+          <%= points_badge('INT', @interception_score_value_bucket[matchup.interception_score]) %>
+          <%= points_badge('FUM', @fumble_score_value_bucket[matchup.fumble_score]) %>
+          <%= points_badge('SACK', @sack_score_value_bucket[matchup.sack_score]) %>
+          <%= points_badge('OPPONENT', @opposing_offense_points_scored_score_value_bucket[matchup.offense_points_scored_score]) %>
+        <!-- TODO Safety + Points allowed vs Points scored -->
+        </div>
+      </td>
+      <%= render partial: 'matchup', locals: {matchup: matchup} %>
+      </tr>
+    </tbody>
+  </table>
+  <% end %>
 <% end %>

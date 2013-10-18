@@ -35,6 +35,8 @@ class MatchupsController < ApplicationController
       *minmax.(:offense_points_scored_score)
     )
     @opposing_offense_points_scored_score_value_bucket.buckets.reverse!
+
+    fresh_when(etag: collection_etag(@defensive_matchups, :week), :public => true)
   end
 
   def sort_function
