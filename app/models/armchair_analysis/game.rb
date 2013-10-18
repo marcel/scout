@@ -9,6 +9,11 @@ class ArmchairAnalysis::Game < ActiveRecord::Base
     foreign_key: :gid
   }
 
+  has_one :stadium, {
+    primary_key: :h,
+    foreign_key: :armchair_analysis_team_name
+  }
+
   def won_by_home_team?
     ptsh > ptsv
   end

@@ -26,7 +26,8 @@
           <% if @week %>
             <span><small class="minor">
               <% if opponent = player.opponent_on_week(@week) %>
-                vs <%= opponent %>
+
+                <%= player.game_on_week(@week).home_team?(player) ? 'vs' : 'at' %> <%= opponent %>
               <% else %>
                 bye week
               <% end %>

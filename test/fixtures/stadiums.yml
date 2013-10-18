@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  zip: MyString
+  team_abbr: MyString
+  armchair_analysis_team_name: MyString
+  name: MyString
+
+two:
+  zip: MyString
+  team_abbr: MyString
+  armchair_analysis_team_name: MyString
+  name: MyString

@@ -173,6 +173,10 @@ module ApplicationHelper
     points_badge(points, badge_class)
   end
 
+  def sort_column(text, param)
+    link_to(text, current_url(sort: param))
+  end
+
   def team_points_status(points)
     badge_class = case points
       when 100..0.1/0 # Infinity

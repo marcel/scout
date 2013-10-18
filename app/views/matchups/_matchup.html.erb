@@ -1,87 +1,24 @@
-<table class="table table-striped table-bordered">
-  <thead>
-    <tr>
-      <th><small>
-        <% if outcome = matchup.outcome %>
-          <h5>Final: <%= outcome.h %> <%= outcome.ptsh %> &mdash; <%= outcome.ptsv %> <%= outcome.v %></h5>
-          <%= outcome.stad %><br />
-          <small class="muted"><%= outcome.cond %> on <%= outcome.surf.downcase %><%= outcome.temp.present? ? raw(' ' + outcome.temp + '&#8457;') : '' %>
-          <%= outcome.humd.present? ? " / #{outcome.humd}% humidity" : '' %></small>
-        <% end %>
-      </small></th>
-      <th><small>Matchup score</small></th>
-      <th><small>Interception score</small></th>
-      <th><small>Fumble score</small></th>
-      <th><small>Sack score</small></th> <!-- TODO Factor in how much opponent gets sacked -->
-      <th><small>Opponent scoring ability score</small></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="span4">
-        Home: <%= player_profile(matchup.home) %>
-      </td>
-      <td class="span2">
-        <div class="text-center">
-          <div class="well">
-            <%= points_badge(matchup.home_defense_overall_matchup_score, @overall_matchup_score_value_bucket[matchup.home_defense_overall_matchup_score]) %><br />
-            <% if actual_points = matchup.home.points_on_week(@week) %>
-              <strong><%= actual_points.total %></strong>
-            <% end %>
-          </div>
-
-          <%= points_badge('INT + FUM', @turnover_score_value_bucket[matchup.home_defense_turnover_score]) %><br />
-          <%= points_badge('INT', @interception_score_value_bucket[matchup.home_defense_interception_score]) %>
-          <%= points_badge('FUM', @fumble_score_value_bucket[matchup.home_defense_fumble_score]) %><br />
-          <%= points_badge('SACK', @sack_score_value_bucket[matchup.home_defense_sack_score]) %>
-          <!-- TODO Safety + Points allowed vs Points scored -->
-        </div>
-      </td>
-      <td class="span1">
-        <strong>
-          <%= points_badge(matchup.home_defense_interception_score, @interception_score_value_bucket[matchup.home_defense_interception_score]) %>
-        </strong>
-      </td>
-      <td class="span1">
-        <strong><%= points_badge(matchup.home_defense_fumble_score, @fumble_score_value_bucket[matchup.home_defense_fumble_score]) %></strong>
-      </td>
-      <td class="span1"><strong>
-        <%= points_badge(matchup.home_defense_sack_score, @sack_score_value_bucket[matchup.home_defense_sack_score]) %>
-      </strong></td>
-      <td class="span1"><strong>
-        <%= points_badge(matchup.away_offense_points_scored_score, @opposing_offense_points_scored_score_value_bucket[matchup.away_offense_points_scored_score]) %>
-        </strong></td>
-    </tr>
-    <tr>
-      <td class="span4">
-        Away: <%= player_profile(matchup.away) %>
-      </td>
-      <td class="span2">
-        <div class="text-center">
-          <div class="well">
-            <%= points_badge(matchup.away_defense_overall_matchup_score, @overall_matchup_score_value_bucket[matchup.away_defense_overall_matchup_score]) %><br />
-            <% if actual_points = matchup.away.points_on_week(@week) %>
-              <strong><%= actual_points.total %></strong>
-            <% end %>
-          </div>
-          <%= points_badge('INT + FUM', @turnover_score_value_bucket[matchup.away_defense_turnover_score]) %><br />
-          <%= points_badge('INT', @interception_score_value_bucket[matchup.away_defense_interception_score]) %>
-          <%= points_badge('FUM', @fumble_score_value_bucket[matchup.away_defense_fumble_score]) %><br />
-          <%= points_badge('SACK', @sack_score_value_bucket[matchup.away_defense_sack_score]) %>
-        </div>
-      </td>
-      <td class="span1">
-        <strong><%= points_badge(matchup.away_defense_interception_score, @interception_score_value_bucket[matchup.away_defense_interception_score]) %></strong>
-      </td>
-      <td class="span1">
-        <strong><%= points_badge(matchup.away_defense_fumble_score, @fumble_score_value_bucket[matchup.away_defense_fumble_score]) %></strong>
-      </td>
-      <td class="span1"><strong>
-        <%= points_badge(matchup.away_defense_sack_score, @sack_score_value_bucket[matchup.away_defense_sack_score]) %>
-      </strong></td>
-      <td class="span1"><strong>
-        <%= points_badge(matchup.home_offense_points_scored_score, @opposing_offense_points_scored_score_value_bucket[matchup.home_offense_points_scored_score]) %>
-        </strong></td>
-    </tr>
-  </tbody>
-</table>
+<td class="span1">
+  <div class="text-center">
+    <%= points_badge(matchup.overall_matchup_score, @overall_matchup_score_value_bucket[matchup.overall_matchup_score]) %><br />
+    <% if actual_points = matchup.defense.points_on_week(@week) %>
+      <strong><%= actual_points.total %></strong>
+    <% end %>
+  </div>
+</td>
+<td class="span1">
+  <%= points_badge(matchup.points_scored_score, @points_scored_value_bucket[matchup.points_scored_score]) %>
+</td>
+<td class="span1">
+  <div class="text-center">
+    <%= points_badge(matchup.turnover_score, @turnover_score_value_bucket[matchup.turnover_score]) %><br />
+    (<%= points_badge(matchup.interception_score, @interception_score_value_bucket[matchup.interception_score]) %> /
+    <%= points_badge(matchup.fumble_score, @fumble_score_value_bucket[matchup.fumble_score]) %>)
+  </div>
+</td>
+<td class="span1"><strong>
+  <%= points_badge(matchup.sack_score, @sack_score_value_bucket[matchup.sack_score]) %>
+</strong></td>
+<td class="span1"><strong>
+  <%= points_badge(matchup.offense_points_scored_score, @opposing_offense_points_scored_score_value_bucket[matchup.offense_points_scored_score]) %>
+</strong></td>

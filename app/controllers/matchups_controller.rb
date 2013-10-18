@@ -1,34 +1,63 @@
 class MatchupsController < ApplicationController
   def index
     @week = (params[:week] || GameWeek.current.week).to_i
-    @games = Game.where(week: @week).includes(:home, :away).load.sort_by do |game|
-      -[game.home_defense_overall_matchup_score, game.away_defense_overall_matchup_score].max
-    end
+    @defensive_matchups = Game.where(week: @week).includes(:home, :away, :stadium).map do |game|
+        [game.home_team_defensive_matchup, game.away_team_defensive_matchup]
+    end.flatten.sort_by(&sort_function)
+
+    minmax = ->(attribute) { @defensive_matchups.map(&attribute).minmax }
 
     @overall_matchup_score_value_bucket = RelativePerformanceValueBucket.new(
-      *(@games.map(&:home_defense_overall_matchup_score) + @games.map(&:away_defense_overall_matchup_score)).minmax
+      *minmax.(:overall_matchup_score)
+    )
+
+    @points_scored_value_bucket = RelativePerformanceValueBucket.new(
+      *minmax.(:points_scored_score)
     )
 
     @turnover_score_value_bucket = RelativePerformanceValueBucket.new(
-      *(@games.map(&:home_defense_turnover_score) + @games.map(&:away_defense_turnover_score)).minmax
+      *minmax.(:turnover_score)
     )
 
     @interception_score_value_bucket = RelativePerformanceValueBucket.new(
-      *(@games.map(&:home_defense_interception_score) + @games.map(&:away_defense_interception_score)).minmax
+      *minmax.(:interception_score)
     )
 
     @fumble_score_value_bucket = RelativePerformanceValueBucket.new(
-      *(@games.map(&:home_defense_fumble_score) + @games.map(&:away_defense_fumble_score)).minmax
+      *minmax.(:fumble_score)
     )
 
     @sack_score_value_bucket = RelativePerformanceValueBucket.new(
-      *(@games.map(&:home_defense_sack_score) + @games.map(&:away_defense_sack_score)).minmax
+      *minmax.(:sack_score)
     )
 
     @opposing_offense_points_scored_score_value_bucket = RelativePerformanceValueBucket.new(
-      *(@games.map(&:home_offense_points_scored_score) + @games.map(&:away_offense_points_scored_score)).minmax
+      *minmax.(:offense_points_scored_score)
     )
     @opposing_offense_points_scored_score_value_bucket.buckets.reverse!
+  end
+
+  def sort_function
+    ->(matchup) {
+      case params[:sort]
+      when 'm'
+        -matchup.overall_matchup_score
+      when 'p'
+        -matchup.points_scored_score
+      when 't'
+        -matchup.turnover_score
+      when 'i'
+        -matchup.interception_score
+      when 'f'
+        -matchup.fumble_score
+      when 's'
+        -matchup.sack_score
+      when 'o'
+        matchup.offense_points_scored_score
+      else
+        -matchup.overall_matchup_score
+      end
+    }
   end
 
   class ValueBucket

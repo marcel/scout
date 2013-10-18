@@ -1,4 +1,4 @@
- encoding: UTF-8
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131013020037) do
+ActiveRecord::Schema.define(version: 20131018051520) do
 
   create_table "accounts", force: true do |t|
     t.string   "username"
@@ -614,6 +614,7 @@ ActiveRecord::Schema.define(version: 20131013020037) do
     t.time     "kickoff_time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "date"
   end
 
   add_index "games", ["away_team"], name: "index_games_on_away_team", using: :btree
@@ -752,6 +753,18 @@ ActiveRecord::Schema.define(version: 20131013020037) do
   add_index "roster_spots", ["yahoo_player_key"], name: "index_roster_spots_on_yahoo_player_key", using: :btree
   add_index "roster_spots", ["yahoo_team_key", "week"], name: "index_roster_spots_on_yahoo_team_key_and_week", using: :btree
   add_index "roster_spots", ["yahoo_team_key"], name: "index_roster_spots_on_yahoo_team_key", using: :btree
+
+  create_table "stadiums", force: true do |t|
+    t.string   "zip"
+    t.string   "team_abbr"
+    t.string   "armchair_analysis_team_name"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "stadiums", ["armchair_analysis_team_name"], name: "index_stadiums_on_armchair_analysis_team_name", using: :btree
+  add_index "stadiums", ["team_abbr"], name: "index_stadiums_on_team_abbr", using: :btree
 
   create_table "stats", force: true do |t|
     t.string  "name"
