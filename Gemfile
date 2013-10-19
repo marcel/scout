@@ -68,7 +68,10 @@ gem 'rack-mini-profiler'
 
 gem 'multi_fetch_fragments'
 
-gem 'newrelic_rpm', group: :production
+group :production do
+  gem 'newrelic_rpm'
+  gem 'unicorn-worker-killer'
+end
 
 gem 'rack-cache'
 gem 'kgio'
