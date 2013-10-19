@@ -14,6 +14,8 @@ Bundler.require(:default, Rails.env)
 module Scout
   module Server
     class Application < Rails::Application
+      CACHE_VERSION = '1'
+
       # Settings in config/environments/* take precedence over those specified here.
       # Application configuration should go into files in config/initializers
       # -- all .rb files in that directory are automatically loaded.
@@ -29,10 +31,10 @@ module Scout
       # Disable the asset pipeline.
       config.assets.enabled = true
     end
-    
+
     def load_models
       Application.initialize! unless Application.initialized?
-      
+
       Dir[Rails.root + 'app/models/**/*.rb'].each do |model_file|
         require model_file
       end
