@@ -1,6 +1,3 @@
-# Unicorn self-process killer
-require 'unicorn/worker_killer'
-
 root = "/home/scout/production/current"
 working_directory root
 listen 8080
@@ -11,9 +8,6 @@ pid "#{root}/tmp/pids/unicorn.pid"
 user "scout", "scout"
 stderr_path "#{root}/log/unicorn.log"
 stdout_path "#{root}/log/unicorn.log"
-
-# Max memory size (RSS) per worker. Restart a unicorn if it exceeds 512MB RSS, check every 25 requests.
-use Unicorn::WorkerKiller::Oom, (192*(1024**2)), (512*(1024**2)), 25
 
 before_exec do |_|
   ENV["BUNDLE_GEMFILE"] = File.join(root, 'Gemfile')
