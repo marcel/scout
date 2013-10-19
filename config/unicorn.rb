@@ -1,9 +1,9 @@
 root = "/home/scout/production/current"
 working_directory root
 listen 8080 
-worker_processes 10
+worker_processes 4
 preload_app true
-timeout 240
+timeout 30
 pid "#{root}/tmp/pids/unicorn.pid"
 user "scout", "scout"
 stderr_path "#{root}/log/unicorn.log"
