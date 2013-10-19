@@ -78,3 +78,5 @@ gem 'typhoeus'
 gem 'oj'
 gem 'multi_json'
 gem 'faraday'
+
+gem "lrucache"
