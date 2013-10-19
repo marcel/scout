@@ -21,16 +21,6 @@ class Game < ActiveRecord::Base
   }
 
   has_one :game_forecast
-  # def forecast
-  #   @forecast ||= Scout.cache.fetch(['game-forecast', cache_key], expires_in: 6.hours) {
-  #     ForecastIO.forecast(
-  #       stadium.latitude,
-  #       stadium.longitude,
-  #       time: (date.to_time.utc + 12.hours).to_i,
-  #       params: {exclude: 'currently,flags,alerts'}
-  #     ).hourly.data[kickoff_time.hour]
-  #   }
-  # end
 
   # TODO Just fix kickoff_time so you don't need both colums
   def start_time
@@ -93,12 +83,11 @@ class Game < ActiveRecord::Base
     end
 
     private
+      def get(path, params = {})
+        params = self.class.default_params.merge(params || {})
 
-    def get(path, params = {})
-      params = self.class.default_params.merge(params || {})
-
-      connection.get(path, params)
-    end
+        connection.get(path, params)
+      end
   end
 
   def home_team?(team)
@@ -123,6 +112,10 @@ class Game < ActiveRecord::Base
       @game    = game
       @defense = defense
       @offense = offense
+    end
+
+    def cache_key
+      [game, defense, offense].map(&:cache_key).join("/")
     end
 
     def home_team?
@@ -176,12 +169,10 @@ class Game < ActiveRecord::Base
     end
 
     def sack_score
-      # score(
-        m(
-          defense.cached_game_performances_for_team.map(&:lbs).sum + defense.cached_game_performances_for_team.map(&:dbs).sum,
-          offense.cached_game_performances_for_team.map(&:sk).sum
-        )
-      # )
+      m(
+        defense.cached_game_performances_for_team.map(&:lbs).sum + defense.cached_game_performances_for_team.map(&:dbs).sum,
+        offense.cached_game_performances_for_team.map(&:sk).sum
+      )
     end
 
     def offense_points_scored_score
