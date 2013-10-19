@@ -63,7 +63,7 @@ Scout::Server::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  ENV['RAILS_CACHE_ID'] = ENV['RAILS_APP_VERSION'] = CACHE_VERSION
+  ENV['RAILS_CACHE_ID'] = ENV['RAILS_APP_VERSION'] = Scout::Server::Application::CACHE_VERSION
 
   # if Rails.root.to_s['releases'] && Rails.root.basename.to_s =~ /^\d+$/
   #   release_version = Rails.root.basename.to_s
