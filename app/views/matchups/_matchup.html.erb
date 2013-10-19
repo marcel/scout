@@ -6,9 +6,11 @@
     <% end %>
   </div>
 </td>
+
 <td class="span1">
   <%= points_badge(matchup.points_scored_score, @points_scored_value_bucket[matchup.points_scored_score]) %>
 </td>
+
 <td class="span1">
   <div class="text-center">
     <%= points_badge(matchup.turnover_score, @turnover_score_value_bucket[matchup.turnover_score]) %><br />
@@ -16,9 +18,25 @@
     <%= points_badge(matchup.fumble_score, @fumble_score_value_bucket[matchup.fumble_score]) %>)
   </div>
 </td>
-<td class="span1"><strong>
+
+<td class="span1">
   <%= points_badge(matchup.sack_score, @sack_score_value_bucket[matchup.sack_score]) %>
-</strong></td>
-<td class="span1"><strong>
+</td>
+
+<td class="span1">
   <%= points_badge(matchup.offense_points_scored_score, @opposing_offense_points_scored_score_value_bucket[matchup.offense_points_scored_score]) %>
-</strong></td>
+</td>
+
+<td class="span1">
+    <%= points_badge(matchup.forecast_score, @forecast_score_value_bucket[matchup.forecast_score]) %>
+  <% if matchup.game.stadium.open_air? %>
+    <% if forecast = matchup.game.forecast %>
+      <%= image_tag("hamweather/#{forecast.icon || 'na.png'}", size: '35x35', title: forecast.description) %>
+      <strong><%= forecast.temp_feels_like %>&deg;F</strong>
+    <% else %>
+      Unavailable
+    <% end %>
+  <% else %>
+    <small><%= matchup.game.stadium.type %></small>
+  <% end %>
+</td>

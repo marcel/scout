@@ -1,21 +1,21 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_filter :profile_if_requested
-  before_filter :log_memcache_if_requested
+  #before_filter :log_memcache_if_requested
 
-  def log_memcache_if_requested
-    if params.has_key?(:log_memcache)
-      $log_memcache = params[:log_memcache] == '1'
-      Rails.logger.info "[memcached] setting $log_memcache to #{$log_memcache}"
-
-      (class << Rails.cache; self end ).class_eval do
-        def fetch(*args, &block)
-          Rails.logger.info "[memcached] fetching #{args.join('/')}" if $log_memcache
-          super
-        end
-      end
-    end
-  end
+  # def log_memcache_if_requested
+  #   if params.has_key?(:log_memcache)
+  #     $log_memcache = params[:log_memcache] == '1'
+  #     Rails.logger.info "[memcached] setting $log_memcache to #{$log_memcache}"
+  # 
+  #     (class << Scout.cache; self end ).class_eval do
+  #       def fetch(*args, &block)
+  #         Rails.logger.info "[memcached] fetching #{args.join('/')}" if $log_memcache
+  #         super
+  #       end
+  #     end
+  #   end
+  # end
 
   def profile_if_requested
     if !Rails.env.production? || params[:profile]

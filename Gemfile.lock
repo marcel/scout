@@ -61,6 +61,8 @@ GEM
     fantasy_football_nerd (0.9.0)
       hashie
       nokogiri
+    faraday (0.8.8)
+      multipart-post (~> 1.2.0)
     faster_xml_simple (0.5.0)
       libxml-ruby (>= 0.3.8.4)
     ffi (1.9.0)
@@ -90,6 +92,7 @@ GEM
     minitest (4.7.5)
     multi_fetch_fragments (0.0.17)
     multi_json (1.8.0)
+    multipart-post (1.2.0)
     mysql2 (0.3.13)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
@@ -99,6 +102,7 @@ GEM
       mini_portile (~> 0.5.0)
     numeric_array (1.0.1)
     oauth (0.4.7)
+    oj (2.1.6)
     polyglot (0.3.3)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
@@ -191,6 +195,7 @@ DEPENDENCIES
   dalli
   debugger
   fantasy_football_nerd
+  faraday
   faster_xml_simple
   hashie
   jbuilder (~> 1.2)
@@ -204,6 +209,7 @@ DEPENDENCIES
   nokogiri
   numeric_array
   oauth
+  oj
   pry
   pry-rails
   rack-cache

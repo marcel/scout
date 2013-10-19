@@ -20,8 +20,9 @@ class Game < ActiveRecord::Base
     foreign_key: :team_abbr
   }
 
+  has_one :game_forecast
   # def forecast
-  #   @forecast ||= Rails.cache.fetch(['game-forecast', cache_key], expires_in: 6.hours) {
+  #   @forecast ||= Scout.cache.fetch(['game-forecast', cache_key], expires_in: 6.hours) {
   #     ForecastIO.forecast(
   #       stadium.latitude,
   #       stadium.longitude,
@@ -31,15 +32,30 @@ class Game < ActiveRecord::Base
   #   }
   # end
 
+  # TODO Just fix kickoff_time so you don't need both colums
+  def start_time
+    date.to_time + kickoff_time.hour.hours
+  end
+
   def forecast
     return @forecast if defined?(@forecast)
-    @forecast = Rails.cache.fetch(['game-forecast', cache_key], expires_in: 3.hours) {
-      HAMWeatherClient.forecast(
-        [stadium.latitude, stadium.longitude].join(','),
-        from: date.to_time.to_i,
-        to: '+4hours'
-      ).try(:response).try(:first).try(:periods).try(:first)
-    end
+    @forecast = Scout.cache.fetch(['game-forecast', cache_key], expires_in: rand(30..60).minutes) {
+      if start_time > Time.now
+        if payload = HAMWeatherClient.forecast(
+            [stadium.latitude, stadium.longitude].join(','),
+            from: start_time.to_i,
+            to: '+4hours'
+          )
+
+          game_forecast = GameForecast.find_or_initialize_by(game_id: id)
+          game_forecast.attributes = GameForecast.attributes_from_payload(payload)
+          game_forecast.save if game_forecast.changed?
+          game_forecast
+        end
+      else
+        game_forecast
+      end
+    }
   end
 
   class HAMWeatherClient
@@ -61,7 +77,11 @@ class Game < ActiveRecord::Base
       forecast_response = get(forecast_url, params)
 
       if forecast_response.success?
-        Hashie::Mash.new(MultiJson.load(forecast_response.body))
+        json = Hashie::Mash.new(MultiJson.load(forecast_response.body))
+        # TODO Eliminate the need for this
+        if result = json.try(:response).try(:first).try(:periods).try(:first)
+          result
+        end
       end
     end
 
@@ -115,10 +135,11 @@ class Game < ActiveRecord::Base
 
     def overall_matchup_score
       score((m(
-        boost(points_scored_score, 7),
-        boost(turnover_score, 5),
-        boost(sack_score, 3),
-      ) / boost(offense_points_scored_score, 10)))#.round(1)
+        boost(points_scored_score, 100),
+        boost(turnover_score, 50),
+        boost(sack_score, 20),
+        boost(forecast_score, 10)
+      ) / boost(offense_points_scored_score, 75)))
     end
 
     def points_scored_score
@@ -130,6 +151,16 @@ class Game < ActiveRecord::Base
 
     def home_field_advantage_score
       home_team? ? 1.1 : 0.9
+    end
+
+    def forecast_score
+      if game.stadium.open_air? && forecast = game.forecast
+        temperature  = forecast.temp_feels_like >= 50 ? forecast.temp_feels_like : 130 - forecast.temp_feels_like
+        temperature *= 10
+        score(forecast.severity * temperature)
+      else
+        1
+      end
     end
 
     def turnover_score

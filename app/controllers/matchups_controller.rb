@@ -1,7 +1,7 @@
 class MatchupsController < ApplicationController
   def index
     @week = (params[:week] || GameWeek.current.week).to_i
-    @defensive_matchups = Game.where(week: @week).includes(:home, :away, :stadium).map do |game|
+    @defensive_matchups = Game.where(week: @week).includes(:home, :away, :stadium).load.map do |game|
         [game.home_team_defensive_matchup, game.away_team_defensive_matchup]
     end.flatten.sort_by(&sort_function)
 
@@ -36,6 +36,10 @@ class MatchupsController < ApplicationController
     )
     @opposing_offense_points_scored_score_value_bucket.buckets.reverse!
 
+    @forecast_score_value_bucket = RelativePerformanceValueBucket.new(
+      *minmax.(:forecast_score)
+    )
+
     fresh_when(etag: collection_etag(@defensive_matchups, :week), :public => true)
   end
 
@@ -56,6 +60,8 @@ class MatchupsController < ApplicationController
         -matchup.sack_score
       when 'o'
         matchup.offense_points_scored_score
+      when 'w'
+        -matchup.forecast_score
       else
         -matchup.overall_matchup_score
       end
@@ -69,6 +75,7 @@ class MatchupsController < ApplicationController
       @max        = max
       @buckets    = buckets
       @chunk_size = (max.to_f - min) / buckets.size
+      @chunk_size = 1 if @chunk_size.zero?
       @max_index  = buckets.size - 1
     end
 

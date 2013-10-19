@@ -10,7 +10,7 @@ class ArmchairAnalysis::Offense < ActiveRecord::Base
   }
 
   def cached_player
-    @cached_player ||= Rails.cache.fetch([Player.name, 'player', self[:player]]) { player }
+    @cached_player ||= Scout.cache.fetch([Player.name, 'player', self[:player]]) { player }
   end
 
   # N.B. It's not named just "game" because there is already a 'game' column on this table.
@@ -33,7 +33,7 @@ class ArmchairAnalysis::Offense < ActiveRecord::Base
   }
 
   def cached_redzone_opportunity
-    @cached_redzone_opportunity ||= Rails.cache.fetch(['redzone_opportunity', uid]) { redzone_opportunity }
+    @cached_redzone_opportunity ||= Scout.cache.fetch(['redzone_opportunity', uid]) { redzone_opportunity }
   end
 
   has_one :team_performance, {

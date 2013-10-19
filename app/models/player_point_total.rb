@@ -7,7 +7,7 @@ class PlayerPointTotal < ActiveRecord::Base
   }, touch: true
 
   def cached_player
-    Rails.cache.fetch(['Player', 'yahoo_player_key', yahoo_player_key]) { player }
+    Scout.cache.fetch(['Player', 'yahoo_player_key', yahoo_player_key]) { player }
   end
 
   class << self

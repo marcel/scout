@@ -17,7 +17,7 @@ class Player < ActiveRecord::Base
   }
 
   def cached_owner
-    @cached_owner ||= Rails.cache.fetch(['Team', owner_key, cache_key]) { owner }
+    @cached_owner ||= Scout.cache.fetch(['Team', owner_key, cache_key]) { owner }
   end
 
   has_many :injuries, {
@@ -37,7 +37,7 @@ class Player < ActiveRecord::Base
   end
 
   def cached_intercepted
-    @cached_intercepted ||= Rails.cache.fetch(['intercepted', armchair_analysis_team_name], expires_in: 1.day) {
+    @cached_intercepted ||= Scout.cache.fetch(['intercepted', armchair_analysis_team_name], expires_in: 1.day) {
       intercepted.to_a
     }
   end
@@ -49,7 +49,7 @@ class Player < ActiveRecord::Base
   end
 
   def cached_interceptions
-    @cached_interceptions ||= Rails.cache.fetch(['interceptions', armchair_analysis_team_name], expires_in: 1.day) {
+    @cached_interceptions ||= Scout.cache.fetch(['interceptions', armchair_analysis_team_name], expires_in: 1.day) {
       interceptions.to_a
     }
   end
@@ -59,7 +59,7 @@ class Player < ActiveRecord::Base
   end
 
   def cached_recovered_fumbles
-    @cached_recovered_fumbles ||= Rails.cache.fetch(['recovered-fumbles', armchair_analysis_team_name], expires_in: 1.day) {
+    @cached_recovered_fumbles ||= Scout.cache.fetch(['recovered-fumbles', armchair_analysis_team_name], expires_in: 1.day) {
       recovered_fumbles.to_a
     }
   end
@@ -81,7 +81,7 @@ class Player < ActiveRecord::Base
   #   end
 
   def cached_projections
-    @cached_projections ||= Rails.cache.fetch(['projections', cache_key]) {
+    @cached_projections ||= Scout.cache.fetch(['projections', cache_key]) {
       projections.to_a.select do |projection|
         !cached_bye_weeks.include?(projection.week)
       end
@@ -105,7 +105,7 @@ class Player < ActiveRecord::Base
    #    end
    #  end
   def cached_points
-    @cached_points ||= Rails.cache.fetch(['points', cache_key]) {
+    @cached_points ||= Scout.cache.fetch(['points', cache_key]) {
       points.to_a.select do |point|
         !cached_bye_weeks.include?(point.week)
       end
@@ -142,7 +142,7 @@ class Player < ActiveRecord::Base
   has_many :watches, inverse_of: :player
 
   def cached_watches
-    @cached_watches ||= Rails.cache.fetch(['watches', cache_key]) { watches.to_a }
+    @cached_watches ||= Scout.cache.fetch(['watches', cache_key]) { watches.to_a }
   end
 
   has_many :expert_ranks, {
@@ -152,7 +152,7 @@ class Player < ActiveRecord::Base
   }
 
   def cached_expert_ranks
-    @cached_expert_ranks ||= Rails.cache.fetch(['expert_ranks', cache_key]) { expert_ranks.to_a }
+    @cached_expert_ranks ||= Scout.cache.fetch(['expert_ranks', cache_key]) { expert_ranks.to_a }
   end
 
   has_many :teammates, {
@@ -174,11 +174,11 @@ class Player < ActiveRecord::Base
   end
 
   def cached_home_games
-    @cached_home_games ||= Rails.cache.fetch(['home_games', cache_key]) { home_games.to_a }
+    @cached_home_games ||= Scout.cache.fetch(['home_games', cache_key]) { home_games.to_a }
   end
 
   def cached_away_games
-    @cached_away_games ||= Rails.cache.fetch(['away_games', cache_key]) { away_games.to_a }
+    @cached_away_games ||= Scout.cache.fetch(['away_games', cache_key]) { away_games.to_a }
   end
 
   # Figure out if there is a better way to get this
@@ -187,7 +187,7 @@ class Player < ActiveRecord::Base
   end
 
   def cached_bye_weeks
-    @cached_bye_weeks ||= Rails.cache.fetch(['bye_weeks', team_abbr]) { bye_weeks }
+    @cached_bye_weeks ||= Scout.cache.fetch(['bye_weeks', team_abbr]) { bye_weeks }
   end
 
   has_many :away_games, {
@@ -216,7 +216,7 @@ class Player < ActiveRecord::Base
    #  end
 
   def cached_game_performances_for_team
-    @cached_game_performances_for_team ||= Rails.cache.fetch(['game_performances_for_team', armchair_analysis_team_name], expires_in: 1.day) {
+    @cached_game_performances_for_team ||= Scout.cache.fetch(['game_performances_for_team', armchair_analysis_team_name], expires_in: 1.day) {
       game_performances_for_team.to_a
     }
   end
@@ -231,7 +231,7 @@ class Player < ActiveRecord::Base
   end
 
   def cached_game_performances_by_opponents
-    @cached_game_performances_by_opponents ||= Rails.cache.fetch(['game_performances_by_opponents', armchair_analysis_team_name], expires_in: 1.day) {
+    @cached_game_performances_by_opponents ||= Scout.cache.fetch(['game_performances_by_opponents', armchair_analysis_team_name], expires_in: 1.day) {
       game_performances_by_opponents.to_a
     }
   end

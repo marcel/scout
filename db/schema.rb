@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131018084857) do
+ActiveRecord::Schema.define(version: 20131019040158) do
 
   create_table "accounts", force: true do |t|
     t.string   "username"
@@ -597,6 +597,22 @@ ActiveRecord::Schema.define(version: 20131018084857) do
   add_index "expert_ranks", ["week"], name: "index_expert_ranks_on_week", using: :btree
   add_index "expert_ranks", ["yahoo_player_key", "week", "position_type"], name: "key_week_position_type", using: :btree
   add_index "expert_ranks", ["yahoo_player_key"], name: "index_expert_ranks_on_yahoo_player_key", using: :btree
+
+  create_table "game_forecasts", force: true do |t|
+    t.integer  "game_id"
+    t.string   "coded"
+    t.string   "icon"
+    t.string   "description"
+    t.integer  "min_temp"
+    t.integer  "max_temp"
+    t.integer  "temp_feels_like"
+    t.integer  "humidity"
+    t.integer  "pop"
+    t.integer  "wind_speed"
+    t.text     "json"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "game_weeks", force: true do |t|
     t.integer "week"

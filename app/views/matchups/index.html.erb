@@ -20,30 +20,28 @@
         <th><small><%= sort_column('Turnover score', 't') %> (<%= sort_column('INT', 'i') %> / <%= sort_column('FUM', 'f') %>)</small></th>
         <th><small><%= sort_column('Sack score', 's') %></small></th> <!-- TODO Factor in how much opponent gets sacked -->
         <th><small><%= sort_column('Opponent point production', 'o') %></small></th>
+        <th><small><%= sort_column('Forecast', 'w') %></small></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-      <td class="span4">
-        <!-- <p class="pull-right"><%#= matchup.home_team? ? 'Home' : 'Away' %></p> -->
+        <td class="span4">
+          <!-- <p class="pull-right"><%#= matchup.home_team? ? 'Home' : 'Away' %></p> -->
 
-        <%= player_profile(matchup.defense) %>
-        <div class="well well-small">
-          <%= points_badge('SCORING', @points_scored_value_bucket[matchup.points_scored_score]) %>
-          <%= points_badge('INT + FUM', @turnover_score_value_bucket[matchup.turnover_score]) %>
-          <%= points_badge('INT', @interception_score_value_bucket[matchup.interception_score]) %>
-          <%= points_badge('FUM', @fumble_score_value_bucket[matchup.fumble_score]) %>
-          <%= points_badge('SACK', @sack_score_value_bucket[matchup.sack_score]) %>
-          <%= points_badge('OPPONENT', @opposing_offense_points_scored_score_value_bucket[matchup.offense_points_scored_score]) %>
-        <!-- TODO Safety + Points allowed vs Points scored -->
-        </div>
-        <% forecast = matchup.game.forecast %>
-        <%= forecast.summary %> / <%= forecast.temperature %>F 
-        <%= image_tag("weather/Cloudy-with-Rain.png", size: '25x25') %>
-        <!-- <object type="image/svg+xml" data="assets/images/meteocon/33.svg">Your browser does not support SVG</object> -->
-        
-      </td>
-      <%= render partial: 'matchup', locals: {matchup: matchup} %>
+          <%= player_profile(matchup.defense) %>
+          <div class="well well-small">
+            <%= points_badge('SCORING', @points_scored_value_bucket[matchup.points_scored_score]) %>
+            <%= points_badge('INT + FUM', @turnover_score_value_bucket[matchup.turnover_score]) %>
+            <%= points_badge('INT', @interception_score_value_bucket[matchup.interception_score]) %>
+            <%= points_badge('FUM', @fumble_score_value_bucket[matchup.fumble_score]) %>
+            <%= points_badge('SACK', @sack_score_value_bucket[matchup.sack_score]) %>
+            <%= points_badge('OPPONENT', @opposing_offense_points_scored_score_value_bucket[matchup.offense_points_scored_score]) %>
+            <%= points_badge('WEATHER', @forecast_score_value_bucket[matchup.forecast_score]) %>
+          <!-- TODO Safety + Points allowed vs Points scored -->
+          </div>
+          <!-- <object type="image/svg+xml" data="assets/images/meteocon/33.svg">Your browser does not support SVG</object> -->
+        </td>
+        <%= render partial: 'matchup', locals: {matchup: matchup} %>
       </tr>
     </tbody>
   </table>

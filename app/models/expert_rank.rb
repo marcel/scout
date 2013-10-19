@@ -6,7 +6,7 @@ class ExpertRank < ActiveRecord::Base
   }
 
   def cached_player
-    Rails.cache.fetch([Player.name, cache_key]) { player }
+    Scout.cache.fetch([Player.name, cache_key]) { player }
   end
 
   def ranked_in_previous_week?
