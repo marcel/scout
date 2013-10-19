@@ -30,11 +30,11 @@ class GameForecast < ActiveRecord::Base
     'SC' => 25,   # Scattered
     'PD' => 25,   # Periods of
     'IS' => 20,   # Isolated
+    'C'  => 15,   # Chance of
     'S'  => 10,   # Slight chance
     'VC' => 10,   # In the vicinity / Nearby
     'AR' => 10,   # Areas of
-    'BR' => 10,   # Brief
-    'C'  => 5     # Chance of
+    'BR' => 10    # Brief
   }
 
   IntensityCodes = {

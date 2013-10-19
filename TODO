@@ -1,3 +1,5 @@
+- Consider adding a more fine grained cache versioning scheme where each model can specify their cache version so the global cache version only needs to change when there is a large change to all caching.
+
 - From Alex:
   It feels like the generalizable product might be
 
