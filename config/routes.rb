@@ -2,6 +2,8 @@ Scout::Server::Application.routes.draw do
   devise_for :accounts, path_names: {sign_in: 'login', sign_out: 'logout', sign_up: 'kensentme'}
   root to: "player_point_totals#index"
 
+  post "sms", to: "inbound_message#sms"
+
   # get '/cabalist', to: Cabalist::Frontend, :anchor => false, :as => :cabalist
   get "expert_ranks/(:week)", to: "expert_ranks#index", as: :expert_ranks
   get "expert_ranks/show"
