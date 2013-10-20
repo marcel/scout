@@ -87,3 +87,5 @@ gem 'faraday'
 gem "lrucache"
 
 gem 'devise'
+
+gem 'mailgun'

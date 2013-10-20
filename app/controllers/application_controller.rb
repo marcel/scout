@@ -2,7 +2,8 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_account!, except: :sign_in
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
-  protect_from_forgery with: :exception
+  # TODO This is disabled until I get it to work with http caching.
+  #protect_from_forgery with: :exception
   before_filter :profile_if_requested
   #before_filter :log_memcache_if_requested
 
