@@ -5,6 +5,6 @@
 <%= dropdown_menu_filters %>
 <table class="table table-bordered">
   <tbody>
-    <%= render partial: 'watched_player', collection: @players, cache: ->(p) { partial_cache_key("watched-player", p) } %>
+    <%= render partial: 'watched_player', collection: @watches, cache: ->(w) { partial_cache_key("watched-player", w) } %>
   </tbody>
 </table>

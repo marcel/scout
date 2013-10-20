@@ -11,14 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131019040158) do
+ActiveRecord::Schema.define(version: 20131020003847) do
 
   create_table "accounts", force: true do |t|
     t.string   "username"
     t.text     "password"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "phone_number"
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
   end
+
+  add_index "accounts", ["email"], name: "index_accounts_on_email", unique: true, using: :btree
+  add_index "accounts", ["reset_password_token"], name: "index_accounts_on_reset_password_token", unique: true, using: :btree
 
   create_table "armchair_analysis_blocks", id: false, force: true do |t|
     t.integer "pid",            null: false
@@ -832,8 +846,10 @@ ActiveRecord::Schema.define(version: 20131019040158) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "votes",      default: 1
+    t.integer  "account_id"
   end
 
+  add_index "watches", ["account_id"], name: "index_watches_on_account_id", using: :btree
   add_index "watches", ["player_id"], name: "index_watches_on_player_id", using: :btree
   add_index "watches", ["team_id", "player_id"], name: "index_watches_on_team_id_and_player_id", using: :btree
 

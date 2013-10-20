@@ -8,3 +8,4 @@ config.cache_classes = false
 config.consider_all_requests_local = true
 config.serve_static_assets = true
 config.autoflush_log = true
+config.action_mailer.default_url_options = {host: 'localhost:8080'}

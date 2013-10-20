@@ -19,7 +19,7 @@ group :doc do
 end
 
 # Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'bcrypt-ruby'
 
 gem 'unicorn'
 
@@ -85,3 +85,5 @@ gem 'multi_json'
 gem 'faraday'
 
 gem "lrucache"
+
+gem 'devise'

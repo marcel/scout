@@ -1,5 +1,5 @@
 module ApplicationHelper
-  
+
   FORECAST_CONDITIONS = %w[clear-day clear-night rain snow sleet wind fog cloudy partly-cloudy-day partly-cloudy-night]
   POSITIONS = [
     ['QB'],
@@ -77,7 +77,7 @@ module ApplicationHelper
     render partial: 'shared/dropdown_menu_filters'
   end
 
-  def player_profile(player, path = nil, include_probably = false)
+  def player_profile(player, path = nil)
     render partial: 'players/profile', :locals => {
       player: player,
       path:  path ? link_to(player.full_name, path) : player.full_name
@@ -126,8 +126,8 @@ module ApplicationHelper
   def watch_button(player)
     watch_params = {id: player.id, upvote: 1}
 
-    button_class = if player.cached_watches.any?
-      if player.cached_watches.first.voted_up?
+    button_class = if watch = current_account.watch_for(player)
+      if watch.voted_up?
         watch_params.delete(:upvote)
         'btn-success'
       else

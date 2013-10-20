@@ -1,6 +1,6 @@
 class WatchController < ApplicationController
   def index
-    query = Player.joins(:watches)
+    query = current_account.watches.joins(:player).includes(:player)
 
     query = query.where("players.full_name LIKE ?", "%#{params[:name]}%") if params[:name]
     query = query.where(position: params[:position].split(',')) if params[:position]
@@ -9,13 +9,13 @@ class WatchController < ApplicationController
     query = query.where(owner_key: params[:owner]) if params[:owner]
     query = query.where(ownership_type: params[:ownership_type].split(',')) if params[:ownership_type]
 
-    @players = query.load.sort_by do |player|
-      [-player.cached_watches.first.votes, -player.total_points]
+    @watches = query.load.sort_by do |watch|
+      [-watch.votes, -watch.player.total_points]
     end
   end
 
   def update
-    if watch = Watch.where(player_id: params[:id]).take
+    if watch = current_account.watches.where(player_id: params[:id]).take
       if params[:upvote]
         watch.votes += Integer(params[:upvote])
         watch.save
@@ -23,7 +23,7 @@ class WatchController < ApplicationController
         watch.destroy
       end
     else
-      Watch.create(player_id: params[:id])
+      current_account.watches.create(player_id: params[:id])
     end
 
     render nothing: true
