@@ -1,12 +1,20 @@
 module Scout
   module SMS
     FROM = '+14154134445'
-    
+    ME   = '+13122082298'
     class << self
-      def send(account, message)
+      def send_to_account(account, message)
+        send(account.sms_phone_number, message)
+      end
+      
+      def send_to_me(message)
+        send(ME, message)
+      end
+      
+      def send(number, message)
         Scout.sms.account.sms.messages.create(
           from: Scout::SMS::FROM,
-          to: account.sms_phone_number,
+          to: number,
           body: message
         )
       end
