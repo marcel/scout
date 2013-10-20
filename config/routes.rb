@@ -1,7 +1,5 @@
 Scout::Server::Application.routes.draw do
-  constraints :protocol => "https" do
-    devise_for :accounts, path_names: {sign_in: 'login', sign_out: 'logout', sign_up: 'kensentme'}
-  end
+  devise_for :accounts, path_names: {sign_in: 'login', sign_out: 'logout', sign_up: 'kensentme'}
   root to: "player_point_totals#index"
 
   # get '/cabalist', to: Cabalist::Frontend, :anchor => false, :as => :cabalist
