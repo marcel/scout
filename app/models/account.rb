@@ -10,4 +10,8 @@ class Account < ActiveRecord::Base
       watches.where(player_id: player.id).take
     }
   end
+  
+  def sms_phone_number
+    "+1#{phone_number.gsub(/\D+/, '')}"
+  end
 end

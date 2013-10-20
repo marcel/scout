@@ -1,3 +1,5 @@
+- Add cron job that runs every hour or so to load/update the forecast for every game that week
+
 - Consider adding a more fine grained cache versioning scheme where each model can specify their cache version so the global cache version only needs to change when there is a large change to all caching.
 
 - From Alex:

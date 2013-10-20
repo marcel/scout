@@ -89,3 +89,6 @@ gem "lrucache"
 gem 'devise'
 
 gem 'mailgun'
+gem 'twilio-ruby'
+
+gem 'emoji'
