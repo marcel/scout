@@ -14,7 +14,7 @@ Bundler.require(:default, Rails.env)
 module Scout
   module Server
     class Application < Rails::Application
-      CACHE_VERSION = '1'
+      CACHE_VERSION = '2'
 
       # Settings in config/environments/* take precedence over those specified here.
       # Application configuration should go into files in config/initializers
