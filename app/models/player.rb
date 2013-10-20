@@ -14,7 +14,7 @@ class Player < ActiveRecord::Base
     primary_key: :yahoo_key,
     class_name: 'Team',
     inverse_of: :players
-  }
+  }, touch: true
 
   def cached_owner
     @cached_owner ||= Scout.cache.fetch(['Team', owner_key, cache_key]) { owner }
@@ -489,7 +489,7 @@ class Player < ActiveRecord::Base
   end
 
   class << self
-    include Scout::ImportLogging
+    include Scout::Importing
 
     def from_payload(payload)
       new(attributes_from_payload(payload))
@@ -539,39 +539,35 @@ class Player < ActiveRecord::Base
 
     # Policy: Update old one
     def import(week = GameWeek.current.week)
-      import_log "Started import at #{Time.now}"
+      importing(week) do
+        client = Scout::Client.new
 
-      client = Scout::Client.new
+        updated_players = client.players(:start => 0)
+        import_log "updated_players: #{updated_players.size}"
 
-      updated_players = client.players(:start => 0)
-      import_log "updated_players: #{updated_players.size}"
-
-      lookup = all.inject({}) do |id_to_player, player|
-        id_to_player[player.yahoo_key] = player
-        id_to_player
-      end
-
-      import_log "existing players: #{lookup.keys.size}"
-
-      players_to_save = updated_players.map do |updated_player|
-        if existing_player = lookup[updated_player.player_key]
-          existing_player.attributes = Player.attributes_from_payload(updated_player)
-          if existing_player.changed?
-            existing_player
-          else
-            nil
-          end
-        else
-          Player.from_payload(updated_player)
+        lookup = all.inject({}) do |id_to_player, player|
+          id_to_player[player.yahoo_key] = player
+          id_to_player
         end
-      end.compact
 
-      import_log "players_to_save: #{players_to_save.size}"
-      players_to_save.each(&:save)
+        import_log "existing players: #{lookup.keys.size}"
 
-      import_log "Done at #{Time.now}"
-    rescue Exception => e
-      import_log "Exception! #{e.message}: #{e.backtrace.join("\n")}"
+        players_to_save = updated_players.map do |updated_player|
+          if existing_player = lookup[updated_player.player_key]
+            existing_player.attributes = Player.attributes_from_payload(updated_player)
+            if existing_player.changed?
+              existing_player
+            else
+              nil
+            end
+          else
+            Player.from_payload(updated_player)
+          end
+        end.compact
+
+        import_log "players_to_save: #{players_to_save.size}"
+        players_to_save.each(&:save)
+      end
     end
   end
 end

@@ -8,8 +8,8 @@ module Scout
         send(account.email, subject, message)
       end
       
-      def send_to_me(message)
-        send(ME, message)
+      def send_to_me(subject, message)
+        send(ME, subject, message)
       end
       
       def send(email, subject, message)

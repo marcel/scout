@@ -18,93 +18,91 @@ class ExpertRank < ActiveRecord::Base
   end
 
   class << self
-    include Scout::ImportLogging
+    include Scout::Importing
 
     # Policy: Update existing for the week
     def import(week = GameWeek.current.week, positions = %w[quarterback wide-receiver running-back tight-end defense-special-teams kicker])
-      import_log "Started week #{week} import at #{Time.now}"
-      if SLUGS.values.first.size < week
-        import_log "No slugs for week #{week}"
-        return
-      end
-      new_records     = 0
-      updated_records = 0
-      ranks_to_save = Array(positions).flatten.shuffle.map do |position|
-        import_log "loading rankings for #{position}"
-        user_agent = ExpertRank::ImporterUserAgents.shuffle.first
-        page_id = SLUGS[position][week - 1]
-
-        h = open("http://sports.yahoo.com/news/week-#{week}-rankings--#{position}-#{page_id}.html", 'User-Agent'=> user_agent).read
-        week_returned = h[/More Week (\d+) Rankings/, 1].to_i
-
-        if week_returned != week
-          import_log "WARNING: Requested week #{week} but got #{week_returned}. Skipping."
-          next []
+      importing(week) do
+        if SLUGS.values.first.size < week
+          import_log "No slugs for week #{week}"
+          return
         end
+        new_records     = 0
+        updated_records = 0
+        ranks_to_save = Array(positions).flatten.shuffle.map do |position|
+          import_log "loading rankings for #{position}"
+          user_agent = ExpertRank::ImporterUserAgents.shuffle.first
+          page_id = SLUGS[position][week - 1]
 
-        doc = Nokogiri::HTML(h)
-        t = doc.at('.body table')
-        rows = t.css('tr')
-        import_log "rows for #{position}: #{rows.size}"
-        player_rows = rows[2..-1]
+          h = open("http://sports.yahoo.com/news/week-#{week}-rankings--#{position}-#{page_id}.html", 'User-Agent'=> user_agent).read
+          week_returned = h[/More Week (\d+) Rankings/, 1].to_i
 
-        # TODO make sure we extract values for at least 30 or so rows to
-        # warn against markup format changes that might cause this to silently do
-        # nothing without failing.
-        player_rows.map do |row|
-          columns = row.css('td')[0...-1] # Skip the last column which is a link
-          columns.first.text =~ /^(\d+)\. (.+)$/
-          overall_rank = $1.to_i
-          player_name = $2
-
-          if position == 'defense-special-teams'
-            team_name = player_name.split[0..-2].join(' ')
-            if team = Player.where(full_name: team_name, team_full_name: player_name).take
-              player_key = team.yahoo_key
-            else
-              import_log "couldn't find team named: #{team_name}. Skipping."
-              next
-            end
-          else
-            player_id = columns.first.at('a').attributes['href'].value[%r[players/(\d+)], 1]
-            player_key = "314.p.#{player_id}"
+          if week_returned != week
+            import_log "WARNING: Requested week #{week} but got #{week_returned}. Skipping."
+            next []
           end
 
-          rank_values = {yahoo_player_key: player_key, week: week, overall_rank: overall_rank, position_type: position}
-          individual_ranks = columns[1..-1].map(&:text).map {|rank| rank == '-' ? 0 : rank.to_i }
-          ranks_by_expert = Hash[
-            *individual_ranks.each_with_index.map do |rank, index|
-              [:"expert_#{index+1}_rank", individual_ranks[index]]
-            end.flatten
-          ]
+          doc = Nokogiri::HTML(h)
+          t = doc.at('.body table')
+          rows = t.css('tr')
+          import_log "rows for #{position}: #{rows.size}"
+          player_rows = rows[2..-1]
 
-          rank_values.update(ranks_by_expert)
-          if existing_expert_rank = ExpertRank.where(week: week, yahoo_player_key: player_key).first
-              existing_expert_rank.attributes = rank_values
-              if existing_expert_rank.changed?
-                updated_records += 1
-                existing_expert_rank
+          # TODO make sure we extract values for at least 30 or so rows to
+          # warn against markup format changes that might cause this to silently do
+          # nothing without failing.
+          player_rows.map do |row|
+            columns = row.css('td')[0...-1] # Skip the last column which is a link
+            columns.first.text =~ /^(\d+)\. (.+)$/
+            overall_rank = $1.to_i
+            player_name = $2
+
+            if position == 'defense-special-teams'
+              team_name = player_name.split[0..-2].join(' ')
+              if team = Player.where(full_name: team_name, team_full_name: player_name).take
+                player_key = team.yahoo_key
               else
-                nil
+                import_log "couldn't find team named: #{team_name}. Skipping."
+                next
               end
-          else
-            new_records += 1
-            ExpertRank.new(rank_values)
-          end
-        end
-      end.flatten.compact
-      if ranks_to_save.empty?
-        import_log "nothing to import"
-      else
-        import_log "new_records: #{new_records}"
-        import_log "updated_records: #{updated_records}"
-        import_log "ranks_to_save: #{ranks_to_save.size}"
-        ranks_to_save.each(&:save)
-      end
+            else
+              player_id = columns.first.at('a').attributes['href'].value[%r[players/(\d+)], 1]
+              player_key = "314.p.#{player_id}"
+            end
 
-      import_log "Done at #{Time.now}"
-    rescue Exception => e
-      import_log "Exception! #{e.message}: #{e.backtrace.join("\n")}"
+            rank_values = {yahoo_player_key: player_key, week: week, overall_rank: overall_rank, position_type: position}
+            individual_ranks = columns[1..-1].map(&:text).map {|rank| rank == '-' ? 0 : rank.to_i }
+            ranks_by_expert = Hash[
+              *individual_ranks.each_with_index.map do |rank, index|
+                [:"expert_#{index+1}_rank", individual_ranks[index]]
+              end.flatten
+            ]
+
+            rank_values.update(ranks_by_expert)
+            if existing_expert_rank = ExpertRank.where(week: week, yahoo_player_key: player_key).first
+                existing_expert_rank.attributes = rank_values
+                if existing_expert_rank.changed?
+                  updated_records += 1
+                  existing_expert_rank
+                else
+                  nil
+                end
+            else
+              new_records += 1
+              ExpertRank.new(rank_values)
+            end
+          end
+        end.flatten.compact
+        
+        if ranks_to_save.empty?
+          import_log "nothing to import"
+        else
+          import_log "new_records: #{new_records}"
+          import_log "updated_records: #{updated_records}"
+          import_log "ranks_to_save: #{ranks_to_save.size}"
+          ranks_to_save.each(&:save)
+        end
+      end
     end
   end
 

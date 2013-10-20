@@ -33,7 +33,7 @@ class Team < ActiveRecord::Base
   end
   
   class << self
-    include Scout::ImportLogging
+    include Scout::Importing
     
     def from_payload(payload)
       new(attributes_from_payload(payload))
@@ -55,36 +55,32 @@ class Team < ActiveRecord::Base
     
     # Policy: Update old one
     def import(week = GameWweek.current.week)
-      import_log "Started import at #{Time.now}"
-
-      client = Scout::Client.new
+      importing(week) do
+        client = Scout::Client.new
       
-      updated_teams = client.teams
+        updated_teams = client.teams
       
-      lookup = all.inject({}) do |id_to_team, team|
-        id_to_team[team.yahoo_key] = team
-        id_to_team
-      end
-        
-      teams_to_save = updated_teams.map do |updated_team|
-        if existing_team = lookup[updated_team.team_key]
-          existing_team.attributes = Team.attributes_from_payload(updated_team)
-          if existing_team.changed?
-            existing_team
-          else
-            nil
-          end
-        else
-          Team.from_payload(updated_team)
+        lookup = all.inject({}) do |id_to_team, team|
+          id_to_team[team.yahoo_key] = team
+          id_to_team
         end
-      end.compact
+        
+        teams_to_save = updated_teams.map do |updated_team|
+          if existing_team = lookup[updated_team.team_key]
+            existing_team.attributes = Team.attributes_from_payload(updated_team)
+            if existing_team.changed?
+              existing_team
+            else
+              nil
+            end
+          else
+            Team.from_payload(updated_team)
+          end
+        end.compact
 
-      import_log "teams_to_save: #{teams_to_save.size}"
-      teams_to_save.each(&:save)
-      
-      import_log "Done at #{Time.now}"
-    rescue Exception => e
-      import_log "Exception! #{e.message}: #{e.backtrace.join("\n")}"
+        import_log "teams_to_save: #{teams_to_save.size}"
+        teams_to_save.each(&:save)
+      end
     end
   end
 end

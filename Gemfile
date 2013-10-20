@@ -24,18 +24,17 @@ gem 'bcrypt-ruby'
 gem 'unicorn'
 
 group :development do
+  gem 'debugger'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'capistrano'
+  gem 'capistrano', '2.15.5'
   gem 'capistrano-rails'
-  gem 'capistrano-bundler'
+  # gem 'capistrano-bundler'
   gem 'rvm-capistrano'
   # Default capistrano-unicorn doesn't seem to work with latest capistrano
-  # gem 'capistrano-unicorn', :require => false
+  gem 'capistrano-unicorn', :require => false
   # gem 'capistrano-unicorn', :git => 'https://github.com/sosedoff/capistrano-unicorn.git', :branch => 'master', :require => false
 end
-
-gem 'debugger', group: [:development, :test]
 
 # For Bootstrap
 gem "twitter-bootstrap-rails"

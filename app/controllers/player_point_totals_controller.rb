@@ -7,7 +7,7 @@ class PlayerPointTotalsController < ApplicationController
     query = PlayerPointTotal.
       where(week: @week).
       joins(:player)
-
+      
     @player_point_totals = apply_filters(query).
       order(total: :desc).
       limit(@limit).sort_by(&points_sort_function)

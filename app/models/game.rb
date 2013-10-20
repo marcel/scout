@@ -39,8 +39,7 @@ class Game < ActiveRecord::Base
   end
 
   def forecast
-    return @forecast if defined?(@forecast)
-    @forecast = Scout.cache.fetch(['game-forecast', cache_key], expires_in: rand(30..60).minutes) {
+    @forecast ||= Scout.cache.fetch(['game-forecast', cache_key], expires_in: rand(30..60).minutes) {
       if !started_yet?
         if payload = Scout.weather.forecast(
             [stadium.latitude, stadium.longitude].join(','),
@@ -48,10 +47,12 @@ class Game < ActiveRecord::Base
             to: '+4hours'
           )
 
-          game_forecast = GameForecast.find_or_initialize_by(game_id: id)
-          game_forecast.attributes = GameForecast.attributes_from_payload(payload)
-          game_forecast.save if game_forecast.changed?
-          game_forecast
+          forecast_to_update = GameForecast.find_or_initialize_by(game_id: id)
+          forecast_to_update.attributes = GameForecast.attributes_from_payload(payload)
+          forecast_to_update.save if forecast_to_update.changed?
+          forecast_to_update
+        else
+          game_forecast 
         end
       else
         game_forecast

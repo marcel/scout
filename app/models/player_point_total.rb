@@ -14,7 +14,7 @@ class PlayerPointTotal < ActiveRecord::Base
 
   class << self
     include Scout::Importing
-    include Scout::ImportLogging
+
     def from_payload(payload)
       new(attributes_from_payload(payload))
     end
