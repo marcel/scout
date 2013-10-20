@@ -24,7 +24,7 @@ class Game < ActiveRecord::Base
   
   class << self
     def update_forecasts(week = GameWeek.current.week)
-      STDERR.puts "[#{Time.now}] Updating weather forecasts for week #{week}"
+      STDERR.puts "[#{Time.zone.now}] Updating weather forecasts for week #{week}"
       where(week: week).includes(:stadium).each(&:forecast)
     end
   end
@@ -37,7 +37,7 @@ class Game < ActiveRecord::Base
   def forecast
     return @forecast if defined?(@forecast)
     @forecast = Scout.cache.fetch(['game-forecast', cache_key], expires_in: rand(30..60).minutes) {
-      if start_time > Time.now
+      if start_time > Time.zone.now
         if payload = Scout.weather.forecast(
             [stadium.latitude, stadium.longitude].join(','),
             from: start_time.to_i,

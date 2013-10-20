@@ -286,7 +286,7 @@ module ApplicationHelper
     projections = player.cached_projections.group_by(&:week).map {|w, ps| ps.sort_by {|p| p.updated_at }.last }.flatten.sort_by(&:week)
     weeks = points.map {|point| "Week #{point.week} vs #{player.opponent_on_week(point.week) ||'bye'}" }
     # Do something better than this.
-    if points.last.week == GameWeek.current.week && points.last.total.zero? && Time.now.wday < 7
+    if points.last.week == GameWeek.current.week && points.last.total.zero? && Time.zone.now.wday < 7
       points = points[0...-1]
     end
     LazyHighCharts::HighChart.new('graph') do |f|
