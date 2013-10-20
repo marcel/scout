@@ -22,10 +22,6 @@ class ApplicationController < ActionController::Base
   # end
   protected
   
-  def after_sign_out_path_for(resource_or_scope)
-    root_path(protocol: 'http')
-  end
-  
   def configure_permitted_parameters
     [:sign_up, :account_update].each do |devise_action|
       devise_parameter_sanitizer.for(devise_action) << :phone_number
