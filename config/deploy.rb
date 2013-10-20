@@ -23,6 +23,9 @@ set :keep_releases, 5
 
 set :normalize_asset_timestamps, %{public/images public/javascripts public/stylesheets}
 
+set :whenever_command, "bundle exec whenever"
+require 'whenever/capistrano'
+
 task :foo do
   on roles(:app) do
     execute "whoami"

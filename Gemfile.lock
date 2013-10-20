@@ -43,6 +43,7 @@ GEM
       capistrano (>= 3.0.0.pre)
     capistrano-rails (1.0.0)
       capistrano
+    chronic (0.10.2)
     cityhash (0.8.0)
     coderay (1.0.9)
     coffee-rails (4.0.0)
@@ -215,6 +216,9 @@ GEM
       unicorn (~> 4)
     warden (1.2.3)
       rack (>= 1.0)
+    whenever (0.8.4)
+      activesupport (>= 2.3.4)
+      chronic (>= 0.6.3)
     will_paginate (3.0.5)
 
 PLATFORMS
@@ -265,4 +269,5 @@ DEPENDENCIES
   typhoeus
   unicorn
   unicorn-worker-killer
+  whenever
   will_paginate

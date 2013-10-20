@@ -22,18 +22,26 @@ class InboundMessageController < ApplicationController
   # ToZip The postal code of the recipient.
   # ToCountry The country of the recipient.
   def sms
-    account = Account.where(phone_number: params[:From].to_s[1..-1]).take
-    respond_to do |format|
-      format.xml do
-        xml = Builder::XmlMarkup.new
-        xml.Response do
-          if account
-            xml.Message("Roger that #{account.email}")
-          end
+    account = Account.where(phone_number: params[:From].to_s[2..-1]).take
+
+    xml = Builder::XmlMarkup.new
+    xml.Response do
+      if account
+        if response = interpret_sms(params[:Body])
+          xml.Message(response)
         end
-        
-        render xml: xml.target!
       end
     end
+    
+    render xml: xml.target!, content_type: Mime::XML
   end
+  
+  private
+    def interpret_sms(body)
+      case body
+      when /injuries/
+      else
+        nil
+      end
+    end
 end

@@ -92,3 +92,5 @@ gem 'mailgun'
 gem 'twilio-ruby'
 
 gem 'emoji'
+
+gem 'whenever', require: false

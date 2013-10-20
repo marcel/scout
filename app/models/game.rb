@@ -21,6 +21,13 @@ class Game < ActiveRecord::Base
   }
 
   has_one :game_forecast
+  
+  class << self
+    def update_forecasts(week = GameWeek.current.week)
+      STDERR.puts "[#{Time.now}] Updating weather forecasts for week #{week}"
+      where(week: week).includes(:stadium).each(&:forecast)
+    end
+  end
 
   # TODO Just fix kickoff_time so you don't need both colums
   def start_time
