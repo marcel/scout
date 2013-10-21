@@ -81,6 +81,7 @@ class PlayerPointTotal < ActiveRecord::Base
         updated_stats = 0
         updated_player_stat_values_to_save = players_with_stats.map do |player|
           player_key = player.player_key
+          player_model = Player.where(yahoo_key: player_key).take
           player.player_stats.stats.stat.map do |stat|
             if existing_stats_for_player = stat_values_lookup[player_key]
               if existing_stat = existing_stats_for_player[stat.stat_id]
@@ -95,7 +96,7 @@ class PlayerPointTotal < ActiveRecord::Base
                 if stat.value.to_f > 0.0
                   new_stats += 1
                   PlayerStatValue.new(
-                    player: player,
+                    player: player_model,
                     season: Date.today.year,
                     week: week,
                     yahoo_stat_id: stat.stat_id,
@@ -107,7 +108,7 @@ class PlayerPointTotal < ActiveRecord::Base
               if stat.value.to_f > 0.0
                 new_stats += 1
                 PlayerStatValue.new(
-                  player: player,
+                  player: player_model,
                   season: Date.today.year,
                   week: week,
                   yahoo_stat_id: stat.stat_id,
