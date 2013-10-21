@@ -42,22 +42,31 @@ set :normalize_asset_timestamps, %{public/images public/javascripts public/style
 set :whenever_command, "bundle exec whenever"
 require 'whenever/capistrano'
 
-task :foo do
-  on roles(:app) do
-    execute "whoami"
-    execute "cd /home/scout/production/current; pwd"
-    execute "which rake"
-    execute "which bundle"
-    execute "which ruby"
-    execute "ruby -v"
-    execute "env"
-  end
-end
-
-task :unicorn_restart do 
+task :unicorn_restart do
   run 'service unicorn restart'
 end
 after 'deploy:restart', 'unicorn_restart'
+
+namespace :import do
+  desc "Import armchair analysis zip (use '-s zip=path/to/archive.zip' to specify path)"
+  task :armchair_analysis do
+    abort("Specify path to zip file with '-s zip=path'") unless zip
+    path_to_zip = File.expand_path(zip)
+    zip_file = File.basename(path_to_zip)
+
+    working_dir = File.join('/tmp', release_name)
+    script = 'armchair-analysis.rb'
+    script_path = File.expand_path(File.join(File.dirname(__FILE__), "/../bin/#{script}"))
+    run "mkdir #{working_dir}"
+    
+    remote_script = File.join(working_dir, script)
+    remote_zip    = File.join(working_dir, zip_file)
+    upload(script_path, remote_script, roles: :db)
+    upload(path_to_zip, remote_zip, roles: :db)
+    run "cd #{working_dir} && unzip #{remote_zip} && /usr/bin/env ruby #{script} import scout_production"
+    run "rm -rf #{working_dir}"
+  end
+end
 
 # namespace :import do
 #   task :all do
@@ -78,7 +87,7 @@ after 'deploy:restart', 'unicorn_restart'
 #       end
 #     end
 #   end
-# 
+#
 #   # after :restart, :clear_cache do
 #   #   on roles(:web), in: :groups, limit: 3, wait: 10 do
 #   #     # Here we can do anything such as:
@@ -87,6 +96,6 @@ after 'deploy:restart', 'unicorn_restart'
 #   #     end
 #   #   end
 #   # end
-# 
+#
 #   after :finishing, 'deploy:cleanup'
 # end

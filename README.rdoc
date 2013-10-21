@@ -9,9 +9,9 @@
   % bundle exec unicorn_rails -E staging
   
 * Importing armchair_analysis data to production
-  
-  % bundle exec cap -t production import:armchair_analysis ZIP=NFLData_2013.zip
 
+  % bundle exec cap import:armchair_analysis -s zip=NFLData_2013.zip
+  
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

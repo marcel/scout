@@ -4,7 +4,7 @@ every :hour do
   runner "Game.update_forecasts"
 end
 
-every 2.hours do 
+every 2.hours do
   runner 'Team.import'
   runner 'RosterSpot.import'
 end
