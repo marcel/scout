@@ -63,7 +63,6 @@ class PlayerPointTotal < ActiveRecord::Base
         updated_player_points_to_save = latest_point_totals_this_week.map do |player|
           if existing_player_point = lookup[player.player_key]
             existing_player_point.attributes = PlayerPointTotal.attributes_from_payload(player)
-            existing_player_point.player = player
             if existing_player_point.changed?
               existing_player_point
             else
@@ -71,7 +70,7 @@ class PlayerPointTotal < ActiveRecord::Base
             end
           else
             player_point_total = PlayerPointTotal.from_payload(player)
-            player_point_total.player = player
+            player_point_total.player = Player.where(yahoo_key: player_point_total.yahoo_player_key).take
             player_point_total
           end
         end.compact
