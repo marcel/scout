@@ -58,21 +58,26 @@
                   return false;
                 }
               });
+              function redirectToPointTotals(datum) {
+                window.location.href = '/players/' + datum.id + '/points';
+                return false;
+              };
               $(document).ready(function() {
                 $('#search').typeahead([{
                   name: 'players',
                   limit: 10,
                   remote: {url: '/typeahead.json?query=%QUERY'},
                   prefetch: {url: '/typeahead.json'},
-                  template: '<div class="row-fluid thumbnail"><a href="/players/{{id}}/points"><div class="span3"><img class="img-polaroid" src="{{headshot}}" /></div><div class="row-fluid span8"><div style="height: 20px" class="logo logo-small logo-nfl-small nfl-small-{{team}} span3 offset1"></div><strong class="span6">{{value}}</strong></div></a></div></div>',
+                  template: '<%= raw(render partial: 'shared/typeahead_result') %>',
                   engine: Hogan
                 }]).on('typeahead:selected', function(obj, datum) {
-                  window.location.href = '/players/' + datum.id + '/points';
-                  return false;
+                  redirectToPointTotals(datum);
+                }).on('typeahead:autocompleted', function(obj, datum) {
+                  redirectToPointTotals(datum);
                 })});
             <% end %>
               <%= form_tag player_search_path, :method => 'get', :style => "padding-top: 5px", :class => "form-search pull-right", id: 'player-search'  do %>
-                <div><%= text_field_tag :search,  params[:search], :placeholder => 'Player', :class => 'input-medium search-query' %></div>
+                <div><%= text_field_tag :search,  params[:search], :placeholder => 'Player', :class => 'input-large search-query' %></div>
                 <div id="search-preview"></div>
               <% end %>
             <% end %>
