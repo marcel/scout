@@ -170,8 +170,29 @@ class PlayerPointTotalsController < ApplicationController
       where(armchair_analysis_games: {wk:  @week}).where("ra > 0").
       order(ra: :desc)
 
-    @offensive_performances = apply_filters(query).load
+    @offensive_performances = apply_filters(query).sort_by(&carries_sort_function)
     render_fresh(@offensive_performances, :week)
+  end
+
+  def carries_sort_function
+    ->(performance) {
+      case params[:sort]
+      when 'c'
+        -performance.ra
+      when 'rz'
+        -(performance.cached_redzone_opportunity.try(:ra) || 0)
+      when 'sr'
+        -performance.sra
+      when 'ry'
+        -performance.ry
+      when 'rtd'
+        -performance.tdr
+      when 'rctd'
+        -performance.tdre
+      else
+        -performance.ra
+      end
+    }
   end
 
   private
