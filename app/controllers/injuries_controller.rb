@@ -32,7 +32,8 @@ class InjuriesController < ApplicationController
       joins(:player).
       order(last_update: :desc)
     @injuries = @injuries.sort_by {|injury| -injury.cached_player.cached_points.map(&:total).sum } if params[:sort].to_s == 'p'
-    fresh_when(etag: collection_etag(@injuries, :week), :public => true)
+    
+    render_fresh(@injuries, :week)
   end
 
   def show

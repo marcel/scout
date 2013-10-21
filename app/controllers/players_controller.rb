@@ -11,7 +11,6 @@ class PlayersController < ApplicationController
   
     query = query.where("players.full_name LIKE ?", "%#{params[:name]}%") if params[:name]
     
-    
     @projections = query.limit(params[:limit] || 100).load
   end
 

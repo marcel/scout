@@ -22,6 +22,6 @@ class ProjectionsController < ApplicationController
     query = query.limit(params[:limit].to_i) if params[:limit]
 
     @projections = query
-    fresh_when(etag: collection_etag(@projections, :week), :public => true)
+    render_fresh(@projections, :week)
   end
 end

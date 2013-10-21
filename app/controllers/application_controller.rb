@@ -50,7 +50,13 @@ class ApplicationController < ActionController::Base
     :watched,
     :week
   ])
-
+  
+  def render_fresh(objects, *args)
+    if @week && !GameWeek.current?(@week)
+      fresh_when(etag: collection_etag(objects, *args), :public => true)
+    end
+  end
+  
   def partial_cache_key(key_name, object, params_to_include = nil)
     prefix = params_cache_prefix(params_to_include)
     k = [current_account.id.to_s, prefix, key_name, object.try(:cache_key)].compact.join('/')

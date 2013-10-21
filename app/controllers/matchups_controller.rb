@@ -40,7 +40,7 @@ class MatchupsController < ApplicationController
       *minmax.(:forecast_score)
     )
 
-    fresh_when(etag: collection_etag(@defensive_matchups, :week), :public => true)
+    render_fresh(@defensive_matchups, :week)
   end
 
   def sort_function

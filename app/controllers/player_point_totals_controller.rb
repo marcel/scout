@@ -7,12 +7,12 @@ class PlayerPointTotalsController < ApplicationController
     query = PlayerPointTotal.
       where(week: @week).
       joins(:player)
-      
+
     @player_point_totals = apply_filters(query).
       order(total: :desc).
       limit(@limit).sort_by(&points_sort_function)
 
-    fresh_when(etag: collection_etag(@player_point_totals, :week), :public => true)
+    render_fresh(@player_point_totals, :week)
   end
 
   def points_sort_function
@@ -66,7 +66,7 @@ class PlayerPointTotalsController < ApplicationController
     end
 
     @players = apply_filters(query).sort_by(&defense_sort_function)
-    fresh_when(etag: collection_etag(@players, :week), :public => true)
+    render_fresh(@players, :week)
   end
 
   def offense
@@ -81,7 +81,7 @@ class PlayerPointTotalsController < ApplicationController
     end
 
     @players = apply_filters(query).sort_by(&offense_sort_function)
-    fresh_when(etag: collection_etag(@players, :week), :public => true)
+    render_fresh(@players, :week)
   end
 
   def offense_sort_function
@@ -141,7 +141,7 @@ class PlayerPointTotalsController < ApplicationController
       order(trg: :desc)
 
     @offensive_performances = apply_filters(query).sort_by(&targets_sort_function)
-    fresh_when(etag: collection_etag(@offensive_performances, :week), :public => true)
+    render_fresh(@offensive_performances, :week)
   end
 
   def targets_sort_function
@@ -172,7 +172,7 @@ class PlayerPointTotalsController < ApplicationController
       order(ra: :desc)
 
     @offensive_performances = apply_filters(query).load
-    fresh_when(etag: collection_etag(@offensive_performances, :week), :public => true)
+    render_fresh(@offensive_performances, :week)
   end
 
   private

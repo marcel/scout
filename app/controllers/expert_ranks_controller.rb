@@ -29,7 +29,7 @@ class ExpertRanksController < ApplicationController
         @actual_ranks[rank.cached_player.id]
       end
     end
-    
-    fresh_when(etag: collection_etag(@expert_ranks, :week), :public => true)
+
+    render_fresh(@expert_ranks, :week)
   end
 end
