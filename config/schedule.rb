@@ -1,10 +1,10 @@
 set :output, "#{path}/log/cron.log"
 
-every :hour do
+every 15.minutes do
   runner "Game.update_forecasts"
 end
 
-every 2.hours do
+every 30.minutes do
   runner 'Team.import'
   runner 'RosterSpot.import'
 end
