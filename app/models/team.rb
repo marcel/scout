@@ -54,7 +54,7 @@ class Team < ActiveRecord::Base
     end
     
     # Policy: Update old one
-    def import(week = GameWweek.current.week)
+    def import(week = GameWeek.current.week)
       importing(week) do
         client = Scout::Client.new
       
