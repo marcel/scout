@@ -46,13 +46,15 @@
                 <%= link_to 'Settings', edit_account_registration_path %> |
                 <%= link_to 'Logout', destroy_account_session_path, method: :delete %>
               <% else %>
-                <%= link_to 'Login', new_account_session_path %>
+                <%= link_to('Login', new_account_session_path) unless url_for == new_account_session_path %>
               <% end %>
             </div>
             <br />
-            <%= form_tag player_search_path, :method => 'get', :style => "padding-top: 5px", :class => "form-search pull-right", id: 'player-search'  do %>
-              <div><%= text_field_tag :search,  params[:search], :placeholder => 'Player', :class => 'input-medium search-query' %></div>
-              <div id="search-preview"></div>
+            <% if account_signed_in? %>
+              <%= form_tag player_search_path, :method => 'get', :style => "padding-top: 5px", :class => "form-search pull-right", id: 'player-search'  do %>
+                <div><%= text_field_tag :search,  params[:search], :placeholder => 'Player', :class => 'input-medium search-query' %></div>
+                <div id="search-preview"></div>
+              <% end %>
             <% end %>
           </div><!--/.nav-collapse -->
         </div>
