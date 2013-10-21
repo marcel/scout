@@ -1,7 +1,3 @@
-- Consolidate import code and alert via sms/email if there is an exception
-
-- Add cron job that runs every hour or so to load/update the forecast for every game that week
-
 - Consider adding a more fine grained cache versioning scheme where each model can specify their cache version so the global cache version only needs to change when there is a large change to all caching.
 
 - From Alex:
@@ -145,6 +141,10 @@ end
 
 DONE:
 =====
+- Add cron job that runs every hour or so to load/update the forecast for every game that week
+
+- Consolidate import code and alert via sms/email if there is an exception
+
 - Maybe add js to map right and left arrow to move forward and backward week to week in index views that have week links
 
 - Fix broken team icons for 2 letter team abbreviations that need to map to a 3 letter abbrevation by just renaming all css to same 2 letter abbreviations that the DB stores
