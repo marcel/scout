@@ -51,6 +51,14 @@
             </div>
             <br />
             <% if account_signed_in? %>
+            <%= javascript_tag do %>
+              $("body").keydown(function(e) {
+                if (e.keyCode == 191) { // Forward-slash
+                  $("#search").focus();
+                  return false;
+                }
+              });
+            <% end %>
               <%= form_tag player_search_path, :method => 'get', :style => "padding-top: 5px", :class => "form-search pull-right", id: 'player-search'  do %>
                 <div><%= text_field_tag :search,  params[:search], :placeholder => 'Player', :class => 'input-medium search-query' %></div>
                 <div id="search-preview"></div>
