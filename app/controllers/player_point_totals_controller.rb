@@ -185,6 +185,8 @@ class PlayerPointTotalsController < ApplicationController
         -performance.sra
       when 'ry'
         -performance.ry
+      when 'rcy'
+        -performance.recy
       when 'rtd'
         -performance.tdr
       when 'rctd'
