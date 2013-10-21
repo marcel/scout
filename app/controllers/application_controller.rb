@@ -52,9 +52,7 @@ class ApplicationController < ActionController::Base
   ])
   
   def render_fresh(objects, *args)
-    if @week && !GameWeek.current?(@week)
-      fresh_when(etag: collection_etag(objects, *args), :public => true)
-    end
+    fresh_when(etag: collection_etag(objects, *args), :public => true)
   end
   
   def partial_cache_key(key_name, object, params_to_include = nil)
@@ -72,7 +70,9 @@ class ApplicationController < ActionController::Base
   end
 
   def collection_cache_key(collection, params_to_include = nil)
-    [ "account-#{current_account.id}",
+    Rails.logger.info "WARNING: in collection_cache_key, collection is nil" if collection.nil?
+    [
+      "account-#{current_account.id}",
       params_cache_prefix(params_to_include),
       CityHash.hash128(ActiveSupport::Cache.expand_cache_key(collection))
     ].compact.join('/')

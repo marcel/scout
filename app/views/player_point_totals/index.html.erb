@@ -28,7 +28,7 @@
       </tr>
     </thead>
     <tbody>
-      <% cache ['points-table', collection_cache_key(@players, :week) ] do %>
+      <% cache ['points-table', collection_cache_key(@player_point_totals, :week) ] do %>
         <%= render partial: 'player_point_total', collection: @player_point_totals, cache: ->(p) { partial_cache_key("player-point-total", p) }%>
       <% end %>
     </tbody>
