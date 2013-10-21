@@ -1,5 +1,9 @@
 <div class="well well-small">
+  <%#= render partial: 'shared/drop_down_menu', locals: {menu: stat_dropdown_menu } %>
   <%= render partial: 'shared/drop_down_menu', locals: {menu: positions_dropdown_menu} %>
   <%= render partial: 'shared/drop_down_menu', locals: {menu: availability_dropdown_menu} %>
+  <% if options[:include_min] %>
+    <%= render partial: 'shared/drop_down_menu', locals: {menu: min_value_dropdown_menu(@player_point_totals) } %>
+  <% end %>
   <%= render partial: 'shared/drop_down_menu', locals: {menu: team_dropdown_menu} %>
 </div>

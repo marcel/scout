@@ -43,13 +43,15 @@ class PlayerPointTotalsController < ApplicationController
   def season
     @no_sidebar = true # TODO Do this is a non-janky way
 
-    params[:position] ||= 'QB'
-
      query = PlayerPointTotal.where.not(total: 0.0).
       joins(:player).
       includes(:player)
 
-      @player_point_totals = apply_filters(query).load.group_by(&:player)
+    player_point_totals_by_player = apply_filters(query).load.group_by(&:player)
+
+    data_points_per_player = player_point_totals_by_player.values.map(&:size).sort
+    median_data_points = data_points_per_player[data_points_per_player.size / 2]
+    @player_point_totals = player_point_totals_by_player.select {|k,v| v.size >= median_data_points}
   end
 
   def defense

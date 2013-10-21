@@ -15,10 +15,19 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require_tree .
-//= require highcharts/highcharts                                                           
-//= require highcharts/highcharts-more                                                         
+//= require highcharts/highcharts
+//= require highcharts/highcharts-more
+//= require typeahead.min.js
+//= require hogan.min.js
 
-$("#player-search input").keyup(function() {
-  $.get($("#player-search").attr("action"), $("#player-search").serialize(), null, "script");
-  return false;
-});
+// $("#player-search input").keyup(function() {
+//   $.get($("#player-search").attr("action"), $("#player-search").serialize(), null, "script");
+//   //return false;
+// });
+
+// $("#player-search input").keydown(function(e) {
+//   if (e.keyCode == 13) { // Enter
+//     $.get($("#player-search").attr("action"), $("#player-search").serialize(), null, "script");
+//     return false;
+//   }
+// });

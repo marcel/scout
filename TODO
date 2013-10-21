@@ -14,8 +14,6 @@
 
 - Consider sending weather warning notifications like "Heads up this defense that is availble will be playing in rain"
 
-- Add support for authentication and accounts
-
 - Pagination (someting like infinite scroll) to mitigate slow load time
 
 - Highlight which column is the sort column
@@ -44,15 +42,13 @@ a kicker's home field a dome (i.e. no wind). Do they have a better FG completion
 
   which indicates the point value for each stat which will allow me to determine for every player the things they have gotten their points from. Maybe I could do a pie chart :-o Or actually maybe better yet a stacked graph that shows the % of their total points broken up by how they got them.
 
-- On the pages that let you filter tables, show a bar at the top of the table with each filter and an [x] that let's you remove filters without clearing everything
-
 - On expert ranking page provide filters to show only Green/Blue/Yellow/Red/Unchanged
 
 - Roster spots is messed up. It needs to only include the current recent roster spots for the week.
 
 - Do research on running analytics and clustering on this corpus
 
-- Import csv of play by play data (though check http://www.armchairanalysis.com/data.php before as it might be easier to import) (apparently CBSSports.com has play by play data by game. see if there are other stats i can import). Also look at what Football Outsiders,  and Pro Football Focus offer. Some links:
+- look at what Football Outsiders,  and Pro Football Focus offer. Some links:
 http://www.footballoutsiders.com/products
 https://www.profootballfocus.com/?tab=by_team&season=2008&teamid=21&stats=&gameid=
 https://www.profootballfocus.com/?tab=by_team&season=2008&teamid=21&stats=&gameid=
@@ -202,3 +198,9 @@ pulling just the current week's data for the resource will limit how much dedupi
 - Deal with case where someone has an empty roster spot. Since we only grab the 12 most recent we either need to create an empty tombstone or something. Also don't know whether the payload will return an empty slot or just 11 results.
 
 - When importing teams also include the roster sub-resource and store selected_position for the given player, maybe in a RosterSpot.
+
+- Add support for authentication and accounts
+
+- On the pages that let you filter tables, show a bar at the top of the table with each filter and an [x] that let's you remove filters without clearing everything
+
+- Import csv of play by play data (though check http://www.armchairanalysis.com/data.php before as it might be easier to import) (apparently CBSSports.com has play by play data by game. see if there are other stats i can import).

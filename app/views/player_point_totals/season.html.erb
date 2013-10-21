@@ -1,6 +1,6 @@
 <% content_for(:sidebar) do %>
-  'WTF'
 <% end %>
+<%= dropdown_menu_filters(include_min: true) %>
 <div class="row">
   <%= high_chart('season-chart', season_performance_chart(@player_point_totals)) %>
 </div>

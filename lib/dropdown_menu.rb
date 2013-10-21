@@ -26,7 +26,7 @@ class DropdownMenu
   def current_value(params)
     options.find do |option|
       params.has_key?(option.parameter) &&
-        params[option.parameter] == option.value
+        params[option.parameter] == option.value.to_s
     end.try(:label)
   end
 
@@ -61,7 +61,7 @@ class DropdownMenu
     end
 
     def value(v = nil)
-      v ? @value = v : (@value || @label)
+      v ? @value = v.to_s : (@value || @label)
     end
 
     def parameters

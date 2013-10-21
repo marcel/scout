@@ -3,6 +3,7 @@ class ExpertRanksController < ApplicationController
     @week          = (params[:week] ||= GameWeek.current.week).to_i
     @position_type = (params[:position_type] ||= 'quarterback')
 
+
     query = ExpertRank.where(week: @week, position_type: @position_type).
       joins(:player).
       order(overall_rank: :asc)

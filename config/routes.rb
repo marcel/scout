@@ -1,6 +1,7 @@
 Scout::Server::Application.routes.draw do
   devise_for :accounts, path_names: {sign_in: 'login', sign_out: 'logout', sign_up: 'kensentme'}
   root to: "player_point_totals#index"
+  get "typeahead", to: "players#typeahead"
 
   post "sms", to: "inbound_message#sms"
 

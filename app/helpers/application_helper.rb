@@ -1,6 +1,4 @@
 module ApplicationHelper
-
-  FORECAST_CONDITIONS = %w[clear-day clear-night rain snow sleet wind fog cloudy partly-cloudy-day partly-cloudy-night]
   POSITIONS = [
     ['QB'],
     ['WR'],
@@ -10,6 +8,56 @@ module ApplicationHelper
     ['K'],
     ['DEF']
   ]
+
+  STATS_OPTIONS = [
+    ['Points' , 'total'],
+    ['TDs',     'foo'],
+    [],
+    ['Passing yards', 'py'],
+    [],
+    ['Targets', 'trg'],
+    ['Receptions', 'rec'],
+    ['Receiving yards', 'recy'],
+    [],
+    ['Carries', 'ra'],
+    ['Rushing yards', 'ry']
+  ]
+
+  def stat_dropdown_menu
+    @stat_dropdown_menu ||= DropdownMenu.new do
+      label 'Stat'
+
+      STATS_OPTIONS.each do |stat, attribute|
+        if stat && attribute
+          option do
+            label stat
+            parameter :stat
+            value attribute
+          end
+        else
+          divider!
+        end
+      end
+    end
+  end
+
+  def min_value_dropdown_menu(player_point_totals_by_player)
+    @min_value_dropdown_menu ||= DropdownMenu.new do
+      label 'Min'
+
+      mins = player_point_totals_by_player.map do |player, point_totals|
+        point_totals.min_by(&:total).total.to_i
+      end.uniq.sort.reverse[0..-2]
+
+      mins.each do |m|
+        option do
+          label m
+          parameter :min
+          value m.to_s
+        end
+      end
+    end
+  end
 
   def positions_dropdown_menu
     @positions_dropdown_menu ||= DropdownMenu.new do
@@ -73,8 +121,8 @@ module ApplicationHelper
     end
   end
 
-  def dropdown_menu_filters
-    render partial: 'shared/dropdown_menu_filters'
+  def dropdown_menu_filters(options = {})
+    render partial: 'shared/dropdown_menu_filters', locals: {options: options}
   end
 
   def player_profile(player, path = nil)
@@ -296,9 +344,9 @@ module ApplicationHelper
       f.chart(borderWidth: 1, borderColor: '#aaa', height: options[:height] || 500)
       f.options[:xAxis][:categories] = weeks
       f.series(allowPointSelect: true, type: 'spline', name: 'Actual points', data: points.map(&:total), color: '#3a87ad', dashStyle: 'Solid')
-      f.series(type: 'spline', name: 'Projected High',    data: projections.map(&:standard_high), color: '#468847')
-      f.series(type: 'spline', name: 'Projected Standard',data: projections.map(&:standard), color: '#f89406')
-      f.series(type: 'spline', name: 'Projected Low',     data: projections.map(&:standard_low), color: '#b94a48')
+      f.series(type: 'spline', name: 'Projected High',    data: projections.map(&:standard_high), color: '#468847', visible: false)
+      f.series(dataLabels: {enabled: false}, type: 'spline', name: 'Projected Standard',data: projections.map(&:standard), color: '#f89406')
+      f.series(type: 'spline', name: 'Projected Low',     data: projections.map(&:standard_low), color: '#b94a48', visible: false)
     end
   end
 
@@ -312,7 +360,7 @@ module ApplicationHelper
     end
 
     LazyHighCharts::HighChart.new('graph') do |f|
-      f.title text: "Weekly points by position"
+      f.title text: "Week over week points"
       f.exporting(enabled: true)
 
       f.plotOptions(series: {dashStyle: 'ShortDot', dataLabels: {enabled: true}}, xAxis: {labels: {useHTML: true}})
@@ -339,7 +387,7 @@ module ApplicationHelper
     LazyHighCharts::HighChart.new('graph') do |f|
       f.title text: "Weekly receiving performance"
       f.plotOptions(series: {dashStyle: 'Solid', dataLabels: {enabled: true, color: '#000'}}, xAxis: {labels: {useHTML: true}})
-      f.yAxis(min: -5, max: 20, minPadding: 0, maxPadding: 0, startOnTick: false, tickInterval: 5)
+      f.yAxis(min: -1, max: 15, minPadding: 0, maxPadding: 0, startOnTick: false, tickInterval: 5)
       f.chart(borderWidth: 1, borderColor: '#aaa', height: 500)
       f.options[:xAxis][:categories] = weeks
 
@@ -374,8 +422,8 @@ module ApplicationHelper
        end)
        f.series(type: 'column', color: '#468847', name: 'Receiving TDs', data: performances.map(&:tdre))
 
-       f.series(dataLabels: {enabled: false}, type: 'spline', dashStyle: 'ShortDot', color: '#3a87ad', name: 'League median targets', data: performances.map {|p| p.league_median(:trg)})
-       f.series(dataLabels: {enabled: false},type: 'spline', dashStyle: 'ShortDot', color: '#f89406', name: 'League median receptions', data: performances.map {|p| p.league_median(:rec)})
+       f.series(dataLabels: {enabled: false}, visible: false, type: 'spline', dashStyle: 'ShortDot', color: '#3a87ad', name: 'League median targets', data: performances.map {|p| p.league_median(:trg)})
+       f.series(dataLabels: {enabled: false}, visible: false, type: 'spline', dashStyle: 'ShortDot', color: '#f89406', name: 'League median receptions', data: performances.map {|p| p.league_median(:rec)})
        # f.series(type: 'spline', dashStyle: 'ShortDot', color: '#3a87ad', name: 'League median targets', data: performances.map {|p| p.league_median(:trg)})
 
      end
@@ -390,7 +438,7 @@ module ApplicationHelper
     LazyHighCharts::HighChart.new('graph') do |f|
       f.title text: "Weekly rushing performance"
       f.plotOptions(series: {dashStyle: 'Solid', dataLabels: {enabled: true, color: '#000'}}, xAxis: {labels: {useHTML: true}})
-      f.yAxis(min: -5, max: 20, minPadding: 0, maxPadding: 0, startOnTick: false, tickInterval: 5)
+      f.yAxis(min: -2, max: 30, minPadding: 0, maxPadding: 0, startOnTick: false, tickInterval: 5)
       f.chart(borderWidth: 1, borderColor: '#aaa', height: 500)
       f.options[:xAxis][:categories] = weeks
       f.series(type: 'column',  name: 'Carries', data: performances.each_with_index.map do |performance, index|
@@ -419,8 +467,8 @@ module ApplicationHelper
           0
         end
       end)
-      f.series(type: 'column', color: '#b94a48', name: 'Fumbles', data: performances.map(&:fuml))
-      f.series(type: 'spline', dashStyle: 'ShortDot', color: 'black', name: 'League median carries', data: performances.map {|p| p.league_median(:ra)})
+      f.series(type: 'column', color: 'purple', name: 'Fumbles', data: performances.map(&:fuml))
+      f.series(dataLabels: {enabled: false}, type: 'spline', dashStyle: 'ShortDot', color: 'black', name: 'League median carries', data: performances.map {|p| p.league_median(:ra)})
     end
   end
 
