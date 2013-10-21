@@ -43,10 +43,10 @@
             <div class="user-auth-controls pull-right">
               <% if account_signed_in? %>
                 Logged in as <strong><%= current_account.email %></strong>.
-                <%= link_to 'Settings', edit_account_registration_path(protocol: 'https') %> |
-                <%= link_to 'Logout', destroy_account_session_path(protocol: 'https'), method: :delete %>
+                <%= link_to 'Settings', edit_account_registration_path %> |
+                <%= link_to 'Logout', destroy_account_session_path, method: :delete %>
               <% else %>
-                <%= link_to 'Login', new_account_session_path(protocol: 'https') %>
+                <%= link_to 'Login', new_account_session_path
               <% end %>
             </div>
             <br />
