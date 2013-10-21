@@ -1,6 +1,4 @@
 class PlayerPointTotalsController < ApplicationController
-  before_action :set_player_with_points, only: :show
-
   def index
     @week  = (params[:week] ||= GameWeek.current.week).to_i
     @limit = (params[:limit] || 100).to_i
@@ -38,6 +36,7 @@ class PlayerPointTotalsController < ApplicationController
   end
 
   def show
+    @player = Player.where(id: params[:player_id]).take
     fresh_when(@player)
   end
 
@@ -164,7 +163,7 @@ class PlayerPointTotalsController < ApplicationController
   end
 
   def carries
-    @week = (params[:week] || GameWeek.current.week).to_i
+    @week = (params[:week] ||= GameWeek.current.week).to_i
 
     query = ArmchairAnalysis::Offense.joins(:player).
       joins(:game_in_season).
@@ -201,9 +200,5 @@ class PlayerPointTotalsController < ApplicationController
 
       query = query.limit(params[:limit].to_i) if params[:limit]
       query
-    end
-
-    def set_player_with_points
-      @player = Player.where(id: params[:player_id]).includes(:points, :projections, :offensive_performances => [:game_in_season]).first
     end
 end
