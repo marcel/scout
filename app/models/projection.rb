@@ -4,7 +4,7 @@ class Projection < ActiveRecord::Base
     :foreign_key => :fantasy_football_nerd_id,
     inverse_of: :projections
   }, touch: true
-  
+
   def cached_player
     Scout.cache.fetch([Player.name, 'fantasy_football_nerd_id', fantasy_football_nerd_id], expires_in: 20.minutes) { player }
   end
@@ -87,6 +87,7 @@ class Projection < ActiveRecord::Base
         import_log "updated projections: #{updated_projections}"
         import_log "updated ranks: #{updated_ranks}"
         projections_to_save.each(&:save)
+        projections_to_save.map(&:player).each(&:touch)
       end
     end
   end
