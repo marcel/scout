@@ -66,7 +66,7 @@ class Injury < ActiveRecord::Base
           import_log "most_recent_existing_injury: #{most_recent_existing_injury.last_update}"
         end
 
-        injuries_this_week = FFNerd.injuries(week)
+        injuries_this_week = FFNerd.injuries(week).delete_if {|i| i.injury.nil?}
 
         import_log "injuries_this_week: #{injuries_this_week.size}"
         import_log "newest new injury: #{injuries_this_week.map(&:injury).sort_by(&:last_update).last.last_update}"
