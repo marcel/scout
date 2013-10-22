@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131020003847) do
+ActiveRecord::Schema.define(version: 20131022082707) do
 
   create_table "accounts", force: true do |t|
     t.string   "username"
@@ -626,6 +626,8 @@ ActiveRecord::Schema.define(version: 20131020003847) do
     t.text     "json"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "inches_of_precipitation"
+    t.float    "inches_of_snow"
   end
 
   create_table "game_weeks", force: true do |t|

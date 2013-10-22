@@ -11,6 +11,8 @@ class GameForecast < ActiveRecord::Base
         temp_feels_like: payload.feelslikeF,
         humidity:        payload.humidity,
         pop:             payload.pop,
+        inches_of_precipitation: payload.precipIN,
+        inches_of_snow:  payload.snowIN,
         wind_speed:      payload.windSpeedMPH,
         json:            payload.to_json
       }
@@ -70,7 +72,31 @@ class GameForecast < ActiveRecord::Base
   }
 
   def severity
-    coverage_value * intensity_value * weather_value
+    coverage_value * intensity_value * weather_value * precipitation_value * snow_value
+  end
+
+  def snow_value
+    inches_of_snow_value
+  end
+
+  def inches_of_snow_value
+    log_scaled_boost(inches_of_snow * 100)
+  end
+
+  def probability_of_precipitation_value
+    log_scaled_boost(pop)
+  end
+
+  def precipitation_value
+    probability_of_precipitation_value * inches_of_precipitation_value
+  end
+
+  def inches_of_precipitation_value
+    log_scaled_boost(inches_of_precipitation * 100)
+  end
+
+  def log_scaled_boost(value)
+    value.zero? ? 1 : [Math.log10(value)**10, 1].max.to_i
   end
 
   def codes
