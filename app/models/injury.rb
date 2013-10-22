@@ -103,6 +103,7 @@ class Injury < ActiveRecord::Base
 
           import_log "new_injuries_to_save: #{new_injuries_to_save.size}"
           new_injuries_to_save.each(&:save)
+          new_injuries_to_save.map(&:player).compact.each(&:save)
         end
       end
     end

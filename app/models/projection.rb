@@ -87,7 +87,7 @@ class Projection < ActiveRecord::Base
         import_log "updated projections: #{updated_projections}"
         import_log "updated ranks: #{updated_ranks}"
         projections_to_save.each(&:save)
-        projections_to_save.map(&:player).each(&:touch)
+        projections_to_save.map(&:player).compact.each(&:touch)
       end
     end
   end
