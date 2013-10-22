@@ -29,4 +29,10 @@
       <%= high_chart("player-rushing-performance-chart", player_rushing_performance_chart(@player)) %>
     </div>
   <% end %>
+
+  <% if @player.position == 'K' %>
+    <div class="row">
+      <%= high_chart('player-kicking-performance-chart', player_kicking_performance_chart(@player)) %>
+    </div>
+  <% end %>
 <% end %>

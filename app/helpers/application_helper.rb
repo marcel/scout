@@ -377,6 +377,24 @@ module ApplicationHelper
     end
   end
 
+  def player_kicking_performance_chart(player)
+    field_goal_attempts = player.field_goal_attempts.includes(:game).to_a
+    field_goal_attempts_by_week = field_goal_attempts.group_by {|a| a.game.wk }.sort_by {|wk, attempts| wk}
+    weeks = field_goal_attempts_by_week.map {|week, attempts| "Week #{week} vs #{player.opponent_on_week(week) ||'bye'}" }
+
+    LazyHighCharts::HighChart.new('graph') do |f|
+      f.title text: "Weekly kicking performance"
+      f.chart(type: 'column')
+      f.plotOptions(column: {stacking: 'normal', dataLabels: {enabled: true, color: 'white'}})
+      f.yAxis(min: 0, max: 10, minPadding: 0, maxPadding: 0, startOnTick: false, tickInterval: 1, stackLabels: {enabled: true, fontWeight: 'bold'})
+      f.chart(borderWidth: 1, borderColor: '#aaa', height: 500)
+      f.options[:xAxis][:categories] = weeks
+      f.series(type: 'column', name: '50+', color: '#468847', data: field_goal_attempts_by_week.map {|k,v| v.select(&:made?).select {|a| a.dist >= 50}.size})
+      f.series(type: 'column', name: '40-49', color: '#3a87ad', data: field_goal_attempts_by_week.map {|k,v| v.select(&:made?).select {|a| (40..49).include?(a.dist) }.size})
+      f.series(type: 'column', name: '0-39', color: '#f89406', data: field_goal_attempts_by_week.map {|k,v| v.select(&:made?).select {|a| a.dist < 40}.size})
+      f.series(type: 'column', name: 'Missed', color: '#b94a48', data: field_goal_attempts_by_week.map {|k,v| v.select(&:missed?).size})
+    end
+  end
 
   def player_receiving_performance_chart(player)
     performances = player.offensive_performances.sort_by {|o| o.game_in_season.wk }
@@ -387,7 +405,7 @@ module ApplicationHelper
     LazyHighCharts::HighChart.new('graph') do |f|
       f.title text: "Weekly receiving performance"
       f.plotOptions(series: {dashStyle: 'Solid', dataLabels: {enabled: true, color: '#000'}}, xAxis: {labels: {useHTML: true}})
-      f.yAxis(min: -1, max: 15, minPadding: 0, maxPadding: 0, startOnTick: false, tickInterval: 5)
+      f.yAxis(min: -1, max: 20, minPadding: 0, maxPadding: 0, startOnTick: false, tickInterval: 5)
       f.chart(borderWidth: 1, borderColor: '#aaa', height: 500)
       f.options[:xAxis][:categories] = weeks
 

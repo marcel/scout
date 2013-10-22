@@ -26,6 +26,18 @@ class Player < ActiveRecord::Base
     inverse_of: :player
   }
 
+  has_many :field_goal_attempts, ->{ where(fgxp: 'FG')}, {
+    foreign_key: :fkicker,
+    primary_key: :armchair_analysis_id,
+    class_name: 'ArmchairAnalysis::FieldGoalExtraPoint'
+  }
+
+  INJURED_PLAYING_STATUSES = Set.new(%w[IR O])
+
+  def injured?
+    INJURED_PLAYING_STATUSES.include?(playing_status)
+  end
+
   def defense?
     position == 'DEF'
   end

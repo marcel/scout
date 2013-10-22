@@ -1,3 +1,12 @@
+- As the calculation of a player's value gets more sophisticated and I get closer to actually being able to produce a competing projection for players, if this site becomes availble to anyone it might be interesting to not make the projection opaque but instead break down the factors that causes one player to be seen more favorably than another. Futher more, something to consider would be to design the projections in a way that would allow the user to tweak the algorithm to their liking so certain things are favored more in the score for them than others so they can design their own projection formula. Even though psychologically this may seem appealing to the user, in theory programmatically the optimal weighting based on empirical evaluation should always trump a human guessing at what value to turn each knob to but the psychological power  might be worth indulging.
+
+- Find all owned players by position with an N delta average point production of people you have to evaluate trades
+
+- Show optimal lineup if you had selected all the best players in the league who were available
+  - By total points
+  - By weekly average
+  - By matchup (needs to be defined/implemented)
+
 - Consider adding a more fine grained cache versioning scheme where each model can specify their cache version so the global cache version only needs to change when there is a large change to all caching.
 
 - From Alex:

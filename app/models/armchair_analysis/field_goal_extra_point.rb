@@ -4,4 +4,14 @@ class ArmchairAnalysis::FieldGoalExtraPoint < ActiveRecord::Base
     primary_key: :pid,
     foreign_key: :pid
   }
+
+  has_one :game, through: :play
+
+  def made?
+    good == 'Y'
+  end
+
+  def missed?
+    !made?
+  end
 end
