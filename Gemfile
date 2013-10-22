@@ -29,6 +29,7 @@ group :development do
   gem 'binding_of_caller'
   gem 'capistrano', '2.15.5'
   gem 'capistrano-rails'
+  # gem 'capistrano-detect-migrations'
   # gem 'capistrano-bundler'
   gem 'rvm-capistrano'
   # Default capistrano-unicorn doesn't seem to work with latest capistrano
@@ -46,8 +47,8 @@ gem 'nokogiri'
 gem 'faster_xml_simple'
 gem 'fantasy_football_nerd'
 
-gem 'pry', group: [:development, :staging]
-gem 'pry-rails', group: [:development, :staging]
+gem 'pry'
+gem 'pry-rails'
 
 gem 'lazy_high_charts'
 gem 'will_paginate'
