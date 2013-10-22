@@ -121,6 +121,7 @@ class PlayerPointTotal < ActiveRecord::Base
 
         import_log "updated_player_points_to_save: #{updated_player_points_to_save.size}"
         updated_player_points_to_save.each(&:save)
+        updated_player_points_to_save.map(&:player).each(&:touch)
         import_log "updated_player_stat_values_to_save: #{updated_player_stat_values_to_save.size}"
         import_log "new_stats: #{new_stats}"
         import_log "updated_stats: #{updated_stats}"
