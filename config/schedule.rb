@@ -30,7 +30,7 @@ every :monday, at: %w[1am 2am 3am 4am 5am 6am] do
   runner 'PlayerPointTotal.import'
 end
 
-every :tuesday, at: %[1am 2am 3am 4am 5am] do
+every :tuesday, at: %w[1am 2am 3am 4am 5am] do
   runner 'PlayerPointTotal.import'
 end
 
