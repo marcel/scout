@@ -1,6 +1,6 @@
 class MatchupsController < ApplicationController
   def index
-    @week = (params[:week] || GameWeek.current.week).to_i
+    @week = (params[:week] ||= GameWeek.current.week).to_i
     @defensive_matchups = Game.where(week: @week).includes(:home, :away, :stadium).load.map do |game|
         [game.home_team_defensive_matchup, game.away_team_defensive_matchup]
     end.flatten.sort_by(&sort_function)
