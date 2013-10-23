@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   #   end
   # end
   protected
-  
+
   def configure_permitted_parameters
     [:sign_up, :account_update].each do |devise_action|
       devise_parameter_sanitizer.for(devise_action) << :phone_number
@@ -50,11 +50,13 @@ class ApplicationController < ActionController::Base
     :watched,
     :week
   ])
-  
+
   def render_fresh(objects, *args)
-    fresh_when(etag: collection_etag(objects, *args), :public => true)
+    if params[:week] && params[:week].to_i != GameWeek.current.week
+      fresh_when(etag: collection_etag(objects, *args), :public => true)
+    end
   end
-  
+
   def partial_cache_key(key_name, object, params_to_include = nil)
     prefix = params_cache_prefix(params_to_include)
     k = [current_account.id.to_s, prefix, key_name, object.try(:cache_key)].compact.join('/')
