@@ -101,7 +101,7 @@ class ExpertRank < ActiveRecord::Base
           import_log "updated_records: #{updated_records}"
           import_log "ranks_to_save: #{ranks_to_save.size}"
           ranks_to_save.each(&:save)
-          ranks_to_save.map(&:player).each(&:touch)
+          ranks_to_save.map(&:player).compact.each(&:touch)
         end
       end
     end
