@@ -28,6 +28,8 @@ module Scout
 
       # Disable the asset pipeline.
       config.assets.enabled = true
+
+      config.autoload_paths += %W(#{config.root}/lib)
     end
 
     def load_models
@@ -40,3 +42,7 @@ module Scout
     module_function :load_models
   end
 end
+
+require 'array_ext'
+require 'numeric_ext'
+require 'hash_ext'

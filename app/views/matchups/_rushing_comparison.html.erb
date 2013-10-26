@@ -1,0 +1,17 @@
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Rushing</h3></caption>
+  <tbody class="row-fluid">
+    <%= stat('Carries', ->(p) { p.carries.count }) %>
+    <%= stat('Yards', ->(p) { number_with_delimiter(p.carries.sum(:yds)) }) %>
+    <%= stat('% successful carries', ->(p) { number_to_percentage(p.percent_successful_carries, precision: 1) } ) %>
+    <%= stat('Avg yards per carry', ->(p) { p.average_yards_per_carry.round(1) }) %>
+    <%= stat('p25 yards per carry', ->(p) { p.carries.pluck(:yds).percentile(25) }) %>
+    <%= stat('p50 yards per carry', ->(p) { p.carries.pluck(:yds).percentile(50) }) %>
+    <%= stat('p75 yards per carry', ->(p) { p.carries.pluck(:yds).percentile(75) }) %>
+    <%= stat('Longest run', ->(p) { p.longest_carry }) %>
+    <%= stat('Rushing TDs', ->(p) { p.rushing_touchdowns.count }) %>
+    <%= stat('% scoring carries on team', ->(p) { number_to_percentage(p.percent_of_scoring_carries_on_team, precision: 1) }) %>
+    <%= stat('Fumbles', ->(p) { p.fumbles.count }) %>
+    <%= stat('% team carries', ->(p) { number_to_percentage(p.percent_of_carries_on_team, precision: 1) }) %>
+  </tbody>
+</table>

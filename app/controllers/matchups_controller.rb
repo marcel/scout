@@ -93,4 +93,41 @@ class MatchupsController < ApplicationController
       super(min, max, BUCKETS.dup)
     end
   end
+
+  def players
+    @week = (params[:week] ||= GameWeek.current.week).to_i
+
+    player1 = Player.find_by(id: params[:player1])
+    player2 = Player.find_by(id: params[:player2])
+
+    @comparison = PlayerComparison.new(player1, player2, @week)
+  end
+
+  class PlayerComparison
+    attr_reader :player1, :player2, :week
+    def initialize(player1, player2, week)
+      @player1 = player1
+      @player2 = player2
+      @week    = week
+    end
+
+    def position
+      player1.position
+    end
+
+    def both_players_set?
+      player1 && player2
+    end
+
+    def player(number)
+      number == 1 ? player1 : player2
+    end
+
+    def opponent(number)
+      player(number).opponent_on_week(week)
+    end
+
+    def opponents_rushing_yards_allowed(number)
+    end
+  end
 end

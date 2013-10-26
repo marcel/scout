@@ -94,3 +94,12 @@ gem 'twilio-ruby'
 gem 'emoji'
 
 gem 'whenever', require: false
+
+gem 'squeel'
+
+gem 'celluloid'
+
+gem 'statsample'
+gem 'statsample-optimization'
+
+gem "js-routes"

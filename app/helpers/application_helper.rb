@@ -377,6 +377,7 @@ module ApplicationHelper
     end
   end
 
+  # TODO N.B. The armchair_analysis kickers table denormalizes this more directly than using the field goal attempt table
   def player_kicking_performance_chart(player)
     field_goal_attempts = player.field_goal_attempts.includes(:game).to_a
     field_goal_attempts_by_week = field_goal_attempts.group_by {|a| a.game.wk }.sort_by {|wk, attempts| wk}

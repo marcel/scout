@@ -1,0 +1,32 @@
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Upcoming Opponent</h3></caption>
+  <tbody class="row-fluid">
+    <tr>
+      <td class="span4">
+        <h5 class="text-center">
+          <%= comparison.opponent(1) || 'bye week' %>
+        </h5>
+      </td>
+      <td class="span4"><h6 class="text-center">Opponent</h6></td>
+      <td class="span4">
+        <h5 class="text-center">
+          <%= comparison.opponent(2) || 'bye week' %>
+        </h5>
+      </td>
+    </tr>
+    <%= stat('Rushing yards allowed', ->(p) { number_with_delimiter(Player.find_by(team_abbr: p.opponent_on_week(@week)).cached_game_performances_by_opponents.map(&:ry).sum) }) %>
+    <!-- <tr>
+      <td class="span5"><h5 class="text-center">10.3</h5></td>
+      <td class="span2"><h5 class="text-center">Rushing TDs allowed (9th)</h5></td>
+      <td class="span5"><h5 class="text-center">12.3</h5></td>
+    </tr>
+    <tr>
+      <td class="span5"><h5 class="text-center">10.3</h5></td>
+      <td class="span2"><h5 class="text-center">Rushing yards allowed (2nd)</h5></td>
+      <td class="span5"><h5 class="text-center">12.3</h5></td>
+    </tr> -->
+  </tbody>
+</table>
+
+<%= render partial: 'rushing_comparison', locals: {comparison: comparison } %>
+<%= render partial: 'redzone_rushing_comparison', locals: { comparison: comparison} %>

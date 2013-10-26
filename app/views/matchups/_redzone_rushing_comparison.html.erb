@@ -1,0 +1,12 @@
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Redzone carries</h3></caption>
+  <tbody class="row-fluid">
+    <%= stat('Carries within 5', ->(p) { p.redzone_carries_within_the_5.count }) %>
+    <%= stat('Carries within 3', ->(p) { p.redzone_carries_within_the_3.count }) %>
+    <%= stat('Carries within 1', ->(p) { p.redzone_carries_within_the_1.count }) %>
+    <%= stat('Redzone TDs', ->(p) { p.redzone_carries_within_the_5.scoring_plays.count }) %>
+    <%= stat('% RZ carrie resulting in TD', ->(p) { number_to_percentage(p.redzone_carries_within_the_5.scoring_plays.count.percent_of(p.redzone_carries_within_the_5.count), precision: 1)} ) %>
+    <%= stat('% team RZ carries', ->(p) { number_to_percentage(p.percent_of_redzone_carries_on_team, precision: 1) }) %>
+    <%= stat('Redzone carries by team', ->(p) { p.carries_by_team.in_redzone(5).count } )%>
+  </tbody>
+</table>

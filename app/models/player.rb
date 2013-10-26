@@ -80,7 +80,17 @@ class Player < ActiveRecord::Base
     cached_interceptions.size + cached_recovered_fumbles.map(&:frcv).sum
   end
 
+  def probability_z(other_player)
+    umann_whitney(other_player).probability_z
+  end
 
+  def umann_whitney(other_player)
+    Statsample::Test::UMannWhitney.new(point_vector, other_player.point_vector)
+  end
+
+  def point_vector
+    cached_points.map(&:total).to_scale
+  end
 
   has_many :projections, {
     primary_key: :fantasy_football_nerd_id,
@@ -200,6 +210,345 @@ class Player < ActiveRecord::Base
 
   def cached_bye_weeks
     @cached_bye_weeks ||= Scout.cache.fetch(['bye_weeks', team_abbr]) { bye_weeks }
+  end
+
+  belongs_to :team, ->{ where(position: 'DEF') }, {
+    primary_key: :team_abbr,
+    foreign_key: :team_abbr,
+    class_name: '::Player'
+  }
+
+  has_many :carries, {
+    primary_key: :armchair_analysis_id,
+    foreign_key: :bc,
+    class_name: 'ArmchairAnalysis::Rush'
+  }
+
+  has_many :players_on_team, {
+    primary_key: :team_abbr,
+    foreign_key: :team_abbr,
+    class_name: '::Player'
+  }
+
+  has_many :plays_by_team, {
+    class_name: 'ArmchairAnalysis::Play'
+    }, through: :games
+
+  scope :redzone_carries, ->(within = 5) {
+    joins(:play).where("armchair_analysis_plays.yfog >= ?", (100 - within))
+  }
+
+  # has_many :redzone_carries, ->(within = 5) {
+  #   # joins(:play).where("armchair_analysis_plays.yfog >= ?", (100 - within))
+  #   merge(Player.redzone_carries(within))
+  # }, {
+  #   primary_key: :armchair_analysis_id,
+  #   foreign_key: :bc,
+  #   class_name: 'ArmchairAnalysis::Rush'
+  # }
+
+
+  module QuarterBack
+    def self.included(model)
+      model.has_many :passes, {
+        primary_key: :armchair_analysis_id,
+        foreign_key: :psr,
+        class_name: 'ArmchairAnalysis::Pass'
+      }
+    end
+
+    # Formula: http://www.nfl.com/help/quarterbackratingformula
+    def passer_rating_on_week(week)
+      @passer_rating_on_week ||= {}
+
+      @passer_rating_on_week[week] ||= Scout.cache.fetch(['passer-rating', week, cache_key]) {
+        enforce_bounds = ->(stat) { [0.0, [stat, 2.375].min].max }
+
+        attempts    = passes.merge(Play.on_week(week)).select("armchair_analysis_passes.pid")
+        completions = attempts.completions
+
+        yards                 = completions.pluck(:yds).sum
+        touchdowns            = completions.scoring_plays.count
+        interceptions         = attempts.interceptions.count
+        number_of_attempts    = attempts.count.to_f
+        number_of_completions = completions.count.to_f
+
+        completion_stat        = (number_of_completions.percent_of(number_of_attempts) - 30) * 0.05
+        yards_per_attempt_stat = ((yards / number_of_attempts) - 3.0) * 0.25
+        touchdown_stat         = touchdowns.percent_of(number_of_attempts) * 0.2
+        interception_stat      = 2.375 - (interceptions.percent_of(number_of_attempts) * 0.25)
+
+        (
+          enforce_bounds[completion_stat]        +
+          enforce_bounds[yards_per_attempt_stat] +
+          enforce_bounds[touchdown_stat]         +
+          enforce_bounds[interception_stat]
+        ) * 100.0 / 6
+      }
+    end
+
+    def passer_rating_per_week
+      @passer_rating_per_week ||= begin
+        weeks = passes.joins(:game).
+          group("armchair_analysis_games.wk").
+          select("armchair_analysis_games.wk as week").
+          map(&:week)
+
+        weeks.inject({}) do |ratings, week|
+          ratings[week] = passer_rating_on_week(week)
+          ratings
+        end
+      end
+    end
+
+    def highest_passer_rating
+      passer_rating_per_week.values.max
+    end
+
+    def lowest_passer_rating
+      passer_rating_per_week.values.min
+    end
+
+    def average_passer_rating
+      passer_rating_per_week.values.average
+    end
+
+    def pass_count_per_week
+      passes.joins(:game).group("armchair_analysis_games.wk").count
+    end
+
+    def average_pass_attempts_per_week
+      pass_count_per_week.values.average
+    end
+
+    # TODO Fix this. It only returns weeks that had an interception, since it doesn't join weeks with none.
+    def interceptions_per_game
+      interceptions.joins(:game).group("armchair_analysis_games.wk").count
+    end
+
+    def average_interceptions_per_game
+      interceptions_per_game.values.average
+    end
+
+    def most_interceptions_in_a_game
+      interceptions_per_game.values.max
+    end
+
+    def passer_rating_score_on_week(week)
+      perfect_score = 158.3
+      passer_rating_on_week(week).percent_of(perfect_score).round(2)
+    end
+
+    def redzone_passing_touchdowns(within = 20)
+      passes.completions.in_redzone(within).scoring_plays
+    end
+  end
+  include QuarterBack
+
+  module RunningBack
+    # X  Carries
+    # X  Carries as % of team's total
+    # X  Yards Per Carry
+    # X  Rushing Touchdowns
+    # Touchdowns as % of teams rushing total
+    # Carries within the TD zone
+    # Carries within the TD Zone as % of teams total
+    # Targets
+    # Receiving TD's
+
+    def average_yards_per_carry
+      carries.average(:yds)
+    end
+
+    def percent_successful_carries
+      carries.successful_plays.count.percent_of(carries.count)
+    end
+
+    def longest_carry
+      carries.select("MAX(yds) as max").first.try(:max)
+    end
+
+    def carry_count_by_week
+      carries.joins(:game).group("armchair_analysis_games.wk").count
+    end
+
+    def most_carries_in_a_game
+      carry_count_by_week.values.max
+    end
+
+    def fewest_carries_in_a_game
+      carry_count_by_week.values.min
+    end
+
+    def average_carries_in_a_game
+      carry_count_by_week.values.average
+    end
+
+    def rushing_touchdowns
+      carries.joins(:scoring_play)
+    end
+
+    def rushing_touchdowns_by_team
+      carries_by_team.scoring_plays.count
+    end
+
+    def redzone_carries_within_the_5
+      carries.in_redzone(5)
+    end
+
+    def redzone_carries_within_the_3
+      carries.in_redzone(3)
+    end
+
+    def redzone_carries_within_the_1
+      carries.in_redzone(1)
+    end
+
+    def percent_of_redzone_carries_on_team(within = 5)
+      carries.in_redzone(within).count.percent_of(carries_by_team.in_redzone(within).count)
+    end
+
+    def carries_by_team
+      @carries_by_team ||= ArmchairAnalysis::Rush.by_team(team_abbr)
+    end
+
+    def percent_of_carries_on_team
+      carries.count.percent_of(carries_by_team.count)
+    end
+
+    def percent_of_scoring_carries_on_team
+      carries.scoring_plays.count.percent_of(carries_by_team.scoring_plays.count)
+    end
+
+    def fumbles
+      carries.joins(:fumble)
+    end
+  end
+  include RunningBack
+
+  module WideReceiver
+    def self.included(model)
+      model.has_many :targets, {
+        primary_key: :armchair_analysis_id,
+        foreign_key: :trg,
+        class_name: 'ArmchairAnalysis::Pass'
+      }
+    end
+
+    def receptions
+      targets.receptions
+    end
+
+    def percent_passes_caught
+      receptions.count.percent_of(targets.count)
+    end
+
+    def average_yards_per_reception
+      receptions.average(:yds).to_f
+    end
+
+    def target_count_by_week
+      targets.joins(:game).group("armchair_analysis_games.wk").count
+    end
+
+    def most_targets_in_a_game
+      target_count_by_week.values.max
+    end
+
+    def fewest_targets_in_a_game
+      target_count_by_week.values.min
+    end
+
+    def average_targets_in_a_game
+      target_count_by_week.values.average
+    end
+
+    def percent_successful_receptions
+      receptions.successful_plays.count.percent_of(receptions.count)
+    end
+
+    def longest_reception
+      receptions.select("MAX(yds) as max").first.try(:max)
+    end
+
+    def receiving_touchdowns
+      receptions.scoring_plays
+    end
+
+    def targets_by_team
+      @targets_by_team ||= ArmchairAnalysis::Pass.by_team(team_abbr)
+    end
+
+    def receiving_touchdowns_by_team
+      targets_by_team.completions.scoring_plays.count
+    end
+
+    def redzone_targets_within_the_10
+      targets.in_redzone(10)
+    end
+
+    def redzone_targets_within_the_5
+      targets.in_redzone(5)
+    end
+
+    def percent_of_redzone_targets_on_team(within = 10)
+      targets.in_redzone(within).count.percent_of(targets_by_team.in_redzone(within).count)
+    end
+
+    def percent_of_targets_on_team
+      targets.count.percent_of(targets_by_team.count)
+    end
+
+    def percent_of_scoring_receptions_on_team
+      receptions.scoring_plays.count.percent_of(targets_by_team.receptions.scoring_plays.count)
+    end
+  end
+  include WideReceiver
+
+  module PlayerAsTeam
+    def self.included(model)
+      model.has_many :drives, {
+        primary_key: :armchair_analysis_team_name,
+        foreign_key: :tname,
+        class_name: "ArmchairAnalysis::Drive"
+      }
+    end
+  end
+  include PlayerAsTeam
+
+  module Kicker
+    def self.included(model)
+      model.has_many :field_goal_attempts, -> { where(fgxp: 'FG') }, {
+        primary_key: :armchair_analysis_id,
+        foreign_key: :fkicker,
+        class_name: "ArmchairAnalysis::FieldGoalExtraPoint"
+      }
+    end
+
+    def percent_field_goals_made
+      field_goal_attempts.made.count.percent_of(field_goal_attempts.count)
+    end
+
+    def field_goal_attempts_by_week
+      field_goal_attempts.joins(:game).group("armchair_analysis_games.wk").count
+    end
+
+    def most_field_goal_attempts_in_a_game
+      field_goal_attempts_by_week.values.max
+    end
+
+    def fewest_field_goal_attempts_in_a_game
+      field_goal_attempts_by_week.values.min
+    end
+
+    def average_field_goal_attempts_in_a_game
+      field_goal_attempts_by_week.values.average
+    end
+  end
+  include Kicker
+
+  def games_played
+    # TODO Implement
   end
 
   has_many :away_games, {
@@ -349,13 +698,13 @@ class Player < ActiveRecord::Base
     }
   end
 
-  has_many :catches, -> {
-    where(type: 'PASS', conv: 'Y')
-  }, {
-    foreign_key: :trg,
-    primary_key: :armchair_analysis_id,
-    class_name: "ArmchairAnalysis::Conversion"
-  }
+  # has_many :catches, -> {
+  #   where(type: 'PASS', conv: 'Y')
+  # }, {
+  #   foreign_key: :trg,
+  #   primary_key: :armchair_analysis_id,
+  #   class_name: "ArmchairAnalysis::Conversion"
+  # }
 
   def try_to_find_team(force = false)
     return nil if !armchair_analysis_team_name.nil? && !force

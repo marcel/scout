@@ -1,0 +1,42 @@
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Upcoming Opponent</h3></caption>
+  <tbody class="row-fluid">
+    <tr>
+      <td class="span4">
+        <h5 class="text-center">
+          <%= comparison.opponent(1) || 'bye week' %>
+        </h5>
+      </td>
+      <td class="span4"><h6 class="text-center">Opponent</h6></td>
+      <td class="span4">
+        <h5 class="text-center">
+          <%= comparison.opponent(2) || 'bye week' %>
+        </h5>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Field Goal Attempts</h3></caption>
+  <tbody class="row-fluid">
+    <%= stat('Attempts', ->(p) { p.field_goal_attempts.count }) %>
+    <%= stat('Missed', ->(p) { p.field_goal_attempts.missed.count }) %>
+    <%= stat('Made', ->(p) { p.field_goal_attempts.made.count }) %>
+    <%= stat('% made', ->(p) { number_to_percentage(p.percent_field_goals_made, precision: 1) } ) %>
+    <%= stat('Avg attempts per game', ->(p) { p.average_field_goal_attempts_in_a_game.round(1) }) %>
+    <%= stat('Most attempts in a game', ->(p) { p.most_field_goal_attempts_in_a_game }) %>
+    <%= stat('Fewest attempts in a game', ->(p) { p.fewest_field_goal_attempts_in_a_game }) %>
+  </tbody>
+</table>
+
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Distance</h3></caption>
+  <tbody class="row-fluid">
+    <%= stat('Avg distance', ->(p) { p.field_goal_attempts.pluck(:dist).average.round(1) }) %>
+    <%= stat('p25 distance', ->(p) { p.field_goal_attempts.pluck(:dist).percentile(25) }) %>
+    <%= stat('p50 distance', ->(p) { p.field_goal_attempts.pluck(:dist).percentile(50) }) %>
+    <%= stat('p75 distance', ->(p) { p.field_goal_attempts.pluck(:dist).percentile(75) }) %>
+    <%= stat('Longest', ->(p) { p.field_goal_attempts.longest.first.try(:dist) }) %>
+  </tbody>
+</table>

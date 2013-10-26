@@ -19,6 +19,7 @@
 //= require highcharts/highcharts-more
 //= require typeahead.min.js
 //= require hogan.min.js
+//= require js-routes
 
 // $("#player-search input").keyup(function() {
 //   $.get($("#player-search").attr("action"), $("#player-search").serialize(), null, "script");

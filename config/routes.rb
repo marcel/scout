@@ -19,6 +19,10 @@ Scout::Server::Application.routes.draw do
     # resource :roster, only: :show
   end
 
+  get "/compare/(:player1)/(:player2)", to: "matchups#players", as: :compare_players
+
+  get "optimize", to: "rosters#optimal"
+
   get 'search', to: "players#search", as: :player_search
 
   resources :players do

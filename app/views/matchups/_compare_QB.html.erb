@@ -1,0 +1,42 @@
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Passer Rating</h3></caption>
+  <tbody class="row-fluid">
+    <%= stat('Avg rating', ->(p) { p.average_passer_rating.round(2) }) %>
+    <%= stat('Highest rating', ->(p) { p.highest_passer_rating.round(2) }) %>
+    <%= stat('Lowest rating', ->(p) { p.lowest_passer_rating.round(2) }) %>
+  </tbody>
+</table>
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Pass Attempts</h3></caption>
+  <tbody class="row-fluid">
+    <%= stat('Attempts', ->(p) { p.passes.count }) %>
+    <%= stat('Completions', ->(p) { p.passes.completions.count }) %>
+    <%= stat('Completion %', ->(p) { number_to_percentage(p.passes.completions.count.percent_of(p.passes.count), precision: 1) }) %>
+    <%= stat('% successful completion', ->(p) { number_to_percentage(p.passes.completions.successful_plays.count.percent_of(p.passes.completions.count), precision: 1) }) %>
+    <%= stat('Avg pass attempts per game', ->(p) { p.average_pass_attempts_per_week.round(1) }) %>
+  </tbody>
+</table>
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Passing Yards</h3></caption>
+  <tbody class="row-fluid">
+    <%= stat('Total yards', ->(p) { number_with_delimiter(p.passes.completions.pluck(:yds).sum) })%>
+    <%= stat('Avg yards per completion', ->(p) { p.passes.completions.pluck(:yds).average.round(1) } )%>
+    <%= stat('p25 yards per completion', ->(p) { p.passes.completions.pluck(:yds).percentile(25) }) %>
+    <%= stat('p50 yards per completion', ->(p) { p.passes.completions.pluck(:yds).percentile(50) }) %>
+    <%= stat('p75 yards per completion', ->(p) { p.passes.completions.pluck(:yds).percentile(75) }) %>
+  </tbody>
+</table>
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Interceptions</h3></caption>
+  <tbody class="row-fluid">
+    <%= stat('Total', ->(p) { p.interceptions.count }) %>
+    <%= stat('Avg per game', ->(p) { p.average_interceptions_per_game.round(1) }) %>
+    <%= stat('Most in a game', ->(p) { p.most_interceptions_in_a_game }) %>
+  </tbody>
+</table>
+<table class="table table-condensed">
+  <caption><h3 class="well text-center">Sacks</h3></caption>
+  <tbody class="row-fluid">
+  </tbody>
+</table>
+<%= render partial: 'rushing_comparison', locals: {comparison: comparison } %>

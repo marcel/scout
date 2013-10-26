@@ -15,20 +15,20 @@ class PlayersController < ApplicationController
   end
 
   def typeahead
-    attributes = [:full_name, :headshot, :team_abbr, :"players.id"]
+    attributes = [:full_name, :headshot, :team_abbr, :id]
     results = if query = params[:query]
       clause = "%#{query}%"
-      Player.where("first_name LIKE ? OR last_name LIKE ? OR full_name LIKE ?", clause, clause, clause).
+      Player.where("first_name LIKE :name OR last_name LIKE :name OR full_name LIKE :name", {name: clause}).
         joins(:points).
         group('players.id').
         order('SUM(player_point_totals.total) DESC').
-        select(*attributes).limit(10)
+        select(attributes).limit(10)
     else
-      Player.where.not(fantasy_football_nerd_id: nil).
+      Player.where { fantasy_football_nerd_id != nil }.
         joins(:points).
         group('players.id').
         order('SUM(player_point_totals.total) DESC').
-        select(*attributes)
+        select(attributes)
     end
 
     players = results.map do |player|
