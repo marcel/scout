@@ -14,7 +14,7 @@
         </h5>
       </td>
     </tr>
-    <%= stat('Passing yards allowed', ->(p) { number_with_delimiter(Player.find_by(team_abbr: p.opponent_on_week(@week)).cached_game_performances_by_opponents.map(&:py).sum) }) %>
+    <%= stat('Passing yards allowed', ->(p) { p.opponent_on_week(@week) ? number_with_delimiter(Player.find_by(team_abbr: p.opponent_on_week(@week)).cached_game_performances_by_opponents.map(&:py).sum) : '' }) %>
     <!-- <tr>
       <td class="span5"><h5 class="text-center">10.3</h5></td>
       <td class="span2"><h5 class="text-center">Rushing TDs allowed (9th)</h5></td>
