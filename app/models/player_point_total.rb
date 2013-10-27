@@ -1,5 +1,3 @@
-require 'scout/importing'
-
 class PlayerPointTotal < ActiveRecord::Base
   belongs_to :player, {
     :foreign_key => :yahoo_player_key,
@@ -7,6 +5,12 @@ class PlayerPointTotal < ActiveRecord::Base
     :class_name  => "Player",
     inverse_of: :points
   }, touch: true
+
+  def self.median3(column_name, where_clause)
+    total = where(where_clause).count
+    limit = total % 2 == 0 ? 1 : 2
+    where(where_clause).order(column_name).offset(total / 2).limit(limit).pluck(column_name).average
+  end
 
   def cached_player
     Scout.cache.fetch(['Player', 'yahoo_player_key', yahoo_player_key]) { player }
@@ -93,7 +97,7 @@ class PlayerPointTotal < ActiveRecord::Base
                   nil
                 end
               else
-                if stat.value.to_f > 0.0
+                if stat.value.to_f != 0.0
                   new_stats += 1
                   PlayerStatValue.new(
                     player: player_model,
@@ -105,7 +109,7 @@ class PlayerPointTotal < ActiveRecord::Base
                 end
               end
             else
-              if stat.value.to_f > 0.0
+              if stat.value.to_f != 0.0
                 new_stats += 1
                 PlayerStatValue.new(
                   player: player_model,

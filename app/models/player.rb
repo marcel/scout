@@ -451,6 +451,10 @@ class Player < ActiveRecord::Base
       targets.joins(:game).group("armchair_analysis_games.wk").count
     end
 
+    def reception_count_by_week
+      receptions.joins(:game).group("armchair_analysis_games.wk").count
+    end
+
     def most_targets_in_a_game
       target_count_by_week.values.max
     end

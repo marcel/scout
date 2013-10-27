@@ -1,7 +1,7 @@
 class Projection < ActiveRecord::Base
   belongs_to :player, {
-    :primary_key => :fantasy_football_nerd_id,
-    :foreign_key => :fantasy_football_nerd_id,
+    primary_key: :fantasy_football_nerd_id,
+    foreign_key: :fantasy_football_nerd_id,
     inverse_of: :projections
   }, touch: true
 
