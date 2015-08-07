@@ -46,7 +46,7 @@ class Team < ActiveRecord::Base
         moves:           payload.number_of_moves,
         trades:          payload.number_of_trades,
         logo:            payload.team_logos.team_logo.url,
-        division_id:     payload.division_id,
+        # division_id:     payload.division_id,
         waiver_priority: payload.waiver_priority,
         faab_balance:    payload.faab_balance,
         manager:         payload.managers.manager.nickname   

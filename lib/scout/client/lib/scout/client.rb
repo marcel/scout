@@ -57,6 +57,10 @@ module Scout
     #   end
     # end
     
+    def games
+      Payload::Games.new(request(Resource.games))
+    end
+    
     def team(key = Resource::TEAM_KEY)
       Payload::Team.new(request(Resource.team(key)).team)
     end

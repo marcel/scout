@@ -1,10 +1,12 @@
 source 'https://rubygems.org'
 
-ruby "1.9.3"
+ruby "2.1.5"
+
+gem 'rake', '10.4.2'
 
 gem 'rails', '4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
-gem 'therubyracer', platforms: :ruby
+#gem 'therubyracer', platforms: :ruby
 gem 'jquery-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -19,19 +21,18 @@ group :doc do
 end
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt-ruby'
+gem 'bcrypt'
 
 gem 'unicorn'
 
 group :development do
-  gem 'debugger'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'capistrano', '2.15.5'
   gem 'capistrano-rails'
   # gem 'capistrano-detect-migrations'
   # gem 'capistrano-bundler'
-  gem 'rvm-capistrano'
+  #gem 'rvm-capistrano'
   # Default capistrano-unicorn doesn't seem to work with latest capistrano
   gem 'capistrano-unicorn', :require => false
   # gem 'capistrano-unicorn', :git => 'https://github.com/sosedoff/capistrano-unicorn.git', :branch => 'master', :require => false
@@ -99,7 +100,7 @@ gem 'squeel'
 
 gem 'celluloid'
 
-gem 'statsample'
-gem 'statsample-optimization'
+#gem 'statsample'
+#gem 'statsample-optimization'
 
 gem "js-routes"

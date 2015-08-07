@@ -28,7 +28,7 @@ module Scout
   self.log_dir    = root + 'logs'
   self.database   = db_dir + 'data.db'
     
-  FANTASY_FOOTBALL_NERD_API_KEY = 2013092193951406  
+  FANTASY_FOOTBALL_NERD_API_KEY = 'besx7cbqcwqm'  
   FFNerd.api_key = FANTASY_FOOTBALL_NERD_API_KEY
 end
 

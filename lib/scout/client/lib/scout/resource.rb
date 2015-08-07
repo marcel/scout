@@ -1,10 +1,15 @@
 module Scout
   class Resource
-    GAME_KEY   = 314
-    LEAGUE_KEY = '314.l.489038'
-    TEAM_KEY   = '314.l.489038.t.4'
+    GAME_KEY   = 348
+    #LEAGUE_KEY = '314.l.489038' # Old game key and league key for 2013
+    TEAM_KEY   = '348.l.304042.t.1'
+    LEAGUE_KEY  = '348.l.304042'
 
     class << self
+      def games
+        new('games') + {game_keys: 'nfl'}
+      end
+      
       def game(key = GAME_KEY)
         new('game', key)
       end

@@ -49,4 +49,22 @@ class Stat < ActiveRecord::Base
   def normalize_name
     name.gsub(' ', '_').downcase
   end
+  
+  class << self
+    include Scout::Importing
+    
+    def import(week = GameWeek.current.week)
+      importing(week) do
+        client = Scout::Client.new
+
+        stats = client.stats
+        import_log "stats: #{stats.size}"
+
+        stats.each do |stat|
+          record = Stat.find_by(yahoo_stat_id: stat.stat_id) || from_payload(stat)
+          record.save if record.new_record?
+        end
+      end
+    end
+  end
 end

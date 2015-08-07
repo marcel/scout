@@ -4,7 +4,7 @@ class GameWeek < ActiveRecord::Base
 
     def current
       today = Time.zone.today
-      cache[today] ||= where("start_date <= :today AND end_date >= :today", today: today).take!
+      cache[today] ||= where("start_date <= :today AND end_date >= :today", today: today).take || first
     end
     
     def current?(week)

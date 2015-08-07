@@ -46,7 +46,10 @@ module Scout
         super
       end
     end
-
+    
+    class Games < Payload
+    end
+    
     class Manager < Payload
     end
 
