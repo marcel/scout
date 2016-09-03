@@ -7,7 +7,7 @@ role :web,'scout@scoutrank.co'
 role :db, 'scout@scoutrank.co'
 after "deploy:restart", "deploy:cleanup"
 
-require "rvm/capistrano"
+# require "rvm/capistrano"
 require "bundler/capistrano"
 # require 'capistrano-unicorn'
 

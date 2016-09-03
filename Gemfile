@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.1.5"
+ruby "2.2.4"
 
 gem 'rake', '10.4.2'
 
@@ -57,7 +57,7 @@ gem 'will_paginate'
 # Needs RMagick...
 # gem 'sparklines'
 
-gem 'mysql2'
+gem 'mysql2', '~> 0.3.18'
 
 # Doesn't work with associations that have custom primary/foreign_keys
 #gem 'identity_cache'

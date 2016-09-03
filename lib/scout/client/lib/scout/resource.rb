@@ -1,9 +1,11 @@
 module Scout
   class Resource
-    GAME_KEY   = 348
-    #LEAGUE_KEY = '314.l.489038' # Old game key and league key for 2013
-    TEAM_KEY   = '348.l.304042.t.1'
-    LEAGUE_KEY  = '348.l.304042'
+    GAME_KEY   = 359
+    # LEAGUE_KEY = '314.l.489038' # Old game key and league key for 2013
+    # LEAGUE_KEY  = '348.l.304042' 2015
+    
+    LEAGUE_KEY  = "#{GAME_KEY}.l.69901" # Double QB with Cheese 2016
+    TEAM_KEY   = "#{LEAGUE_KEY}.t.1"
 
     class << self
       def games

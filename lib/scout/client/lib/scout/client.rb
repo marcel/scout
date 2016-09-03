@@ -21,6 +21,15 @@ module Scout
       else
         raise e
       end
+    rescue Exception => e
+      if e.message =~ /Authorization Required/
+        $retries ||= 0
+        $retries += 1
+        STDERR.puts "Retrying...."
+        retry if $retries != 4
+      else
+        raise e
+      end
     end
     
     DEFAULT_TRANSACTION_TYPES = %w[add trade drop]

@@ -1,6 +1,6 @@
 module Scout
   module Email
-    FROM = 'Scout Rank <alert@scoutrank.co>'
+    FROM = 'Scout Rank <alert@scoutrank.com>'
     ME   = 'scoutrank@marcelmolina.com'
     
     class << self
@@ -29,7 +29,7 @@ module Scout
   
   Mailgun.configure do |config|
     config.api_key = 'key-3w76vsdzohvhsx94vee3xlzwj68mjfj5'
-    config.domain  = 'scoutrank.co'
+    config.domain  = 'scoutrank.com'
   end
 
   @mailer = Mailgun(api_key: Mailgun.api_key, domain: Mailgun.domain)
