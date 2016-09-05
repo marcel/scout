@@ -6,6 +6,10 @@ module Scout
     
     LEAGUE_KEY  = "#{GAME_KEY}.l.69901" # Double QB with Cheese 2016
     TEAM_KEY   = "#{LEAGUE_KEY}.t.1"
+    
+    LEAGUES = {
+      "359.l.69901" => "Double QB w/ Cheese"
+    }
 
     class << self
       def games

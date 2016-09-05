@@ -10,9 +10,11 @@ require 'nokogiri'
 require 'faster_xml_simple'
 require 'logger'
 require 'zlib'
-require 'fantasy_football_nerd'
+# require 'fantasy_football_nerd'
 require 'active_support/core_ext/array'
 require 'active_support/core_ext/class'
+require 'twilio-ruby'
+require 'mailgun'
 
 module Scout
   class << self
@@ -29,7 +31,7 @@ module Scout
   self.database   = db_dir + 'data.db'
     
   FANTASY_FOOTBALL_NERD_API_KEY = 'besx7cbqcwqm'  
-  FFNerd.api_key = FANTASY_FOOTBALL_NERD_API_KEY
+  # FFNerd.api_key = FANTASY_FOOTBALL_NERD_API_KEY
 end
 
 require Scout.config_dir + 'database'

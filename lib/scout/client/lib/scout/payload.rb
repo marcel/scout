@@ -25,11 +25,12 @@ module Scout
 
     attr_reader :doc, :data
     def initialize(doc)
-      @doc = doc
+      @doc  = doc
+      @data = Data.new(XmlParser.parse(doc.to_xml))
+
       doc.instance_eval do
         def inspect; '...' end
       end
-      @data = Data.new(XmlParser.parse(doc.to_xml))
     end
 
     # N.B. So pretty print doesn't display huge xml doc
@@ -79,7 +80,7 @@ module Scout
       end
 
       def players
-        doc.css('player').map do |player|
+        @players ||= doc.css('player').map do |player|
           Player.new(player)
         end
       end

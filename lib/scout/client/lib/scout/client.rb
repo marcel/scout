@@ -35,10 +35,10 @@ module Scout
     DEFAULT_TRANSACTION_TYPES = %w[add trade drop]
     
     # TODO waiver and pending trade with team key
-    def transactions(options = {})
-      types = (options[:types] || DEFAULT_TRANSACTION_TYPES).join(',')
+    def transactions(league_key = nil, options = {})
+      types = (options.delete(:types) || DEFAULT_TRANSACTION_TYPES).join(',')
       
-      request(Resource.league / 'transactions' + {:types => types}) do |result|
+      request(Resource.league(league_key || Resource::LEAGUE_KEY) / 'transactions' + {:types => types} + options) do |result|
         result.transactions.map do |transaction| 
           Payload::Transaction.new(transaction)
         end
@@ -102,7 +102,7 @@ module Scout
     end
     
     def request(resource, options = {}, &block)
-      p "uri: #{resource.uri}"
+      STDERR.puts "uri: #{resource.uri}" if $DEBUG
 
       results = block_given? ? yield(get(resource)) : get(resource)
 

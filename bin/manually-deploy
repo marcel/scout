@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+last_seen_id_path="scout-deploy/scout/lib/scout/client/config/last_seen_transaction_ids.yml"
+timestamp=$(date "+%Y-%m-%d-%H.%M.%S")
+filename=scout.$timestamp.tar.gz
+destination=/tmp/$filename
+
+cd $SCOUT/..
+tar --exclude='./scout/.git/' -zcvf $destination scout
+
+scp $destination scout@scoutrank.com:
+ssh scout@scoutrank.com "mkdir -p scout/$timestamp && tar -xzf $filename -C scout/$timestamp && cp $last_seen_id_path . && rm scout-deploy && ln -s scout/$timestamp scout-deploy && cp last_seen_transaction_ids.yml $last_seen_id_path && cd scout-deploy/scout && bundle && cd - && rm $filename"
+
+cd -
